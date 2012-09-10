@@ -1,4 +1,4 @@
-package com.ipeirotis.galc;
+package com.andreou.galc;
 
 import java.util.HashSet;
 import java.util.HashMap;

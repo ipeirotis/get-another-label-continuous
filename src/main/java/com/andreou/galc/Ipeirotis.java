@@ -1,4 +1,4 @@
-package com.ipeirotis.galc;
+package com.andreou.galc;
 
 
 public class Ipeirotis {
