@@ -8,6 +8,11 @@ public class Worker {
 	private Double 			quality;
 	private Double			beta;
 	private Set<Category> 	categories;
+	
+	//Data generation characteristics
+	private Double			mu;
+	private Double			sigma;
+	private Double			rho;
 
 	public Worker(String name){
 		this.name = name;
@@ -44,6 +49,31 @@ public class Worker {
 
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
+	}
+
+	
+	public Double getMu() {
+		return mu;
+	}
+
+	public void setMu(Double mu) {
+		this.mu = mu;
+	}
+
+	public Double getSigma() {
+		return sigma;
+	}
+
+	public void setSigma(Double sigma) {
+		this.sigma = sigma;
+	}
+
+	public Double getRho() {
+		return rho;
+	}
+
+	public void setRho(Double rho) {
+		this.rho = rho;
 	}
 
 	@Override

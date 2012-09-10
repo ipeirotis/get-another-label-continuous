@@ -1,8 +1,7 @@
 package com.andreou.galc;
 
-import java.util.HashSet;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -10,7 +9,7 @@ public class Engine {
 
 	private Set<Category> 					categories			= new HashSet<Category>();
 	private Set<Worker> 					workers				= new HashSet<Worker>();
-	private HashMap<CategoryWorker,Integer> labels 				= new HashMap<CategoryWorker, Integer>();
+	private HashMap<CategoryWorker,Double> labels 				= new HashMap<CategoryWorker, Double>();
 	private HashMap<CategoryWorker,Double> 	zetas 				= new HashMap<CategoryWorker, Double>();
 	
 //	private Set<Category> 					current_categories			= new HashSet<Category>();
@@ -20,20 +19,18 @@ public class Engine {
 	
 	public Engine() {
 		
-		buildCategories();
-		buildWorkers();
-		this.ip = new Ipeirotis(this);
-//		current_categories = ((Set<Category>) ((HashSet) categories).clone());
-//		current_workers = ((Set<Worker>) ((HashSet) workers).clone());
+		SyntheticData data = new SyntheticData(5, 4);
+		this.categories = data.getCategories();
+		this.workers = data.getWorkers();
+		data.build();
+		this.labels = data.getLabels();
 
-		loadLebels();
+		this.ip = new Ipeirotis(this);
+
+
 		initWorkers();
 		initCategories();
 		caclZeta();
-		
-		finalizeCategories();
-		
-		
 		
 		Utils utils = new Utils();
 		utils.printCategories(categories);
@@ -50,6 +47,8 @@ public class Engine {
 				System.out.println("\n___" + i +" th loop __");
 			}
 		}
+
+		finalizeCategories();
 		utils.printRealValues(categories);
 		
 		//utils.printMeans(categories);
@@ -127,7 +126,7 @@ public class Engine {
 		return diff;
 	}
 	private void caclZeta(){
-		Integer y = 0;
+		Double y = 0.0;
 		Double  z = 0.0;
 		for( Category c: this.categories)
 			for(Worker w: this.workers){
@@ -153,7 +152,7 @@ public class Engine {
 		}		
 }
 	private void initCategories() {
-		Integer y = 0;
+		Double y = 0.0;
 		Double 	mean= 0.0;
 		Double	 std= 0.0;
 		for( Category c: this.categories){
@@ -181,7 +180,7 @@ public class Engine {
 		int i =this.categories.size()*this.workers.size();
 		for( Category c: this.categories)
 			for(Worker w: this.workers){
-				labels.put(new CategoryWorker(c, w),(Integer)i--);
+				labels.put(new CategoryWorker(c, w), new Double(i--));
 				System.out.printf("(%s,%s): %s", c.getName(),w.getName(),i+1);
 				String nl = (i % workers.size()==0)? "%n":"\t\t";
 				System.out.printf(nl);				

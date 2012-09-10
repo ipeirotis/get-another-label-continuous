@@ -13,6 +13,10 @@ public class Category {
 	private Double std	= 0.0;
 	private Double zeta	= 0.0;
 	private Set<Worker> workers;
+	
+	//Data generation characteristics
+	private Double	trueValue;
+
 
 	public Category(String name){
 		this.name = name;
@@ -72,6 +76,14 @@ public class Category {
 
 	public void setWorkers(Set<Worker> workers) {
 		this.workers = workers;
+	}
+	
+	public Double getTrueValue() {
+		return trueValue;
+	}
+
+	public void setTrueValue(Double trueValue) {
+		this.trueValue = trueValue;
 	}
 
 	/*
