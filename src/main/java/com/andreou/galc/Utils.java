@@ -67,19 +67,24 @@ public class Utils {
 
 	}
 
-	public void printLabels(Set<DatumCont> categories, Set<Worker> workers, Map<CategoryWorker, Double> m) {
+	/*
+	public void printLabels(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
 
 		System.out.print("Labels ");
 		printMap(categories, workers, m);
 	}
+	*/
 
-	public void printTrasposedLabels(Set<DatumCont> categories, Set<Worker> workers, Map<CategoryWorker, Double> m) {
+	/*
+	public void printTrasposedLabels(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
 
 		System.out.print("Labels ");
 		printTrasposedMap(categories, workers, m);
 	}
+	*/
 
-	public void printMap(Set<DatumCont> categories, Set<Worker> workers, Map<CategoryWorker, Double> m) {
+	/*
+	public void printMap(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
 
 		System.out.println("Map");
 		// System.out.printf("%s: (%s,%s)%n", key, c.getName(),w.getName());
@@ -87,7 +92,7 @@ public class Utils {
 		int i = categories.size() * workers.size();
 		for (DatumCont c : categories)
 			for (Worker w : workers) {
-				CategoryWorker aux = new CategoryWorker(c, w);
+				AssignedLabel aux = new AssignedLabel(c, w);
 				value = m.get(aux);
 				System.out.printf("(%s,%s): %s", c.getName(), w.getName(), value.toString());
 				String nl = (--i % workers.size() == 0) ? "%n" : "\t\t";
@@ -95,8 +100,10 @@ public class Utils {
 			}
 
 	}
+	*/
 
-	public void printTrasposedMap(Set<DatumCont> categories, Set<Worker> workers, Map<CategoryWorker, Double> m) {
+	/*
+	public void printTrasposedMap(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
 
 		System.out.println("--Transposed map--");
 		// System.out.printf("%s: (%s,%s)%n", key, c.getName(),w.getName());
@@ -104,7 +111,7 @@ public class Utils {
 		int i = categories.size() * workers.size();
 		for (Worker w : workers)
 			for (DatumCont c : categories) {
-				CategoryWorker aux = new CategoryWorker(c, w);
+				AssignedLabel aux = new AssignedLabel(c, w);
 				value = m.get(aux);
 				System.out.printf("(%s,%s): %s", c.getName(), w.getName(), value.toString());
 				String nl = (--i % categories.size() == 0) ? "%n" : "\t\t";
@@ -112,5 +119,6 @@ public class Utils {
 			}
 
 	}
+	*/
 
 }

@@ -7,38 +7,55 @@ import java.util.TreeSet;
 
 public class Engine {
 
-	private Set<DatumCont>										categories	= new TreeSet<DatumCont>();
-	private Set<Worker>											workers			= new TreeSet<Worker>();
-	private Map<CategoryWorker, Double>	labels			= new TreeMap<CategoryWorker, Double>();
-	private Map<CategoryWorker, Double>	zetas				= new TreeMap<CategoryWorker, Double>();
-
+	private Set<DatumCont> objects;
+	private Map<String, DatumCont> objects_index;
+	private Set<Worker>	workers;
+	private Map<String, Worker> workers_index;
+	private Set<AssignedLabel>	labels;
+	
 	// private Set<Category> current_categories = new HashSet<Category>();
 	// private Set<Worker> current_workers = new HashSet<Worker>();
 
-	private Ipeirotis												ip;
+	//private Ipeirotis												ip;
 
 	public Engine() {
 
-		SyntheticData data = new SyntheticData(5, 4);
+		SyntheticData data = new SyntheticData();
+		Double data_mu=0.0;
+		Double data_sigma=1.0;
+		data.setDataParameters(data_mu, data_sigma);
+		
+		Double worker_mu_down=-10.0;
+		Double worker_mu_up=10.0;
+		Double worker_sigma_down=0.0;
+		Double worker_sigma_up=1.0;
+		data.setWorkerParameters(worker_mu_down, worker_mu_up, worker_sigma_down, worker_sigma_up);
 
-		// True Values initialization initData(mu,sigma)
-		data.initData(0.0, 1.0);
+		int data_points = 5;
+		int workers = 5;
+		data.build(data_points, workers);
 
-		this.categories = data.getCategories();
+		this.objects = data.getObjects();
+		this.objects_index = new TreeMap<String, DatumCont>();
+		for (DatumCont d : this.objects) {
+			objects_index.put(d.getName(), d);
+		}
+		
 		this.workers = data.getWorkers();
-		data.build();
+		this.workers_index = new TreeMap<String, Worker>();
+		for (Worker w : this.workers) {
+			workers_index.put(w.getName(), w);
+		}
+		
 		this.labels = data.getLabels();
 
-		this.ip = new Ipeirotis(this);
-
+		
 		initWorkers();
-		initCategories();
-		caclZeta();
+		estimateObjectZetas();
+		estimateWorkerRho();
 
-		Utils utils = new Utils();
-		utils.printCategories(categories);
-		utils.printWorkers(workers);
-		utils.printLabels(categories, workers, labels);
+	}
+		/*
 		Double diffq, diffz;
 		for (int i = 0; i < 10; i++) {
 			diffz = recaclZeta();
@@ -52,22 +69,21 @@ public class Engine {
 		}
 
 		finalizeCategories();
-		utils.printRealValues(categories);
+		*/
 
-		// utils.printMeans(categories);
-		// utils.printStds(categories);
-	}
 
+
+	/*
 	private void finalizeCategories() {
 
 		Double zeta = 0.0;
 		Double mean_num = 0.0;
 		Double std_num = 0.0;
 		Double denum = 0.0;
-		CategoryWorker aux;
-		for (DatumCont c : this.categories) {
+		AssignedLabel aux;
+		for (DatumCont c : this.objects) {
 			for (Worker w : this.workers) {
-				aux = new CategoryWorker(c, w);
+				aux = new AssignedLabel(c, w);
 				zeta = zetas.get(aux);
 				mean_num = mean_num + w.getBeta() * Math.sqrt(1 - 1 / w.getBeta()) * c.getMean();
 				std_num = std_num + w.getBeta() * Math.sqrt(1 - 1 / w.getBeta()) * c.getStd();
@@ -77,7 +93,7 @@ public class Engine {
 				c.setMean(mean_num / denum);
 				c.setStd(std_num / denum);
 				c.setValue((std_num * zeta + mean_num) / denum);
-			} else {/* it would Never happen */
+			} else {// it should Never happen
 			}
 			mean_num = std_num = denum = 0.0;
 		}
@@ -92,8 +108,8 @@ public class Engine {
 		Double q = 0.0;
 		Double diff = 0.0;
 		for (Worker w : this.workers) {
-			for (DatumCont c : this.categories) {
-				CategoryWorker aux = new CategoryWorker(c, w);
+			for (DatumCont c : this.objects) {
+				AssignedLabel aux = new AssignedLabel(c, w);
 				zeta = zetas.get(aux);
 				p_num = p_num + c.getZeta() * zeta;
 				p_denum_i = p_denum_i + c.getZeta() * c.getZeta();
@@ -113,12 +129,12 @@ public class Engine {
 		Double zeta = 0.0;
 		Double z_num = 0.0;
 		Double z_denum = 0.0;
-		CategoryWorker aux;
+		AssignedLabel aux;
 		Double z = 0.0;
 		Double diff = 0.0;
-		for (DatumCont c : this.categories) {
+		for (DatumCont c : this.objects) {
 			for (Worker w : this.workers) {
-				aux = new CategoryWorker(c, w);
+				aux = new AssignedLabel(c, w);
 				zeta = zetas.get(aux);
 				z_num = z_num + w.getBeta() * Math.sqrt(1 - 1 / w.getBeta()) * zeta;
 				z_denum = z_denum + w.getBeta();
@@ -128,7 +144,7 @@ public class Engine {
 				diff = c.getZeta() - z;
 				System.out.print("diffZ: " + diff + " ");
 				c.setZeta(z);
-			} else {/* it would Never happen */
+			} else {// it would Never happen 
 			}
 			z_num = z_denum = 0.0;
 		}
@@ -139,9 +155,9 @@ public class Engine {
 
 		Double y = 0.0;
 		Double z = 0.0;
-		for (DatumCont c : this.categories)
+		for (DatumCont c : this.objects)
 			for (Worker w : this.workers) {
-				CategoryWorker aux = new CategoryWorker(c, w);
+				AssignedLabel aux = new AssignedLabel(c, w);
 				y = labels.get(aux);
 				z = (y - c.getMean()) / c.getStd();
 				zetas.put(aux, z);
@@ -156,50 +172,70 @@ public class Engine {
 			w.setBeta(beta);
 		}
 	}
-
+*/
 	private void initWorkers() {
 
-		Double beta = 0.0;
+		Generator rhoGenerator =  new Generator(Generator.Distribution.UNIFORM);
+		rhoGenerator.setUniformParameters(-1.0, 1.0);
+		
 		for (Worker w : this.workers) {
-			w.setQuality(new Utils().getRandQuality());
-			beta = 1 / (1 - w.getQuality() * w.getQuality());
-			w.setBeta(beta);
+			Double rho_init = rhoGenerator.nextData();
+			w.setRho(rho_init);
 		}
 	}
 
-	private void initCategories() {
-
-		Double y = 0.0;
-		Double mean = 0.0;
-		Double std = 0.0;
-		for (DatumCont c : this.categories) {
-			// mean loop
-			for (Worker w : this.workers) {
-				CategoryWorker aux = new CategoryWorker(c, w);
-				y = labels.get(aux);
-				mean = mean + y;
+	private void estimateObjectZetas() {
+  // See equation 9
+		for (DatumCont d : this.objects) {
+			
+			Double zeta = 0.0;
+			Double betasum = 0.0;
+			for (AssignedLabel al : d.getAssignedLabels() ) {
+				String wid = al.getWorker();
+				Worker w = this.workers_index.get(wid);
+				zeta += w.getBeta() * Math.sqrt(1 - 1/w.getBeta()) * w.getZeta(al.getLabel());
+				betasum += w.getBeta();
 			}
-			mean = mean / workers.size();
-			c.setMean(mean);
-
-			// std loop
-			for (Worker w : this.workers) {
-				CategoryWorker aux = new CategoryWorker(c, w);
-				y = labels.get(aux);
-				std = (y - mean) * (y - mean);
-			}
-			std = std / workers.size();
-			c.setStd(std);
+			
+			d.setZeta(zeta/betasum);
 		}
-
+		
+		
 	}
 
+	private void estimateWorkerRho() {
+	  // See equation 10
+			for (Worker w : this.workers) {
+				for (AssignedLabel al : w.getZetaValues() ) {
+					String oid = al.getDatum(); //zij
+					DatumCont d = objects_index.get(oid);
+					d.getZeta();
+					
+				}
+				
+				
+				Double zeta = 0.0;
+				Double betasum = 0.0;
+				for (AssignedLabel al : d.getAssignedLabels() ) {
+					String wid = al.getWorker();
+					Worker w = this.workers_index.get(wid);
+					zeta += w.getBeta() * Math.sqrt(1 - 1/w.getBeta()) * w.getZeta(al.getLabel());
+					betasum += w.getBeta();
+				}
+				
+				d.setZeta(zeta/betasum);
+			}
+			
+			
+		}
+	
+	
 	private void loadLebels() {
 
-		int i = this.categories.size() * this.workers.size();
-		for (DatumCont c : this.categories)
+		int i = this.objects.size() * this.workers.size();
+		for (DatumCont c : this.objects)
 			for (Worker w : this.workers) {
-				labels.put(new CategoryWorker(c, w), new Double(i--));
+				labels.put(new AssignedLabel(c, w), new Double(i--));
 				System.out.printf("(%s,%s): %s", c.getName(), w.getName(), i + 1);
 				String nl = (i % workers.size() == 0) ? "%n" : "\t\t";
 				System.out.printf(nl);
@@ -207,112 +243,19 @@ public class Engine {
 
 	}
 
-	private void buildCategories() {
+	public Set<DatumCont> getObjects() {
 
-		this.categories.add(new DatumCont("cat1"));
-		this.categories.add(new DatumCont("cat2"));
-		this.categories.add(new DatumCont("cat3"));
+		return objects;
 	}
 
-	private void buildWorkers() {
+	public void setObjects(Set<DatumCont> objects) {
 
-		this.workers.add(new Worker("work1"));
-		this.workers.add(new Worker("work2"));
-		this.workers.add(new Worker("work3"));
-		this.workers.add(new Worker("work4"));
+		this.objects = objects;
 	}
 
-	public Set<DatumCont> getCategories() {
-
-		return categories;
-	}
-
-	public void setCategories(Set<DatumCont> categories) {
-
-		this.categories = categories;
-	}
-
-	public Set<Worker> getWorker() {
-
-		return worker;
-	}
-
-	public void setWorker(Set<Worker> worker) {
-
-		this.worker = worker;
-	}
-
-	private Set<Worker>	worker;
 
 }
 
-class CategoryWorker {
-
-	private Worker		w;
-	private DatumCont	c;
-
-	public CategoryWorker(DatumCont c, Worker w) {
-
-		if (!(w.equals(null) || c.equals(null))) {
-			this.w = w;
-			this.c = c;
-		}
-	}
-
-	public Worker getW() {
-
-		return w;
-	}
-
-	public void setW(Worker w) {
-
-		this.w = w;
-	}
-
-	public DatumCont getC() {
-
-		return c;
-	}
-
-	public void setC(DatumCont c) {
-
-		this.c = c;
-	}
-
-	@Override
-	public int hashCode() {
-
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((c == null) ? 0 : c.hashCode());
-		result = prime * result + ((w == null) ? 0 : w.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof CategoryWorker))
-			return false;
-		CategoryWorker other = (CategoryWorker) obj;
-		if (c == null) {
-			if (other.c != null)
-				return false;
-		} else if (!c.equals(other.c))
-			return false;
-		if (w == null) {
-			if (other.w != null)
-				return false;
-		} else if (!w.equals(other.w))
-			return false;
-		return true;
-	}
-
-}
 
 class WorkerCategories {
 

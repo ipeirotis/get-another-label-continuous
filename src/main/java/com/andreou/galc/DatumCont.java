@@ -6,7 +6,7 @@ public class DatumCont {
 
 	private String			name;
 	private Double			value;
-	private Double			label;
+	private Set<AssignedLabel> labels;
 
 	private Double			mean	= 0.0;
 	private Double			std		= 0.0;
@@ -19,6 +19,13 @@ public class DatumCont {
 
 		this.name = name;
 
+	}
+	
+	public void addAssignedLabel(AssignedLabel al) {
+
+		if (al.getDatum().equals(name)) {
+			this.labels.add(al);
+		}
 	}
 
 	public String getName() {
@@ -39,16 +46,6 @@ public class DatumCont {
 	public void setValue(Double value) {
 
 		this.value = value;
-	}
-
-	public Double getLabel() {
-
-		return label;
-	}
-
-	public void setLabel(Double label) {
-
-		this.label = label;
 	}
 
 	public Double getMean() {
@@ -126,6 +123,25 @@ public class DatumCont {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	
+	/**
+	 * @return the labels
+	 */
+	public Set<AssignedLabel> getAssignedLabels() {
+	
+		return labels;
+	}
+	
+
+	
+	/**
+	 * @param labels the labels to set
+	 */
+	public void setLabels(Set<AssignedLabel> labels) {
+	
+		this.labels = labels;
 	}
 
 }

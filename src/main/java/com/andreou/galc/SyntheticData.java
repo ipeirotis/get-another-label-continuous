@@ -1,94 +1,113 @@
 package com.andreou.galc;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class SyntheticData {
 
-	private Set<DatumCont>										objects	= new HashSet<DatumCont>();
-	private Set<Worker>											workers			= new HashSet<Worker>();
-	private HashMap<CategoryWorker, Double>	labels			= new HashMap<CategoryWorker, Double>();
+	private Set<DatumCont> objects	= new TreeSet<DatumCont>();
+	private Set<Worker>	workers	= new TreeSet<Worker>();
+	private Set<AssignedLabel>	labels = new TreeSet<AssignedLabel>();
 
-	private Double													mu					= new Double(0.0);
-	private Double													sigma				= new Double(1.0);
+	private Double	data_mu;
+	private Double	data_sigma;
 
-	public SyntheticData(int k_objects, int l_workers) {
 
-		buildCategories(k_objects);
-		buildWorkers(l_workers);
+	
+	Generator muGenerator;
+	Generator sigmaGenerator;
+	Generator rhoGenerator;
+	
+	Generator datumGenerator;
+	
+	public SyntheticData() {
 
 	}
 
-	public void initData(Double mu, Double sigma) {
-
-		this.mu = mu;
-		this.sigma = sigma;
+	public void setDataParameters(Double mu, Double sigma) {
+	  this.data_mu=mu;
+	  this.data_sigma=sigma;
+		datumGenerator = new Generator(Generator.Distribution.GAUSSIAN);
+		datumGenerator.setGaussianParameters(mu, sigma);
+	}
+	
+	public void setWorkerParameters(Double worker_mu_down, Double worker_mu_up, Double worker_sigma_down, Double worker_sigma_up) {
+			muGenerator =  new Generator(Generator.Distribution.UNIFORM);
+			muGenerator.setUniformParameters(worker_mu_down, worker_mu_up);
+			
+			sigmaGenerator =  new Generator(Generator.Distribution.UNIFORM);
+			sigmaGenerator.setUniformParameters(worker_sigma_down, worker_sigma_up);
+			
+			rhoGenerator =  new Generator(Generator.Distribution.UNIFORM);
+			rhoGenerator.setUniformParameters(-1.0, 1.0);
 	}
 
-	public void build() {
+	public void build(int k_objects, int l_workers) {
 
-		// Generate Object Real Values x_i
-		Generator datumGenerator =  new Generator(Generator.Distribution.GAUSSIAN);
-		datumGenerator.setGaussianParameters(this.mu, this.sigma);
-		
-		for (DatumCont c : this.objects) {
-			c.setTrueValue(datumGenerator.nextData());
-			System.out.println("(Object, value): " + c.getName() + ", " + c.getTrueValue());
-		}
 
-		// Generate Worker Characteristics
-		Generator muGenerator =  new Generator(Generator.Distribution.UNIFORM);
-		muGenerator.setUniformParameters(-10.0, 10.0);
-		
-		Generator sigmaGenerator =  new Generator(Generator.Distribution.UNIFORM);
-		sigmaGenerator.setUniformParameters(0.0, 10.0);
-		
-		Generator rhoGenerator =  new Generator(Generator.Distribution.UNIFORM);
-		rhoGenerator.setUniformParameters(-1.0, 1.0);
-		
-		for (Worker w : this.workers) {
-			w.setMu(muGenerator.nextData());
-			w.setSigma(sigmaGenerator.nextData());
-			w.setRho(rhoGenerator.nextData());
-			System.out.println("(Worker, mu, sigma, rho): " + w.getName() + ", " + w.getMu() + ", " + w.getSigma() + ", "
-					+ w.getRho());
-		}
+		createObjects(k_objects);
+		createWorkers(l_workers);
+		createLabels();
 
+	}
+
+	
+	private void createLabels() {
+		
 		// Generate Observation Values y_ij
 
-		for (DatumCont c : this.objects)
+		for (DatumCont d : this.objects) {
 			for (Worker w : this.workers) {
-				CategoryWorker label = new CategoryWorker(c, w);
-				// Using Bivariate-Normal Distribution (ref: http://www.athenasc.com/Bivariate-Normal.pdf)
-				
-				Double label_mu = w.getMu() + w.getRho() * (w.getSigma() / this.sigma) * (c.getTrueValue() - this.mu);
-				
-				Double label_sigma = Math.sqrt((1 - w.getRho() * w.getRho())) * w.getSigma();
+			
+				Double datum_z = (d.getTrueValue() - this.data_mu) / this.data_sigma;
+				Double label_mu = w.getTrueMu() + w.getTrueRho() * w.getTrueSigma() * datum_z;
+				Double label_sigma = Math.sqrt( 1 - Math.pow( w.getRho(), 2) ) * w.getTrueSigma();
 				
 				Generator labelGenerator =  new Generator(Generator.Distribution.GAUSSIAN);
 				labelGenerator.setGaussianParameters(label_mu, label_sigma);
+				Double label = labelGenerator.nextData();
+				System.out.println("(" + d.getName() + "," + w.getName() + "):" + label);
 				
-				labels.put(label, labelGenerator.nextData());
+				AssignedLabel al = new AssignedLabel(w.getName(), d.getName(), label);
+				labels.add(al);
+				w.addAssignedLabel(al);
+				d.addAssignedLabel(al);
 				
-				System.out.println("(" + c.getName() + "," + w.getName() + "):" + labels.get(label) + " (mu,sigma):(" + mu + ", "
-						+ sigma + ")");
+				
 			}
+		}
+	}
+	
+	private void createObjects(int k_objects) {
+
+		// Generate Object Real Values x_i
+		for (int i = 0; i < k_objects; i++) {
+			DatumCont d = new DatumCont("Object" + (i + 1));
+			Double value = datumGenerator.nextData();
+			d.setTrueValue(value);
+			System.out.println("(Object, value): " + d.getName() + ", " + d.getTrueValue());
+			this.objects.add(d);
+		}	
 	}
 
-	private void buildCategories(int k_objects) {
+	private void createWorkers(int l_workers) {
 
-		for (int i = 0; i < k_objects; i++)
-			this.objects.add(new DatumCont("obj" + (i + 1)));
+		// Generate Worker Characteristics
+		for (int i = 0; i < l_workers; i++) {
+			Worker w = new Worker("Worker" + (i + 1));
+			w.setTrueMu(muGenerator.nextData());
+			w.setTrueSigma(sigmaGenerator.nextData());
+			w.setRho(rhoGenerator.nextData());
+			System.out.println("(Worker, mu, sigma, rho): " + w.getName() + ", " + w.getTrueMu() + ", " + w.getTrueSigma() + ", "
+					+ w.getTrueRho());
+			this.workers.add(w);
+		}
+
+
+		
 	}
 
-	private void buildWorkers(int l_workers) {
-
-		for (int i = 0; i < l_workers; i++)
-			this.workers.add(new Worker("work" + (i + 1)));
-	}
-
-	public Set<DatumCont> getCategories() {
+	public Set<DatumCont> getObjects() {
 
 		return objects;
 	}
@@ -98,8 +117,7 @@ public class SyntheticData {
 		return workers;
 	}
 
-	public HashMap<CategoryWorker, Double> getLabels() {
-
+	public Set<AssignedLabel> getLabels() {
 		return labels;
 	}
 }
