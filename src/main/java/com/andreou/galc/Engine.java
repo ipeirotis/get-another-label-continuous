@@ -33,8 +33,8 @@ public class Engine {
 		data.setWorkerParameters(worker_mu_down, worker_mu_up, worker_sigma_down, worker_sigma_up, worker_rho_down,
 				worker_rho_up);
 
-		int data_points = 500;
-		int workers = 5;
+		int data_points = 5000;
+		int workers = 50;
 		data.build(data_points, workers);
 		System.out.println("Data points: " + data_points);
 		System.out.println("Workers: " + workers);
@@ -183,7 +183,9 @@ public class Engine {
 			for (AssignedLabel al : d.getAssignedLabels()) {
 				String wid = al.getWorker();
 				Worker w = this.workers_index.get(wid);
-				zeta +=  Math.sqrt( Math.pow(w.getBeta(), 2) - w.getBeta()) * w.getZeta(al.getLabel());
+				Double b = w.getBeta();
+				Double z = w.getZeta(al.getLabel());
+				zeta +=  Math.sqrt(b*b - b) * z;
 				betasum += w.getBeta();
 			}
 

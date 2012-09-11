@@ -81,8 +81,7 @@ public class Worker implements Comparable<Worker> {
 	public Double getBeta() {
 
 		// To avoid overflows
-		if (this.est_rho>0.99) return 50.0;
-		
+		if (Math.abs(this.est_rho)>0.999) return 500.0;
 		
 		return 1 / (1 - Math.pow(this.est_rho, 2));
 	}
@@ -177,8 +176,8 @@ public class Worker implements Comparable<Worker> {
 	 */
 	public void setEst_rho(Double est_rho) {
 	
-		if (est_rho>0.99) this.est_rho = 0.99;
-		if (est_rho<-0.99) this.est_rho = -0.99;
+		if (est_rho>0.999) this.est_rho = 0.999;
+		if (est_rho<-0.999) this.est_rho = -0.999;
 		
 		this.est_rho = est_rho;
 	}
