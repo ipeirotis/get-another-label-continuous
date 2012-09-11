@@ -212,24 +212,10 @@ public class Engine {
 					d.getZeta();
 					
 				}
-				
-				
-				Double zeta = 0.0;
-				Double betasum = 0.0;
-				for (AssignedLabel al : d.getAssignedLabels() ) {
-					String wid = al.getWorker();
-					Worker w = this.workers_index.get(wid);
-					zeta += w.getBeta() * Math.sqrt(1 - 1/w.getBeta()) * w.getZeta(al.getLabel());
-					betasum += w.getBeta();
-				}
-				
-				d.setZeta(zeta/betasum);
-			}
-			
-			
 		}
+	}
 	
-	
+	/*
 	private void loadLebels() {
 
 		int i = this.objects.size() * this.workers.size();
@@ -242,7 +228,7 @@ public class Engine {
 			}
 
 	}
-
+*/
 	public Set<DatumCont> getObjects() {
 
 		return objects;
