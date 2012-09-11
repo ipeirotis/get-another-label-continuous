@@ -89,6 +89,10 @@ public class Worker implements Comparable<Worker> {
 
 	public Double getBeta() {
 
+		// To avoid overflows
+		if (this.est_rho>0.99) return 50.0;
+		
+		
 		return 1 / (1 - Math.pow(this.est_rho, 2));
 	}
 

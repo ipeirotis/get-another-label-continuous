@@ -69,32 +69,6 @@ public class Engine {
 
 	}
 
-	/*
-	 * private void finalizeCategories() {
-	 * 
-	 * Double zeta = 0.0;
-	 * Double mean_num = 0.0;
-	 * Double std_num = 0.0;
-	 * Double denum = 0.0;
-	 * AssignedLabel aux;
-	 * for (DatumCont c : this.objects) {
-	 * for (Worker w : this.workers) {
-	 * aux = new AssignedLabel(c, w);
-	 * zeta = zetas.get(aux);
-	 * mean_num = mean_num + w.getBeta() * Math.sqrt(1 - 1 / w.getBeta()) * c.getMean();
-	 * std_num = std_num + w.getBeta() * Math.sqrt(1 - 1 / w.getBeta()) * c.getStd();
-	 * denum = denum + w.getBeta();
-	 * }
-	 * if (denum != 0) {
-	 * c.setMean(mean_num / denum);
-	 * c.setStd(std_num / denum);
-	 * c.setValue((std_num * zeta + mean_num) / denum);
-	 * } else {// it should Never happen
-	 * }
-	 * mean_num = std_num = denum = 0.0;
-	 * }
-	 * }
-	 */
 	private void initWorkers() {
 
 		Generator rhoGenerator = new Generator(Generator.Distribution.UNIFORM);
@@ -127,7 +101,7 @@ public class Engine {
 			for (AssignedLabel al : d.getAssignedLabels()) {
 				String wid = al.getWorker();
 				Worker w = this.workers_index.get(wid);
-				zeta += w.getBeta() * Math.sqrt(1 - 1 / w.getBeta()) * w.getZeta(al.getLabel());
+				zeta +=  Math.sqrt( Math.pow(w.getBeta(), 2) - w.getBeta()) * w.getZeta(al.getLabel());
 				betasum += w.getBeta();
 			}
 
@@ -170,20 +144,6 @@ public class Engine {
 		return diff;
 	}
 
-	/*
-	 * private void loadLebels() {
-	 * 
-	 * int i = this.objects.size() * this.workers.size();
-	 * for (DatumCont c : this.objects)
-	 * for (Worker w : this.workers) {
-	 * labels.put(new AssignedLabel(c, w), new Double(i--));
-	 * System.out.printf("(%s,%s): %s", c.getName(), w.getName(), i + 1);
-	 * String nl = (i % workers.size() == 0) ? "%n" : "\t\t";
-	 * System.out.printf(nl);
-	 * }
-	 * 
-	 * }
-	 */
 	public Set<DatumCont> getObjects() {
 
 		return objects;
@@ -192,101 +152,6 @@ public class Engine {
 	public void setObjects(Set<DatumCont> objects) {
 
 		this.objects = objects;
-	}
-
-}
-
-class WorkerCategories {
-
-	private Worker					w;
-	private Set<DatumCont>	c;
-
-	public WorkerCategories(Worker w, Set<DatumCont> c) {
-
-		if (!(w.equals(null) && c.equals(null))) {
-			this.w = w;
-			this.c = c;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((c == null) ? 0 : c.hashCode());
-		result = prime * result + ((w == null) ? 0 : w.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		WorkerCategories other = (WorkerCategories) obj;
-		if (c == null) {
-			if (other.c != null)
-				return false;
-		} else if (!c.equals(other.c))
-			return false;
-		if (w == null) {
-			if (other.w != null)
-				return false;
-		} else if (!w.equals(other.w))
-			return false;
-		return true;
-	}
-}
-
-class CategorizedWorkers {
-
-	private DatumCont		c;
-	private Set<Worker>	w;
-
-	public CategorizedWorkers(DatumCont c, Set<Worker> w) {
-
-		if (!(w.equals(null) && c.equals(null))) {
-			this.c = c;
-			this.w = w;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((c == null) ? 0 : c.hashCode());
-		result = prime * result + ((w == null) ? 0 : w.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CategorizedWorkers other = (CategorizedWorkers) obj;
-		if (c == null) {
-			if (other.c != null)
-				return false;
-		} else if (!c.equals(other.c))
-			return false;
-		if (w == null) {
-			if (other.w != null)
-				return false;
-		} else if (!w.equals(other.w))
-			return false;
-		return true;
 	}
 
 }
