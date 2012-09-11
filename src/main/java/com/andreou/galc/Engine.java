@@ -33,7 +33,7 @@ public class Engine {
 		data.setWorkerParameters(worker_mu_down, worker_mu_up, worker_sigma_down, worker_sigma_up, worker_rho_down,
 				worker_rho_up);
 
-		int data_points = 500;
+		int data_points = 1000;
 		int workers = 10;
 		data.build(data_points, workers);
 
@@ -66,6 +66,32 @@ public class Engine {
 			if (d1+d2<epsilon) break;
 			if (Double.isNaN(d1+d2)) System.err.println("ERROR: Check for division by 0");
 		}
+		
+		// Estimate mu and sigma of distribution
+		Double nominator_mu = 0.0;
+		Double nominator_sigma = 0.0;
+		Double denominator = 0.0;
+		for (Worker w : this.workers) {
+			Double b = w.getBeta();
+			Double coef = Math.sqrt(b*b-b);
+			Double m = w.getEst_mu();
+			Double s = w.getEst_sigma();
+			nominator_mu += coef * m;
+			nominator_sigma += coef * s;
+			denominator += b;
+		}
+		Double est_mu =  nominator_mu/denominator;
+		Double est_sigma =  nominator_sigma/denominator;
+		System.out.println("True mu = " + data_mu);
+		System.out.println("Estimated mu = " +est_mu);
+		System.out.println("True sigma = " + data_sigma);
+		System.out.println("Estimated sigma = " +est_sigma);
+		
+		// Give report for objects
+		
+		
+		
+		// Give report for workers
 
 	}
 
@@ -79,7 +105,7 @@ public class Engine {
 
 		for (Worker w : this.workers) {
 			Double rho_init = rhoGenerator.nextData();
-			w.setRho(rho_init);
+			w.setEst_rho(rho_init);
 
 			w.computeZetaValues();
 		}
@@ -119,14 +145,16 @@ public class Engine {
 	private double estimateWorkerRho() {
 
 		// See equation 10
-		Double sum_prod = 0.0;
-		Double sum_zi = 0.0;
-		Double sum_zij = 0.0;
+
 
 		double diff = 0.0;
 		for (Worker w : this.workers) {
 
-			double oldrho = w.getRho();
+			Double sum_prod = 0.0;
+			Double sum_zi = 0.0;
+			Double sum_zij = 0.0;
+			
+			double oldrho = w.getEst_rho();
 			for (AssignedLabel zl : w.getZetaValues()) {
 				String oid = zl.getDatum();
 				DatumCont d = objects_index.get(oid);
@@ -139,10 +167,11 @@ public class Engine {
 			}
 			double rho = sum_prod / Math.sqrt(sum_zi * sum_zij);
 
-			w.setRho(rho);
+			w.setEst_rho(rho);
+	
 			System.out.println(w.toString());
 
-			diff += Math.abs(w.getRho() - oldrho);
+			diff += Math.abs(w.getEst_rho() - oldrho);
 		}
 		return diff;
 	}

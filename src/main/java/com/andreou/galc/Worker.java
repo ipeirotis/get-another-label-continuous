@@ -77,15 +77,6 @@ public class Worker implements Comparable<Worker> {
 		this.name = name;
 	}
 
-	public Double getRho() {
-
-		return this.est_rho;
-	}
-
-	public void setRho(Double rho) {
-
-		this.est_rho = rho;
-	}
 
 	public Double getBeta() {
 
@@ -169,6 +160,63 @@ public class Worker implements Comparable<Worker> {
 
 		return "Worker [name=" + name + ", est_rho=" + est_rho + ", true_rho=" + true_rho + ", est_mu=" + est_mu
 				+ ", true_mu=" + true_mu + ", est_sigma=" + est_sigma + ", true_sigma=" + true_sigma + "]";
+	}
+
+	
+	/**
+	 * @return the est_rho
+	 */
+	public Double getEst_rho() {
+	
+		return est_rho;
+	}
+
+	
+	/**
+	 * @param est_rho the est_rho to set
+	 */
+	public void setEst_rho(Double est_rho) {
+	
+		if (est_rho>0.99) this.est_rho = 0.99;
+		if (est_rho<-0.99) this.est_rho = -0.99;
+		
+		this.est_rho = est_rho;
+	}
+
+	
+	/**
+	 * @return the est_mu
+	 */
+	public Double getEst_mu() {
+	
+		return est_mu;
+	}
+
+	
+	/**
+	 * @param est_mu the est_mu to set
+	 */
+	public void setEst_mu(Double est_mu) {
+	
+		this.est_mu = est_mu;
+	}
+
+	
+	/**
+	 * @return the est_sigma
+	 */
+	public Double getEst_sigma() {
+	
+		return est_sigma;
+	}
+
+	
+	/**
+	 * @param est_sigma the est_sigma to set
+	 */
+	public void setEst_sigma(Double est_sigma) {
+	
+		this.est_sigma = est_sigma;
 	}
 
 }

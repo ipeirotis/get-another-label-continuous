@@ -128,4 +128,14 @@ public class DatumCont implements Comparable<DatumCont> {
 		return this.getName().compareTo(o.getName());
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+
+		return "DatumCont [name=" + name + ", est_value=" + est_value + ", est_zeta=" + est_zeta + ", trueValue="
+				+ trueValue + "]";
+	}
+
 }
