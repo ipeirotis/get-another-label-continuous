@@ -28,13 +28,13 @@ public class Engine {
 		Double worker_mu_up = 10.0;
 		Double worker_sigma_down = 0.0;
 		Double worker_sigma_up = 1.0;
-		Double worker_rho_down = 0.5;
+		Double worker_rho_down = 0.0;
 		Double worker_rho_up = 1.0;
 		data.setWorkerParameters(worker_mu_down, worker_mu_up, worker_sigma_down, worker_sigma_up, worker_rho_down,
 				worker_rho_up);
 
-		int data_points = 50;
-		int workers = 5;
+		int data_points = 500;
+		int workers = 10;
 		data.build(data_points, workers);
 
 		this.objects = data.getObjects();
