@@ -11,10 +11,6 @@ public class Generator {
 	public static int		JAVARANDOM				= 1;
 	public static int		JAVARANDOM_minus	= -1;
 
-	private Double			mu;
-	private Double			sigma;
-	private Double			x;
-
 	private RandomData	randomData				= new RandomDataImpl();
 
 	public Generator() {

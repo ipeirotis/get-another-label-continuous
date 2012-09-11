@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class Engine {
 
-	private Set<Category>										categories	= new HashSet<Category>();
+	private Set<DatumCont>										categories	= new HashSet<DatumCont>();
 	private Set<Worker>											workers			= new HashSet<Worker>();
 	private HashMap<CategoryWorker, Double>	labels			= new HashMap<CategoryWorker, Double>();
 	private HashMap<CategoryWorker, Double>	zetas				= new HashMap<CategoryWorker, Double>();
@@ -64,7 +64,7 @@ public class Engine {
 		Double std_num = 0.0;
 		Double denum = 0.0;
 		CategoryWorker aux;
-		for (Category c : this.categories) {
+		for (DatumCont c : this.categories) {
 			for (Worker w : this.workers) {
 				aux = new CategoryWorker(c, w);
 				zeta = zetas.get(aux);
@@ -91,7 +91,7 @@ public class Engine {
 		Double q = 0.0;
 		Double diff = 0.0;
 		for (Worker w : this.workers) {
-			for (Category c : this.categories) {
+			for (DatumCont c : this.categories) {
 				CategoryWorker aux = new CategoryWorker(c, w);
 				zeta = zetas.get(aux);
 				p_num = p_num + c.getZeta() * zeta;
@@ -115,7 +115,7 @@ public class Engine {
 		CategoryWorker aux;
 		Double z = 0.0;
 		Double diff = 0.0;
-		for (Category c : this.categories) {
+		for (DatumCont c : this.categories) {
 			for (Worker w : this.workers) {
 				aux = new CategoryWorker(c, w);
 				zeta = zetas.get(aux);
@@ -138,7 +138,7 @@ public class Engine {
 
 		Double y = 0.0;
 		Double z = 0.0;
-		for (Category c : this.categories)
+		for (DatumCont c : this.categories)
 			for (Worker w : this.workers) {
 				CategoryWorker aux = new CategoryWorker(c, w);
 				y = labels.get(aux);
@@ -171,7 +171,7 @@ public class Engine {
 		Double y = 0.0;
 		Double mean = 0.0;
 		Double std = 0.0;
-		for (Category c : this.categories) {
+		for (DatumCont c : this.categories) {
 			// mean loop
 			for (Worker w : this.workers) {
 				CategoryWorker aux = new CategoryWorker(c, w);
@@ -196,7 +196,7 @@ public class Engine {
 	private void loadLebels() {
 
 		int i = this.categories.size() * this.workers.size();
-		for (Category c : this.categories)
+		for (DatumCont c : this.categories)
 			for (Worker w : this.workers) {
 				labels.put(new CategoryWorker(c, w), new Double(i--));
 				System.out.printf("(%s,%s): %s", c.getName(), w.getName(), i + 1);
@@ -208,9 +208,9 @@ public class Engine {
 
 	private void buildCategories() {
 
-		this.categories.add(new Category("cat1"));
-		this.categories.add(new Category("cat2"));
-		this.categories.add(new Category("cat3"));
+		this.categories.add(new DatumCont("cat1"));
+		this.categories.add(new DatumCont("cat2"));
+		this.categories.add(new DatumCont("cat3"));
 	}
 
 	private void buildWorkers() {
@@ -221,12 +221,12 @@ public class Engine {
 		this.workers.add(new Worker("work4"));
 	}
 
-	public Set<Category> getCategories() {
+	public Set<DatumCont> getCategories() {
 
 		return categories;
 	}
 
-	public void setCategories(Set<Category> categories) {
+	public void setCategories(Set<DatumCont> categories) {
 
 		this.categories = categories;
 	}
@@ -248,9 +248,9 @@ public class Engine {
 class CategoryWorker {
 
 	private Worker		w;
-	private Category	c;
+	private DatumCont	c;
 
-	public CategoryWorker(Category c, Worker w) {
+	public CategoryWorker(DatumCont c, Worker w) {
 
 		if (!(w.equals(null) || c.equals(null))) {
 			this.w = w;
@@ -268,12 +268,12 @@ class CategoryWorker {
 		this.w = w;
 	}
 
-	public Category getC() {
+	public DatumCont getC() {
 
 		return c;
 	}
 
-	public void setC(Category c) {
+	public void setC(DatumCont c) {
 
 		this.c = c;
 	}
@@ -316,9 +316,9 @@ class CategoryWorker {
 class WorkerCategories {
 
 	private Worker				w;
-	private Set<Category>	c;
+	private Set<DatumCont>	c;
 
-	public WorkerCategories(Worker w, Set<Category> c) {
+	public WorkerCategories(Worker w, Set<DatumCont> c) {
 
 		if (!(w.equals(null) && c.equals(null))) {
 			this.w = w;
@@ -362,10 +362,10 @@ class WorkerCategories {
 
 class CategorizedWorkers {
 
-	private Category		c;
+	private DatumCont		c;
 	private Set<Worker>	w;
 
-	public CategorizedWorkers(Category c, Set<Worker> w) {
+	public CategorizedWorkers(DatumCont c, Set<Worker> w) {
 
 		if (!(w.equals(null) && c.equals(null))) {
 			this.c = c;

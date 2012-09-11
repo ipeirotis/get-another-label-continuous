@@ -2,7 +2,7 @@ package com.andreou.galc;
 
 import java.util.Set;
 
-public class Category {
+public class DatumCont {
 
 	private String			name;
 	private Double			value;
@@ -16,7 +16,7 @@ public class Category {
 	// Data generation characteristics
 	private Double			trueValue;
 
-	public Category(String name) {
+	public DatumCont(String name) {
 
 		this.name = name;
 
@@ -128,9 +128,9 @@ public class Category {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Category))
+		if (!(obj instanceof DatumCont))
 			return false;
-		Category other = (Category) obj;
+		DatumCont other = (DatumCont) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;
