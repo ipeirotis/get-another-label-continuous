@@ -2,87 +2,103 @@ package com.andreou.galc;
 
 import java.util.Set;
 
-
 public class Category {
-	
-	private String name;
-	private Double value;
-	private Double label;
 
-	private Double mean	= 0.0;
-	private Double std	= 0.0;
-	private Double zeta	= 0.0;
-	private Set<Worker> workers;
-	
-	//Data generation characteristics
-	private Double	trueValue;
+	private String			name;
+	private Double			value;
+	private Double			label;
 
+	private Double			mean	= 0.0;
+	private Double			std		= 0.0;
+	private Double			zeta	= 0.0;
+	private Set<Worker>	workers;
 
-	public Category(String name){
+	// Data generation characteristics
+	private Double			trueValue;
+
+	public Category(String name) {
+
 		this.name = name;
-		
+
 	}
 
 	public String getName() {
+
 		return name;
 	}
 
 	public void setName(String name) {
+
 		this.name = name;
 	}
 
 	public Double getValue() {
+
 		return value;
 	}
 
 	public void setValue(Double value) {
+
 		this.value = value;
 	}
-	
+
 	public Double getLabel() {
+
 		return label;
 	}
+
 	public void setLabel(Double label) {
+
 		this.label = label;
 	}
 
 	public Double getMean() {
+
 		return mean;
 	}
 
 	public void setMean(Double mean) {
+
 		this.mean = mean;
 	}
 
 	public Double getStd() {
+
 		return std;
 	}
 
 	public void setStd(Double std) {
+
 		this.std = std;
 	}
 
 	public Double getZeta() {
+
 		return zeta;
 	}
 
 	public void setZeta(Double zeta) {
+
 		this.zeta = zeta;
 	}
-	
+
 	public Set<Worker> getWorkers() {
+
 		return workers;
 	}
 
 	public void setWorkers(Set<Worker> workers) {
+
 		this.workers = workers;
 	}
-	
+
 	public Double getTrueValue() {
+
 		return trueValue;
 	}
 
 	public void setTrueValue(Double trueValue) {
+
 		this.trueValue = trueValue;
 	}
 
@@ -93,6 +109,7 @@ public class Category {
 	 */
 	@Override
 	public int hashCode() {
+
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -106,6 +123,7 @@ public class Category {
 	 */
 	@Override
 	public boolean equals(Object obj) {
+
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -120,5 +138,5 @@ public class Category {
 			return false;
 		return true;
 	}
-		
+
 }
