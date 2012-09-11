@@ -26,9 +26,9 @@ public class Generator {
 	
 	double up=1; 
 	double down=0;
-	public void setUniformParameters(Double down, Double up) {
-		this.up=down;
-		this.down=down;
+	public void setUniformParameters(Double d, Double u) {
+		this.up=u;
+		this.down=d;
 	}
 
 	public Double nextData() {

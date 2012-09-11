@@ -45,7 +45,7 @@ public class SyntheticData {
 		sigmaGenerator.setUniformParameters(0.0, 10.0);
 		
 		Generator rhoGenerator =  new Generator(Generator.Distribution.UNIFORM);
-		rhoGenerator.setUniformParameters(-1.0, 10.0);
+		rhoGenerator.setUniformParameters(-1.0, 1.0);
 		
 		for (Worker w : this.workers) {
 			w.setMu(muGenerator.nextData());
