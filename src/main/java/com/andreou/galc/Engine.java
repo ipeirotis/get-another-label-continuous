@@ -55,7 +55,7 @@ public class Engine {
 
 		// Run until convergence.
 		int round = 1;
-		double epsilon = 0.0001;
+		double epsilon = 0.01;
 		while (true) {
 			System.out.println("Round:" + round);
 			double d1 = estimateObjectZetas();
@@ -75,7 +75,7 @@ public class Engine {
 
 		// We do not assign the full range from -1 to 1, because
 		// in that case we will not converge into a reasonable equilibrium
-		rhoGenerator.setUniformParameters(0.5, 0.9);
+		rhoGenerator.setUniformParameters(0.0, 0.9);
 
 		for (Worker w : this.workers) {
 			Double rho_init = rhoGenerator.nextData();
@@ -93,9 +93,7 @@ public class Engine {
 		double diff = 0.0;
 		for (DatumCont d : this.objects) {
 			Double oldzeta = d.getZeta();
-			if (oldzeta == null)
-				oldzeta = 0.0;
-
+			
 			Double zeta = 0.0;
 			Double betasum = 0.0;
 			for (AssignedLabel al : d.getAssignedLabels()) {
@@ -106,7 +104,12 @@ public class Engine {
 			}
 
 			d.setZeta(zeta / betasum);
-
+			
+			if (oldzeta == null) {
+				diff += 1;
+				continue;
+			}
+			
 			diff += Math.abs(d.getZeta() - oldzeta);
 		}
 		return diff;
