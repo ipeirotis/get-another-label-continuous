@@ -1,6 +1,6 @@
 package com.andreou.galc;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -67,19 +67,19 @@ public class Utils {
 
 	}
 
-	public void printLabels(Set<DatumCont> categories, Set<Worker> workers, HashMap<CategoryWorker, Double> m) {
+	public void printLabels(Set<DatumCont> categories, Set<Worker> workers, Map<CategoryWorker, Double> m) {
 
 		System.out.print("Labels ");
 		printMap(categories, workers, m);
 	}
 
-	public void printTrasposedLabels(Set<DatumCont> categories, Set<Worker> workers, HashMap<CategoryWorker, Double> m) {
+	public void printTrasposedLabels(Set<DatumCont> categories, Set<Worker> workers, Map<CategoryWorker, Double> m) {
 
 		System.out.print("Labels ");
 		printTrasposedMap(categories, workers, m);
 	}
 
-	public void printMap(Set<DatumCont> categories, Set<Worker> workers, HashMap<CategoryWorker, Double> m) {
+	public void printMap(Set<DatumCont> categories, Set<Worker> workers, Map<CategoryWorker, Double> m) {
 
 		System.out.println("Map");
 		// System.out.printf("%s: (%s,%s)%n", key, c.getName(),w.getName());
@@ -96,7 +96,7 @@ public class Utils {
 
 	}
 
-	public void printTrasposedMap(Set<DatumCont> categories, Set<Worker> workers, HashMap<CategoryWorker, Double> m) {
+	public void printTrasposedMap(Set<DatumCont> categories, Set<Worker> workers, Map<CategoryWorker, Double> m) {
 
 		System.out.println("--Transposed map--");
 		// System.out.printf("%s: (%s,%s)%n", key, c.getName(),w.getName());

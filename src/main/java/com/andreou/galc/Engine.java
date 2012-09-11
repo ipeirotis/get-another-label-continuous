@@ -1,15 +1,16 @@
 package com.andreou.galc;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Engine {
 
-	private Set<DatumCont>										categories	= new HashSet<DatumCont>();
-	private Set<Worker>											workers			= new HashSet<Worker>();
-	private HashMap<CategoryWorker, Double>	labels			= new HashMap<CategoryWorker, Double>();
-	private HashMap<CategoryWorker, Double>	zetas				= new HashMap<CategoryWorker, Double>();
+	private Set<DatumCont>										categories	= new TreeSet<DatumCont>();
+	private Set<Worker>											workers			= new TreeSet<Worker>();
+	private Map<CategoryWorker, Double>	labels			= new TreeMap<CategoryWorker, Double>();
+	private Map<CategoryWorker, Double>	zetas				= new TreeMap<CategoryWorker, Double>();
 
 	// private Set<Category> current_categories = new HashSet<Category>();
 	// private Set<Worker> current_workers = new HashSet<Worker>();

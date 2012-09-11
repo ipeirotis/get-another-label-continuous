@@ -1,62 +1,48 @@
 package com.andreou.galc;
 
-import java.util.Random;
-
 import org.apache.commons.math3.random.RandomData;
 import org.apache.commons.math3.random.RandomDataImpl;
 
 public class Generator {
 
-	public static int		GAUSSIAN					= 0;
-	public static int		JAVARANDOM				= 1;
-	public static int		JAVARANDOM_minus	= -1;
+	public enum Distribution { 
+		GAUSSIAN, UNIFORM;
+	}
+	
+	private Distribution dist;
+	private RandomData	randomData;
 
-	private RandomData	randomData				= new RandomDataImpl();
-
-	public Generator() {
-
+	public Generator(Distribution d) {
+		this.dist = d;
+		this.randomData				= new RandomDataImpl();
+	}
+	
+	double mu=0; 
+	double sigma=1;
+	public void setGaussianParameters(Double mu, Double sigma) {
+		this.mu=mu;
+		this.sigma=sigma;
+	}
+	
+	double up=1; 
+	double down=0;
+	public void setUniformParameters(Double down, Double up) {
+		this.up=down;
+		this.down=down;
 	}
 
-	public Double nextData(Double mu, Double sigma, int dist) {
+	public Double nextData() {
 
-		Double out = 0.0;
 		switch (dist) {
-			case 0:
-				out = GaussianDistr(mu, sigma);
-				break;
-			case -1:
-				out = RandDistr();
-				break;
-			case 1:
-				out = Random();
-				break;
+			case GAUSSIAN:
+				return this.randomData.nextGaussian(mu, sigma);
+			case UNIFORM:
+				return this.randomData.nextUniform(down, up);
 			default:
-				out = GaussianDistr(sigma, mu);
-				break;
+				return null;
 		}
 
-		return out;
 	}
 
-	private Double GaussianDistr(Double mu, Double sigma) {
-
-		Double out = 0.0;
-		out = this.randomData.nextGaussian(mu, sigma);
-		return out;
-	}
-
-	private Double RandDistr() {
-
-		Random rn = new Random();
-		return 2 * rn.nextDouble() - 1;
-
-	}
-
-	private Double Random() {
-
-		Random rn = new Random();
-		return rn.nextDouble();
-
-	}
 
 }

@@ -6,11 +6,10 @@ import java.util.Set;
 
 public class SyntheticData {
 
-	private Set<DatumCont>										categories	= new HashSet<DatumCont>();
+	private Set<DatumCont>										objects	= new HashSet<DatumCont>();
 	private Set<Worker>											workers			= new HashSet<Worker>();
 	private HashMap<CategoryWorker, Double>	labels			= new HashMap<CategoryWorker, Double>();
 
-	private Generator												gen					= new Generator();
 	private Double													mu					= new Double(0.0);
 	private Double													sigma				= new Double(1.0);
 
@@ -30,30 +29,49 @@ public class SyntheticData {
 	public void build() {
 
 		// Generate Object Real Values x_i
-		for (DatumCont c : this.categories) {
-			c.setTrueValue(gen.nextData(mu, sigma, Generator.GAUSSIAN));
-			System.out.println("(name,trueValue):(" + c.getName() + ", " + c.getTrueValue() + ")");
+		Generator datumGenerator =  new Generator(Generator.Distribution.GAUSSIAN);
+		datumGenerator.setGaussianParameters(this.mu, this.sigma);
+		
+		for (DatumCont c : this.objects) {
+			c.setTrueValue(datumGenerator.nextData());
+			System.out.println("(Object, value): " + c.getName() + ", " + c.getTrueValue());
 		}
 
-		// Generate Observer Characteristics
+		// Generate Worker Characteristics
+		Generator muGenerator =  new Generator(Generator.Distribution.UNIFORM);
+		muGenerator.setUniformParameters(-10.0, 10.0);
+		
+		Generator sigmaGenerator =  new Generator(Generator.Distribution.UNIFORM);
+		sigmaGenerator.setUniformParameters(0.0, 10.0);
+		
+		Generator rhoGenerator =  new Generator(Generator.Distribution.UNIFORM);
+		rhoGenerator.setUniformParameters(-1.0, 10.0);
+		
 		for (Worker w : this.workers) {
-			w.setMu(gen.nextData(null, null, Generator.JAVARANDOM));
-			w.setSigma(gen.nextData(null, null, Generator.JAVARANDOM));
-			w.setRho(gen.nextData(null, null, Generator.JAVARANDOM_minus));
-			System.out.println("(name,mu,sigma,Rho):" + w.getName() + ", " + w.getMu() + ", " + w.getSigma() + ", "
-					+ w.getRho() + ")");
+			w.setMu(muGenerator.nextData());
+			w.setSigma(sigmaGenerator.nextData());
+			w.setRho(rhoGenerator.nextData());
+			System.out.println("(Worker, mu, sigma, rho): " + w.getName() + ", " + w.getMu() + ", " + w.getSigma() + ", "
+					+ w.getRho());
 		}
 
 		// Generate Observation Values y_ij
-		Double mu, sigma;
-		for (DatumCont c : this.categories)
+
+		for (DatumCont c : this.objects)
 			for (Worker w : this.workers) {
-				CategoryWorker aux = new CategoryWorker(c, w);
+				CategoryWorker label = new CategoryWorker(c, w);
 				// Using Bivariate-Normal Distribution (ref: http://www.athenasc.com/Bivariate-Normal.pdf)
-				mu = w.getMu() + w.getRho() * (w.getSigma() / this.sigma) * (c.getTrueValue() - this.mu);
-				sigma = Math.sqrt((1 - w.getRho() * w.getRho())) * w.getSigma();
-				labels.put(aux, gen.nextData(mu, sigma, Generator.GAUSSIAN));
-				System.out.println("(" + c.getName() + "," + w.getName() + "):" + labels.get(aux) + " (mu,sigma):(" + mu + ", "
+				
+				Double label_mu = w.getMu() + w.getRho() * (w.getSigma() / this.sigma) * (c.getTrueValue() - this.mu);
+				
+				Double label_sigma = Math.sqrt((1 - w.getRho() * w.getRho())) * w.getSigma();
+				
+				Generator labelGenerator =  new Generator(Generator.Distribution.GAUSSIAN);
+				labelGenerator.setGaussianParameters(label_mu, label_sigma);
+				
+				labels.put(label, labelGenerator.nextData());
+				
+				System.out.println("(" + c.getName() + "," + w.getName() + "):" + labels.get(label) + " (mu,sigma):(" + mu + ", "
 						+ sigma + ")");
 			}
 	}
@@ -61,7 +79,7 @@ public class SyntheticData {
 	private void buildCategories(int k_objects) {
 
 		for (int i = 0; i < k_objects; i++)
-			this.categories.add(new DatumCont("obj" + (i + 1)));
+			this.objects.add(new DatumCont("obj" + (i + 1)));
 	}
 
 	private void buildWorkers(int l_workers) {
@@ -72,7 +90,7 @@ public class SyntheticData {
 
 	public Set<DatumCont> getCategories() {
 
-		return categories;
+		return objects;
 	}
 
 	public Set<Worker> getWorkers() {
