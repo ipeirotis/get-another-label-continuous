@@ -2,8 +2,9 @@ package com.andreou.galc;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
-public class Worker {
+public class Worker implements Comparable<Worker>{
 
 	private String				name;
 	
@@ -21,6 +22,12 @@ public class Worker {
 	private Double				true_sigma;
 	private Double				true_rho;
 
+	
+	public Worker(String name) {
+
+		this.name = name;
+		this.labels = new TreeSet<AssignedLabel>();
+	}
 	
 	public void addAssignedLabel(AssignedLabel al) {
 
@@ -59,10 +66,7 @@ public class Worker {
 		return (label - this.est_mu) / this.est_sigma;
 	}
 	
-	public Worker(String name) {
 
-		this.name = name;
-	}
 
 	public String getName() {
 
@@ -145,6 +149,13 @@ public class Worker {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+
+	@Override
+	public int compareTo(Worker o) {
+
+		return this.getName().compareTo(o.getName());
 	}
 
 }

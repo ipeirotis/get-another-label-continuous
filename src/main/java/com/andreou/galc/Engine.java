@@ -166,7 +166,10 @@ public class Engine {
 		for (Worker w : this.workers) {
 			Double rho_init = rhoGenerator.nextData();
 			w.setRho(rho_init);
+			
+			w.computeZetaValues();
 		}
+		
 	}
 
 	private double estimateObjectZetas() {

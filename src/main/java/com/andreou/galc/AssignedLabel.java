@@ -1,7 +1,7 @@
 package com.andreou.galc;
 
 
-public class AssignedLabel {
+public class AssignedLabel implements Comparable<AssignedLabel> {
 
 		private String worker_id;
 		private String object_id;
@@ -110,6 +110,16 @@ public class AssignedLabel {
 		public void setLabel(Double label) {
 		
 			this.label = label;
+		}
+
+		@Override
+		public int compareTo(AssignedLabel o) {
+
+			int c1 = this.getDatum().compareTo(o.getDatum());
+			int c2 = this.getWorker().compareTo(o.getWorker());
+			
+			return (c1==0)? c2 : c1;
+			
 		}
 
 

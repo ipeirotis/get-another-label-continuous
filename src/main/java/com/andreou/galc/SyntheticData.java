@@ -61,7 +61,7 @@ public class SyntheticData {
 			
 				Double datum_z = (d.getTrueValue() - this.data_mu) / this.data_sigma;
 				Double label_mu = w.getTrueMu() + w.getTrueRho() * w.getTrueSigma() * datum_z;
-				Double label_sigma = Math.sqrt( 1 - Math.pow( w.getRho(), 2) ) * w.getTrueSigma();
+				Double label_sigma = Math.sqrt( 1 - Math.pow( w.getTrueRho(), 2) ) * w.getTrueSigma();
 				
 				Generator labelGenerator =  new Generator(Generator.Distribution.GAUSSIAN);
 				labelGenerator.setGaussianParameters(label_mu, label_sigma);
@@ -97,7 +97,7 @@ public class SyntheticData {
 			Worker w = new Worker("Worker" + (i + 1));
 			w.setTrueMu(muGenerator.nextData());
 			w.setTrueSigma(sigmaGenerator.nextData());
-			w.setRho(rhoGenerator.nextData());
+			w.setTrueRho(rhoGenerator.nextData());
 			System.out.println("(Worker, mu, sigma, rho): " + w.getName() + ", " + w.getTrueMu() + ", " + w.getTrueSigma() + ", "
 					+ w.getTrueRho());
 			this.workers.add(w);

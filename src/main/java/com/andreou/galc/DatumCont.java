@@ -1,8 +1,9 @@
 package com.andreou.galc;
 
 import java.util.Set;
+import java.util.TreeSet;
 
-public class DatumCont {
+public class DatumCont implements Comparable<DatumCont> {
 
 	private String			name;
 	private Double			value;
@@ -18,6 +19,7 @@ public class DatumCont {
 	public DatumCont(String name) {
 
 		this.name = name;
+		this.labels = new TreeSet<AssignedLabel>();
 
 	}
 	
@@ -142,6 +144,11 @@ public class DatumCont {
 	public void setLabels(Set<AssignedLabel> labels) {
 	
 		this.labels = labels;
+	}
+
+	@Override
+	public int compareTo(DatumCont o) {
+		return this.getName().compareTo(o.getName());
 	}
 
 }
