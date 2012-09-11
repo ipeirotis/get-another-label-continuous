@@ -13,6 +13,61 @@ public class DatumCont implements Comparable<DatumCont> {
 
 	// Data generation characteristics
 	private Double							trueValue;
+	private Double							trueZeta;
+
+	
+	/**
+	 * @return the est_value
+	 */
+	public Double getEst_value() {
+	
+		return est_value;
+	}
+
+	
+	/**
+	 * @param est_value the est_value to set
+	 */
+	public void setEst_value(Double est_value) {
+	
+		this.est_value = est_value;
+	}
+
+	
+	/**
+	 * @return the est_zeta
+	 */
+	public Double getEst_zeta() {
+	
+		return est_zeta;
+	}
+
+	
+	/**
+	 * @param est_zeta the est_zeta to set
+	 */
+	public void setEst_zeta(Double est_zeta) {
+	
+		this.est_zeta = est_zeta;
+	}
+
+	
+	/**
+	 * @return the trueZeta
+	 */
+	public Double getTrueZeta() {
+	
+		return trueZeta;
+	}
+
+	
+	/**
+	 * @param trueZeta the trueZeta to set
+	 */
+	public void setTrueZeta(Double trueZeta) {
+	
+		this.trueZeta = trueZeta;
+	}
 
 	public DatumCont(String name) {
 
@@ -36,26 +91,6 @@ public class DatumCont implements Comparable<DatumCont> {
 	public void setName(String name) {
 
 		this.name = name;
-	}
-
-	public Double getValue() {
-
-		return est_value;
-	}
-
-	public void setValue(Double value) {
-
-		this.est_value = value;
-	}
-
-	public Double getZeta() {
-
-		return est_zeta;
-	}
-
-	public void setZeta(Double zeta) {
-
-		this.est_zeta = zeta;
 	}
 
 	public Double getTrueValue() {
@@ -128,14 +163,5 @@ public class DatumCont implements Comparable<DatumCont> {
 		return this.getName().compareTo(o.getName());
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-
-		return "DatumCont [name=" + name + ", est_value=" + est_value + ", est_zeta=" + est_zeta + ", trueValue="
-				+ trueValue + "]";
-	}
 
 }

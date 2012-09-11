@@ -24,24 +24,26 @@ public class Engine {
 		Double data_sigma = 1.0;
 		data.setDataParameters(data_mu, data_sigma);
 
-		Double worker_mu_down = -10.0;
-		Double worker_mu_up = 10.0;
-		Double worker_sigma_down = 0.0;
-		Double worker_sigma_up = 1.0;
-		Double worker_rho_down = 0.1;
-		Double worker_rho_up = 0.9;
+		Double worker_mu_down = -5.0;
+		Double worker_mu_up = 5.0;
+		Double worker_sigma_down = 0.5;
+		Double worker_sigma_up = 1.5;
+		Double worker_rho_down = 0.0;
+		Double worker_rho_up = 0.5;
 		data.setWorkerParameters(worker_mu_down, worker_mu_up, worker_sigma_down, worker_sigma_up, worker_rho_down,
 				worker_rho_up);
 
-		int data_points = 5000;
+		int data_points = 1000;
 		int workers = 50;
-		data.build(data_points, workers);
+		
 		System.out.println("Data points: " + data_points);
 		System.out.println("Workers: " + workers);
 		
 		System.out.println("Low rho: " + worker_rho_down);
 		System.out.println("High rho: " + worker_rho_up);
 
+		data.build(data_points, workers);
+		
 		this.objects = data.getObjects();
 		this.objects_index = new TreeMap<String, DatumCont>();
 		for (DatumCont d : this.objects) {
@@ -69,25 +71,71 @@ public class Engine {
 			double d2 = estimateWorkerRho();
 			//System.out.println("DiffWorkers:" + d2);
 			round++;
+			System.out.println("");
+			generateObjectReport(data_mu, data_sigma);
+			generateWorkerReport();
 			if (d1+d2<epsilon) break;
 			if (Double.isNaN(d1+d2)) System.err.println("ERROR: Check for division by 0");
 		}
 		System.out.println("Done!\n----");
 		
 		// Report about distributional estimates
+		generateDistributionReport(data_mu, data_sigma);
+		
+		// Give report for objects
+		generateObjectReport(data_mu, data_sigma);
+		
+		
+		// Give report for workers
+			generateWorkerReport();
+
+	}
+
+	/**
+	 * 
+	 */
+	private void generateWorkerReport() {
+
+		Double avgRhoError = 0.0;
+		Double relRhoError = 0.0;
+		for (Worker w : this.workers) {
+			double estRho = w.getEst_rho();
+			double realRho = w.getTrueRho();
+			double absDiff = Math.abs(realRho-estRho);
+			double relDiff = Math.abs(absDiff/realRho);
+			
+			avgRhoError += absDiff/this.objects.size();
+			relRhoError += relDiff/this.objects.size();
+		}
+		System.out.println("Average absolute estimation error for correlation values: "+avgRhoError);
+		System.out.println("Average relative estimation error for correlation values: "+relRhoError);
+	}
+
+	/**
+	 * @param data_mu
+	 * @param data_sigma
+	 */
+	private void generateDistributionReport(Double data_mu, Double data_sigma) {
+
 		Double est_mu = estimateDistributionMu();
 		Double est_sigma = estimateDistributionSigma();
 		System.out.println("True mu = " + data_mu);
 		System.out.println("Estimated mu = " +est_mu);
 		System.out.println("True sigma = " + data_sigma);
 		System.out.println("Estimated sigma = " +est_sigma);
-		
-		// Give report for objects
+	}
+
+	/**
+	 * @param data_mu
+	 * @param data_sigma
+	 */
+	private void generateObjectReport(Double data_mu, Double data_sigma) {
+
 		Double avgAbsError = 0.0;
 		Double avgRelError = 0.0;
 		for (DatumCont d : this.objects) {
-			double estZ = d.getZeta();
-			double realZ = (d.getTrueValue()-data_mu)/data_sigma;
+			double estZ = d.getEst_zeta();
+			double realZ = d.getTrueZeta();
 			double absDiff = Math.abs(realZ-estZ);
 			double relDiff = Math.abs(absDiff/realZ);
 			
@@ -96,24 +144,6 @@ public class Engine {
 		}
 		System.out.println("Average absolute estimation error for z-values: "+avgAbsError);
 		System.out.println("Average relative estimation error for z-values: "+avgRelError);
-		
-		
-		// Give report for workers
-	// Give report for objects
-			Double avgRhoError = 0.0;
-			Double relRhoError = 0.0;
-			for (Worker w : this.workers) {
-				double estRho = w.getEst_rho();
-				double realRho = w.getTrueRho();
-				double absDiff = Math.abs(realRho-estRho);
-				double relDiff = Math.abs(absDiff/realRho);
-				
-				avgRhoError += absDiff/this.objects.size();
-				relRhoError += relDiff/this.objects.size();
-			}
-			System.out.println("Average absolute estimation error for correlation values: "+avgRhoError);
-			System.out.println("Average relative estimation error for correlation values: "+relRhoError);
-
 	}
 
 	/**
@@ -176,7 +206,7 @@ public class Engine {
 
 		double diff = 0.0;
 		for (DatumCont d : this.objects) {
-			Double oldzeta = d.getZeta();
+			Double oldzeta = d.getEst_zeta();
 			
 			Double zeta = 0.0;
 			Double betasum = 0.0;
@@ -186,17 +216,18 @@ public class Engine {
 				Double b = w.getBeta();
 				Double z = w.getZeta(al.getLabel());
 				zeta +=  Math.sqrt(b*b - b) * z;
-				betasum += w.getBeta();
+				betasum += b;
 			}
-
-			d.setZeta(zeta / betasum);
+			
+			d.setEst_zeta(zeta / betasum);
+			this.objects_index.put(d.getName(), d);
 			
 			if (oldzeta == null) {
 				diff += 1;
 				continue;
 			}
 			
-			diff += Math.abs(d.getZeta() - oldzeta);
+			diff += Math.abs(d.getEst_zeta() - oldzeta);
 		}
 		return diff;
 
@@ -218,7 +249,7 @@ public class Engine {
 			for (AssignedLabel zl : w.getZetaValues()) {
 				String oid = zl.getDatum();
 				DatumCont d = objects_index.get(oid);
-				double z_i = d.getZeta();
+				double z_i = d.getEst_zeta();
 				double z_ij = zl.getLabel();
 
 				sum_prod += z_i * z_ij;
@@ -228,6 +259,7 @@ public class Engine {
 			double rho = sum_prod / Math.sqrt(sum_zi * sum_zij);
 
 			w.setEst_rho(rho);
+			this.workers_index.put(w.getName(), w);
 	
 			//System.out.println(w.toString());
 
