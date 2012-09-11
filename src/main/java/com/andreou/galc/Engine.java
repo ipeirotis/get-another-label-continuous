@@ -51,27 +51,12 @@ public class Engine {
 
 		
 		initWorkers();
-		estimateObjectZetas();
-		estimateWorkerRho();
+		
+		// Run until convergence.
+		while (estimateObjectZetas() >0 && estimateWorkerRho()>0);
+
 
 	}
-		/*
-		Double diffq, diffz;
-		for (int i = 0; i < 10; i++) {
-			diffz = recaclZeta();
-			diffq = recaclQuality();
-			refineWorkers();
-			if (i % 1 == 0) {
-				// utils.printMeans(categories);
-				// utils.printStds(categories);
-				System.out.println("\n___" + i + " th loop __");
-			}
-		}
-
-		finalizeCategories();
-		*/
-
-
 
 	/*
 	private void finalizeCategories() {
@@ -184,10 +169,12 @@ public class Engine {
 		}
 	}
 
-	private void estimateObjectZetas() {
+	private double estimateObjectZetas() {
   // See equation 9
+		
+		double diff = 0.0;
 		for (DatumCont d : this.objects) {
-			
+			Double oldzeta = d.getZeta();
 			Double zeta = 0.0;
 			Double betasum = 0.0;
 			for (AssignedLabel al : d.getAssignedLabels() ) {
@@ -198,21 +185,39 @@ public class Engine {
 			}
 			
 			d.setZeta(zeta/betasum);
+			
+			diff+= Math.abs(d.getZeta() - oldzeta);
 		}
-		
+		return diff;
 		
 	}
 
-	private void estimateWorkerRho() {
+	private double estimateWorkerRho() {
 	  // See equation 10
+		Double sum_prod = 0.0;
+		Double sum_zi = 0.0;
+		Double sum_zij = 0.0;
+		
+		double diff = 0.0;
 			for (Worker w : this.workers) {
-				for (AssignedLabel al : w.getZetaValues() ) {
-					String oid = al.getDatum(); //zij
+				
+				double oldrho = w.getRho();
+				for (AssignedLabel zl : w.getZetaValues() ) {
+					String oid = zl.getDatum();
 					DatumCont d = objects_index.get(oid);
-					d.getZeta();
+					double z_i = d.getZeta();
+					double z_ij = zl.getLabel();
 					
+					sum_prod += z_i * z_ij;
+					sum_zi += z_i * z_i;
+					sum_zij += z_ij * z_ij;
 				}
+				double rho = sum_prod / Math.sqrt(sum_zi * sum_zij);
+				w.setRho(rho);
+				
+				diff += Math.abs(w.getRho() - oldrho);
 		}
+		return diff;
 	}
 	
 	/*
