@@ -28,13 +28,13 @@ public class Engine {
 		Double worker_mu_up = 10.0;
 		Double worker_sigma_down = 0.0;
 		Double worker_sigma_up = 1.0;
-		Double worker_rho_down = 0.0;
+		Double worker_rho_down = -0.5;
 		Double worker_rho_up = 0.9;
 		data.setWorkerParameters(worker_mu_down, worker_mu_up, worker_sigma_down, worker_sigma_up, worker_rho_down,
 				worker_rho_up);
 
 		int data_points = 1000;
-		int workers = 10;
+		int workers = 20;
 		data.build(data_points, workers);
 
 		this.objects = data.getObjects();
@@ -169,7 +169,7 @@ public class Engine {
 
 			w.setEst_rho(rho);
 	
-			System.out.println(w.toString());
+			//System.out.println(w.toString());
 
 			diff += Math.abs(w.getEst_rho() - oldrho);
 		}
