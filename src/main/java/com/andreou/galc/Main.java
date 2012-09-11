@@ -7,9 +7,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		System.out.println("Start");
 		Engine eng = new Engine();
-		System.out.println("--");
 
 	}
 

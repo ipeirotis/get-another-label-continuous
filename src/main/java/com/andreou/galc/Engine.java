@@ -28,14 +28,19 @@ public class Engine {
 		Double worker_mu_up = 10.0;
 		Double worker_sigma_down = 0.0;
 		Double worker_sigma_up = 1.0;
-		Double worker_rho_down = -0.5;
+		Double worker_rho_down = 0.1;
 		Double worker_rho_up = 0.9;
 		data.setWorkerParameters(worker_mu_down, worker_mu_up, worker_sigma_down, worker_sigma_up, worker_rho_down,
 				worker_rho_up);
 
-		int data_points = 1000;
-		int workers = 20;
+		int data_points = 500;
+		int workers = 5;
 		data.build(data_points, workers);
+		System.out.println("Data points: " + data_points);
+		System.out.println("Workers: " + workers);
+		
+		System.out.println("Low rho: " + worker_rho_down);
+		System.out.println("High rho: " + worker_rho_up);
 
 		this.objects = data.getObjects();
 		this.objects_index = new TreeMap<String, DatumCont>();
@@ -55,44 +60,97 @@ public class Engine {
 
 		// Run until convergence.
 		int round = 1;
-		double epsilon = 0.01;
+		double epsilon = 0.0001;
+		System.out.print("----\nRound: ");
 		while (true) {
-			System.out.println("Round:" + round);
+			System.out.print(round+"... ");
 			double d1 = estimateObjectZetas();
-			System.out.println("DiffObjects:" + d1);
+			//System.out.println("DiffObjects:" + d1);
 			double d2 = estimateWorkerRho();
-			System.out.println("DiffWorkers:" + d2);
+			//System.out.println("DiffWorkers:" + d2);
 			round++;
 			if (d1+d2<epsilon) break;
 			if (Double.isNaN(d1+d2)) System.err.println("ERROR: Check for division by 0");
 		}
+		System.out.println("Done!\n----");
 		
-		// Estimate mu and sigma of distribution
-		Double nominator_mu = 0.0;
-		Double nominator_sigma = 0.0;
-		Double denominator = 0.0;
-		for (Worker w : this.workers) {
-			Double b = w.getBeta();
-			Double coef = Math.sqrt(b*b-b);
-			Double m = w.getEst_mu();
-			Double s = w.getEst_sigma();
-			nominator_mu += coef * m;
-			nominator_sigma += coef * s;
-			denominator += b;
-		}
-		Double est_mu =  nominator_mu/denominator;
-		Double est_sigma =  nominator_sigma/denominator;
+		// Report about distributional estimates
+		Double est_mu = estimateDistributionMu();
+		Double est_sigma = estimateDistributionSigma();
 		System.out.println("True mu = " + data_mu);
 		System.out.println("Estimated mu = " +est_mu);
 		System.out.println("True sigma = " + data_sigma);
 		System.out.println("Estimated sigma = " +est_sigma);
 		
 		// Give report for objects
-		
+		Double avgAbsError = 0.0;
+		Double avgRelError = 0.0;
+		for (DatumCont d : this.objects) {
+			double estZ = d.getZeta();
+			double realZ = (d.getTrueValue()-data_mu)/data_sigma;
+			double absDiff = Math.abs(realZ-estZ);
+			double relDiff = Math.abs(absDiff/realZ);
+			
+			avgAbsError += absDiff/this.objects.size();
+			avgRelError += relDiff/this.objects.size();
+		}
+		System.out.println("Average absolute estimation error for z-values: "+avgAbsError);
+		System.out.println("Average relative estimation error for z-values: "+avgRelError);
 		
 		
 		// Give report for workers
+	// Give report for objects
+			Double avgRhoError = 0.0;
+			Double relRhoError = 0.0;
+			for (Worker w : this.workers) {
+				double estRho = w.getEst_rho();
+				double realRho = w.getTrueRho();
+				double absDiff = Math.abs(realRho-estRho);
+				double relDiff = Math.abs(absDiff/realRho);
+				
+				avgRhoError += absDiff/this.objects.size();
+				relRhoError += relDiff/this.objects.size();
+			}
+			System.out.println("Average absolute estimation error for correlation values: "+avgRhoError);
+			System.out.println("Average relative estimation error for correlation values: "+relRhoError);
 
+	}
+
+	/**
+	 * @return
+	 */
+	private Double estimateDistributionSigma() {
+
+		Double nominator_sigma = 0.0;
+		Double denominator_sigma = 0.0;
+		for (Worker w : this.workers) {
+			Double b = w.getBeta();
+			Double coef = Math.sqrt(b*b-b);
+			Double s = w.getEst_sigma();
+			nominator_sigma += coef * s;
+			denominator_sigma += b;
+		}
+		Double est_sigma =  nominator_sigma/denominator_sigma;
+		return est_sigma;
+	}
+
+	/**
+	 * @return
+	 */
+	private Double estimateDistributionMu() {
+
+		// Estimate mu and sigma of distribution
+		Double nominator_mu = 0.0;
+		Double denominator_mu = 0.0;
+		for (Worker w : this.workers) {
+			Double b = w.getBeta();
+			Double coef = Math.sqrt(b*b-b);
+			Double m = w.getEst_mu();
+			nominator_mu += coef * m;
+			denominator_mu += b;
+		}
+		Double est_mu =  nominator_mu/denominator_mu;
+		return est_mu;
 	}
 
 	private void initWorkers() {

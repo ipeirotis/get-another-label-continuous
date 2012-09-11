@@ -52,7 +52,7 @@ public class Worker implements Comparable<Worker> {
 
 		this.est_mu = mu_worker / n;
 		this.est_sigma = Math.sqrt(1.0 / n * (mu_square - Math.pow(mu_worker, 2) / n));
-		System.out.println(this.toString());
+		//System.out.println(this.toString());
 
 		this.zeta = new HashSet<AssignedLabel>();
 		for (AssignedLabel al : labels) {

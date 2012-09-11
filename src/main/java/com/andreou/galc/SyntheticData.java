@@ -65,7 +65,7 @@ public class SyntheticData {
 				Generator labelGenerator = new Generator(Generator.Distribution.GAUSSIAN);
 				labelGenerator.setGaussianParameters(label_mu, label_sigma);
 				Double label = labelGenerator.nextData();
-				System.out.println("(" + d.getName() + "," + w.getName() + "):" + label);
+				//System.out.println("(" + d.getName() + "," + w.getName() + "):" + label);
 
 				AssignedLabel al = new AssignedLabel(w.getName(), d.getName(), label);
 				labels.add(al);
@@ -83,7 +83,6 @@ public class SyntheticData {
 			DatumCont d = new DatumCont("Object" + (i + 1));
 			Double value = datumGenerator.nextData();
 			d.setTrueValue(value);
-			System.out.println("(Object, value): " + d.getName() + ", " + d.getTrueValue());
 			this.objects.add(d);
 		}
 	}
@@ -96,8 +95,6 @@ public class SyntheticData {
 			w.setTrueMu(muGenerator.nextData());
 			w.setTrueSigma(sigmaGenerator.nextData());
 			w.setTrueRho(rhoGenerator.nextData());
-			System.out.println("(Worker, mu, sigma, rho): " + w.getName() + ", " + w.getTrueMu() + ", " + w.getTrueSigma()
-					+ ", " + w.getTrueRho());
 			this.workers.add(w);
 		}
 
