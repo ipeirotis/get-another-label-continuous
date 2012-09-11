@@ -7,7 +7,6 @@ public class Worker {
 	private String				name;
 	private Double				quality;
 	private Double				beta;
-	private Set<DatumCont>	categories;
 
 	// Data generation characteristics
 	private Double				mu;
@@ -47,16 +46,6 @@ public class Worker {
 	public void setBeta(Double beta) {
 
 		this.beta = beta;
-	}
-
-	public Set<DatumCont> getCategories() {
-
-		return categories;
-	}
-
-	public void setCategories(Set<DatumCont> categories) {
-
-		this.categories = categories;
 	}
 
 	public Double getMu() {

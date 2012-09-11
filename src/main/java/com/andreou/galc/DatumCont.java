@@ -11,7 +11,6 @@ public class DatumCont {
 	private Double			mean	= 0.0;
 	private Double			std		= 0.0;
 	private Double			zeta	= 0.0;
-	private Set<Worker>	workers;
 
 	// Data generation characteristics
 	private Double			trueValue;
@@ -80,16 +79,6 @@ public class DatumCont {
 	public void setZeta(Double zeta) {
 
 		this.zeta = zeta;
-	}
-
-	public Set<Worker> getWorkers() {
-
-		return workers;
-	}
-
-	public void setWorkers(Set<Worker> workers) {
-
-		this.workers = workers;
 	}
 
 	public Double getTrueValue() {
