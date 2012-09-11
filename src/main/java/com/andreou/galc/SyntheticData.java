@@ -21,6 +21,10 @@ public class SyntheticData {
 		buildWorkers(l_workers);
 		
 	}
+	public void initData(Double mu, Double sigma){
+		this.mu = mu;
+		this.sigma = sigma;
+	}
 	public void build(){
 
 		//Generate Object Real Values x_i

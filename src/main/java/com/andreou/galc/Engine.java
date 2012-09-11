@@ -21,6 +21,11 @@ public class Engine {
 	public Engine() {
 		
 		SyntheticData data = new SyntheticData(5, 4);
+
+		//True Values initialization initData(mu,sigma)
+		data.initData(0.0, 1.0); 
+		
+		
 		this.categories = data.getCategories();
 		this.workers = data.getWorkers();
 		data.build();
