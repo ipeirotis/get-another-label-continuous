@@ -13,9 +13,11 @@ public class Generator {
 	public static int JAVARANDOM = 1;
 	public static int JAVARANDOM_minus = -1;
 
-	Double mu;
-	Double sigma;
-	Double x;
+	private Double mu;
+	private Double sigma;
+	private Double x;
+
+	private RandomData randomData = new RandomDataImpl(); 
 
 	public Generator() {
 
@@ -41,8 +43,7 @@ public class Generator {
 	
 	private Double GaussianDistr(Double mu, Double sigma ){
 		Double out= 0.0;
-		RandomData randomData = new RandomDataImpl(); 
-		out = randomData.nextGaussian(mu, sigma);
+		out = this.randomData.nextGaussian(mu, sigma);
 		return out;
 	}
 	private Double RandDistr() {

@@ -12,8 +12,8 @@ public class SyntheticData {
 	private HashMap<CategoryWorker,Double> 	labels 				= new HashMap<CategoryWorker, Double>();
 
 	private Generator 						gen 				= new Generator();
-	private Double 							mu 					= new Double(3.0);
-	private Double 							sigma 				= new Double(0.2);
+	private Double 							mu 					= new Double(0.0);
+	private Double 							sigma 				= new Double(1.0);
 
 	
 	public SyntheticData(int k_objects, int l_workers){
