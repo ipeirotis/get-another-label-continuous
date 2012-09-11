@@ -1,6 +1,5 @@
 package com.andreou.galc;
 
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -35,20 +34,24 @@ public class Utils {
 		System.out.println();
 	}
 
-	public void printMeans(Set<DatumCont> c) {
+	/*
+	 * public void printMeans(Set<DatumCont> c) {
+	 * 
+	 * System.out.print("\n--Categories Mean Values List--");
+	 * for (DatumCont i : c)
+	 * System.out.print(i.getMean() + "\t");
+	 * System.out.println();
+	 * }
+	 */
 
-		System.out.print("\n--Categories Mean Values List--");
-		for (DatumCont i : c)
-			System.out.print(i.getMean() + "\t");
-		System.out.println();
-	}
-
-	public void printStds(Set<DatumCont> c) {
-
-		System.out.print("--Categories  Std Values List--");
-		for (DatumCont i : c)
-			System.out.print(i.getStd() + "\t");
-	}
+	/*
+	 * public void printStds(Set<DatumCont> c) {
+	 * 
+	 * System.out.print("--Categories  Std Values List--");
+	 * for (DatumCont i : c)
+	 * System.out.print(i.getStd() + "\t");
+	 * }
+	 */
 
 	public void printCategories(Set<DatumCont> c) {
 
@@ -68,57 +71,57 @@ public class Utils {
 	}
 
 	/*
-	public void printLabels(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
-
-		System.out.print("Labels ");
-		printMap(categories, workers, m);
-	}
-	*/
-
-	/*
-	public void printTrasposedLabels(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
-
-		System.out.print("Labels ");
-		printTrasposedMap(categories, workers, m);
-	}
-	*/
+	 * public void printLabels(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
+	 * 
+	 * System.out.print("Labels ");
+	 * printMap(categories, workers, m);
+	 * }
+	 */
 
 	/*
-	public void printMap(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
-
-		System.out.println("Map");
-		// System.out.printf("%s: (%s,%s)%n", key, c.getName(),w.getName());
-		Double value = 0.0;
-		int i = categories.size() * workers.size();
-		for (DatumCont c : categories)
-			for (Worker w : workers) {
-				AssignedLabel aux = new AssignedLabel(c, w);
-				value = m.get(aux);
-				System.out.printf("(%s,%s): %s", c.getName(), w.getName(), value.toString());
-				String nl = (--i % workers.size() == 0) ? "%n" : "\t\t";
-				System.out.printf(nl);
-			}
-
-	}
-	*/
+	 * public void printTrasposedLabels(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
+	 * 
+	 * System.out.print("Labels ");
+	 * printTrasposedMap(categories, workers, m);
+	 * }
+	 */
 
 	/*
-	public void printTrasposedMap(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
+	 * public void printMap(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
+	 * 
+	 * System.out.println("Map");
+	 * // System.out.printf("%s: (%s,%s)%n", key, c.getName(),w.getName());
+	 * Double value = 0.0;
+	 * int i = categories.size() * workers.size();
+	 * for (DatumCont c : categories)
+	 * for (Worker w : workers) {
+	 * AssignedLabel aux = new AssignedLabel(c, w);
+	 * value = m.get(aux);
+	 * System.out.printf("(%s,%s): %s", c.getName(), w.getName(), value.toString());
+	 * String nl = (--i % workers.size() == 0) ? "%n" : "\t\t";
+	 * System.out.printf(nl);
+	 * }
+	 * 
+	 * }
+	 */
 
-		System.out.println("--Transposed map--");
-		// System.out.printf("%s: (%s,%s)%n", key, c.getName(),w.getName());
-		Double value = 0.0;
-		int i = categories.size() * workers.size();
-		for (Worker w : workers)
-			for (DatumCont c : categories) {
-				AssignedLabel aux = new AssignedLabel(c, w);
-				value = m.get(aux);
-				System.out.printf("(%s,%s): %s", c.getName(), w.getName(), value.toString());
-				String nl = (--i % categories.size() == 0) ? "%n" : "\t\t";
-				System.out.printf(nl);
-			}
-
-	}
-	*/
+	/*
+	 * public void printTrasposedMap(Set<DatumCont> categories, Set<Worker> workers, Map<AssignedLabel, Double> m) {
+	 * 
+	 * System.out.println("--Transposed map--");
+	 * // System.out.printf("%s: (%s,%s)%n", key, c.getName(),w.getName());
+	 * Double value = 0.0;
+	 * int i = categories.size() * workers.size();
+	 * for (Worker w : workers)
+	 * for (DatumCont c : categories) {
+	 * AssignedLabel aux = new AssignedLabel(c, w);
+	 * value = m.get(aux);
+	 * System.out.printf("(%s,%s): %s", c.getName(), w.getName(), value.toString());
+	 * String nl = (--i % categories.size() == 0) ? "%n" : "\t\t";
+	 * System.out.printf(nl);
+	 * }
+	 * 
+	 * }
+	 */
 
 }

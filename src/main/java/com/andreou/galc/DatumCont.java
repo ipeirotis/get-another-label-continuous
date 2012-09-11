@@ -5,16 +5,14 @@ import java.util.TreeSet;
 
 public class DatumCont implements Comparable<DatumCont> {
 
-	private String			name;
-	private Double			value;
-	private Set<AssignedLabel> labels;
+	private String							name;
+	private Set<AssignedLabel>	labels;
 
-	private Double			mean	= 0.0;
-	private Double			std		= 0.0;
-	private Double			zeta	= 0.0;
+	private Double							est_value;
+	private Double							est_zeta;
 
 	// Data generation characteristics
-	private Double			trueValue;
+	private Double							trueValue;
 
 	public DatumCont(String name) {
 
@@ -22,7 +20,7 @@ public class DatumCont implements Comparable<DatumCont> {
 		this.labels = new TreeSet<AssignedLabel>();
 
 	}
-	
+
 	public void addAssignedLabel(AssignedLabel al) {
 
 		if (al.getDatum().equals(name)) {
@@ -42,42 +40,22 @@ public class DatumCont implements Comparable<DatumCont> {
 
 	public Double getValue() {
 
-		return value;
+		return est_value;
 	}
 
 	public void setValue(Double value) {
 
-		this.value = value;
-	}
-
-	public Double getMean() {
-
-		return mean;
-	}
-
-	public void setMean(Double mean) {
-
-		this.mean = mean;
-	}
-
-	public Double getStd() {
-
-		return std;
-	}
-
-	public void setStd(Double std) {
-
-		this.std = std;
+		this.est_value = value;
 	}
 
 	public Double getZeta() {
 
-		return zeta;
+		return est_zeta;
 	}
 
 	public void setZeta(Double zeta) {
 
-		this.zeta = zeta;
+		this.est_zeta = zeta;
 	}
 
 	public Double getTrueValue() {
@@ -127,27 +105,26 @@ public class DatumCont implements Comparable<DatumCont> {
 		return true;
 	}
 
-	
 	/**
 	 * @return the labels
 	 */
 	public Set<AssignedLabel> getAssignedLabels() {
-	
+
 		return labels;
 	}
-	
 
-	
 	/**
-	 * @param labels the labels to set
+	 * @param labels
+	 *          the labels to set
 	 */
 	public void setLabels(Set<AssignedLabel> labels) {
-	
+
 		this.labels = labels;
 	}
 
 	@Override
 	public int compareTo(DatumCont o) {
+
 		return this.getName().compareTo(o.getName());
 	}
 
