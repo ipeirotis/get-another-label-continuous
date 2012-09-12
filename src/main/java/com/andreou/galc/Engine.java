@@ -12,11 +12,6 @@ public class Engine {
 	private Map<String, Worker>			workers_index;
 	private Set<AssignedLabel>			labels;
 
-	// private Set<Category> current_categories = new HashSet<Category>();
-	// private Set<Worker> current_workers = new HashSet<Worker>();
-
-	// private Ipeirotis ip;
-
 	public Engine() {
 
 		SyntheticData data = new SyntheticData();
@@ -28,8 +23,8 @@ public class Engine {
 		Double worker_mu_up = 5.0;
 		Double worker_sigma_down = 0.5;
 		Double worker_sigma_up = 1.5;
-		Double worker_rho_down = 0.0;
-		Double worker_rho_up = 0.5;
+		Double worker_rho_down = -0.9;
+		Double worker_rho_up = 1.0;
 		data.setWorkerParameters(worker_mu_down, worker_mu_up, worker_sigma_down, worker_sigma_up, worker_rho_down,
 				worker_rho_up);
 
@@ -59,10 +54,15 @@ public class Engine {
 		this.labels = data.getLabels();
 
 		initWorkers();
+		System.out.println("=======");
+		estimateObjectZetas();
+		generateObjectReport(data_mu, data_sigma);
+		generateWorkerReport();
+		System.out.println("=======");
 
 		// Run until convergence.
 		int round = 1;
-		double epsilon = 0.0001;
+		double epsilon = 0.00001;
 		System.out.print("----\nRound: ");
 		while (true) {
 			System.out.print(round+"... ");
@@ -104,8 +104,8 @@ public class Engine {
 			double absDiff = Math.abs(realRho-estRho);
 			double relDiff = Math.abs(absDiff/realRho);
 			
-			avgRhoError += absDiff/this.objects.size();
-			relRhoError += relDiff/this.objects.size();
+			avgRhoError += absDiff/this.workers.size();
+			relRhoError += relDiff/this.workers.size();
 		}
 		System.out.println("Average absolute estimation error for correlation values: "+avgRhoError);
 		System.out.println("Average relative estimation error for correlation values: "+relRhoError);
@@ -185,16 +185,9 @@ public class Engine {
 
 	private void initWorkers() {
 
-		Generator rhoGenerator = new Generator(Generator.Distribution.UNIFORM);
-
-		// We do not assign the full range from -1 to 1, because
-		// in that case we will not converge into a reasonable equilibrium
-		rhoGenerator.setUniformParameters(0.0, 0.9);
-
+		double initial_rho = 0.9;
 		for (Worker w : this.workers) {
-			Double rho_init = rhoGenerator.nextData();
-			w.setEst_rho(rho_init);
-
+			w.setEst_rho(initial_rho);
 			w.computeZetaValues();
 		}
 

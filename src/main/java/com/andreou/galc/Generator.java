@@ -18,8 +18,8 @@ public class Generator {
 		this.randomData = new RandomDataImpl();
 	}
 
-	double	mu		= 0;
-	double	sigma	= 1;
+	Double	mu;
+	Double	sigma;
 
 	public void setGaussianParameters(Double mu, Double sigma) {
 
@@ -27,8 +27,8 @@ public class Generator {
 		this.sigma = sigma;
 	}
 
-	double	up		= 1;
-	double	down	= 0;
+	Double	up;
+	Double	down;
 
 	public void setUniformParameters(Double d, Double u) {
 
