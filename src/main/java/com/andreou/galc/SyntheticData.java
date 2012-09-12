@@ -1,7 +1,5 @@
 package com.andreou.galc;
 
-import java.util.Set;
-import java.util.TreeSet;
 
 public class SyntheticData extends Data {
 
@@ -98,18 +96,4 @@ public class SyntheticData extends Data {
 
 	}
 
-	public Set<DatumCont> getObjects() {
-
-		return objects;
-	}
-
-	public Set<Worker> getWorkers() {
-
-		return workers;
-	}
-
-	public Set<AssignedLabel> getLabels() {
-
-		return labels;
-	}
 }

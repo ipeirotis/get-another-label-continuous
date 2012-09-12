@@ -166,6 +166,32 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
+		// Data data = createSyntheticDataSet();
+		
+		// PANOS: not verified that it works...
+		EmpiricalData data = new EmpiricalData();
+		data.loadFile(args[0]);
+
+		Engine eng = new Engine(data);
+		
+		ReportGenerator rpt = new ReportGenerator(eng);
+
+		// Report about distributional estimates
+		rpt.generateDistributionReport();
+
+		// Give report for objects
+		rpt.generateObjectReport();
+
+		// Give report for workers
+		rpt.generateWorkerReport();
+
+	}
+
+	/**
+	 * @return
+	 */
+	private static SyntheticData createSyntheticDataSet() {
+
 		int data_points = 100;
 		Double data_mu = 0.0;
 		Double data_sigma = 1.0;
@@ -186,20 +212,7 @@ public class Main {
 
 		SyntheticData data = createDataSet(data_points, data_mu, data_sigma, workers, worker_mu_down, worker_mu_up,
 				worker_sigma_down, worker_sigma_up, worker_rho_down, worker_rho_up);
-
-		Engine eng = new Engine(data);
-		
-		ReportGenerator rpt = new ReportGenerator(eng);
-
-		// Report about distributional estimates
-		rpt.generateDistributionReport();
-
-		// Give report for objects
-		rpt.generateObjectReport();
-
-		// Give report for workers
-		rpt.generateWorkerReport();
-
+		return data;
 	}
 
 }
