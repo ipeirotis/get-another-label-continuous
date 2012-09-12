@@ -48,7 +48,7 @@ public class Engine {
 			double d2 = estimateWorkerRho();
 			//System.out.println("DiffWorkers:" + d2);
 			round++;
-			//System.out.println("");
+			System.out.println("");
 			//generateObjectReport(data_mu, data_sigma);
 			//generateWorkerReport();
 			if (d1+d2<epsilon) break;

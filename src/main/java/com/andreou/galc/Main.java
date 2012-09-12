@@ -144,6 +144,33 @@ class ReportGenerator {
 
 public class Main {
 
+	/**
+	 * @return
+	 */
+	private static SyntheticData createSyntheticDataSet() {
+
+		int data_points = 1000;
+		Double data_mu = 0.0;
+		Double data_sigma = 1.0;
+
+		int workers = 5;
+		Double worker_mu_down = -5.0;
+		Double worker_mu_up = 5.0;
+		Double worker_sigma_down = 0.5;
+		Double worker_sigma_up = 1.5;
+		Double worker_rho_down = 0.999;
+		Double worker_rho_up = 0.9999;
+
+		System.out.println("Data points: " + data_points);
+		System.out.println("Workers: " + workers);
+
+		System.out.println("Low rho: " + worker_rho_down);
+		System.out.println("High rho: " + worker_rho_up);
+
+		SyntheticData data = createDataSet(data_points, data_mu, data_sigma, workers, worker_mu_down, worker_mu_up,
+				worker_sigma_down, worker_sigma_up, worker_rho_down, worker_rho_up);
+		return data;
+	}
 
 
 	 static SyntheticData createDataSet(int data_points, Double data_mu, Double data_sigma, int workers,
@@ -166,13 +193,16 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		// Data data = createSyntheticDataSet();
+		String filename = "test-labels.txt";
+		
+		SyntheticData sdata = createSyntheticDataSet();
+		sdata.writeLabelsToFile(filename);
 		
 		// PANOS: not verified that it works...
-		EmpiricalData data = new EmpiricalData();
-		data.loadFile(args[0]);
-
-		Engine eng = new Engine(data);
+		EmpiricalData edata = new EmpiricalData();
+		edata.loadFile(filename);
+		
+		Engine eng = new Engine(edata);
 		
 		ReportGenerator rpt = new ReportGenerator(eng);
 
@@ -187,32 +217,5 @@ public class Main {
 
 	}
 
-	/**
-	 * @return
-	 */
-	private static SyntheticData createSyntheticDataSet() {
-
-		int data_points = 100;
-		Double data_mu = 0.0;
-		Double data_sigma = 1.0;
-
-		int workers = 1000;
-		Double worker_mu_down = -5.0;
-		Double worker_mu_up = 5.0;
-		Double worker_sigma_down = 0.5;
-		Double worker_sigma_up = 1.5;
-		Double worker_rho_down = 0.999;
-		Double worker_rho_up = 0.9999;
-
-		System.out.println("Data points: " + data_points);
-		System.out.println("Workers: " + workers);
-
-		System.out.println("Low rho: " + worker_rho_down);
-		System.out.println("High rho: " + worker_rho_up);
-
-		SyntheticData data = createDataSet(data_points, data_mu, data_sigma, workers, worker_mu_down, worker_mu_up,
-				worker_sigma_down, worker_sigma_up, worker_rho_down, worker_rho_up);
-		return data;
-	}
 
 }

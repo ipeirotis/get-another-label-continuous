@@ -1,5 +1,9 @@
 package com.andreou.galc;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+
 
 public class SyntheticData extends Data {
 
@@ -95,5 +99,29 @@ public class SyntheticData extends Data {
 		}
 
 	}
+	
+	public void writeLabelsToFile(String filename) {
 
+		try {
+			File outfile = new File(filename);
+			
+			
+			if (outfile.getParent() != null) {
+				File parentDir = new File(outfile.getParent());
+				if (!parentDir.exists()) {
+					parentDir.mkdirs();
+				}
+			}
+
+
+			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
+			for (AssignedLabel al: labels) {
+				String line = al.getWorker() +"\t" + al.getDatum() +"\t" + al.getLabel() + "\n";
+				bw.write(line);
+			}
+			bw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

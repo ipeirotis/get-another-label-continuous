@@ -10,7 +10,7 @@ public class EmpiricalData extends Data {
 	private Map<String, Worker>			workers_index = new TreeMap<String, Worker>();
 	
 	public EmpiricalData() {
-
+		super();
 	}
 
 
@@ -46,6 +46,7 @@ public class EmpiricalData extends Data {
 			d.addAssignedLabel(al);
 			w.addAssignedLabel(al);
 		}
+		//System.out.println("Loaded "+lines.length + " lines");
 	}
 
 
