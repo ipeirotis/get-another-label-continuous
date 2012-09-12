@@ -3,20 +3,17 @@ package com.andreou.galc;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class SyntheticData {
+public class SyntheticData extends Data {
 
-	private Set<DatumCont>			objects	= new TreeSet<DatumCont>();
-	private Set<Worker>					workers	= new TreeSet<Worker>();
-	private Set<AssignedLabel>	labels	= new TreeSet<AssignedLabel>();
 
 	private Double							data_mu;
 	private Double							data_sigma;
 
-	Generator										muGenerator;
-	Generator										sigmaGenerator;
-	Generator										rhoGenerator;
+	private Generator										muGenerator;
+	private Generator										sigmaGenerator;
+	private Generator										rhoGenerator;
 
-	Generator										datumGenerator;
+	private Generator										datumGenerator;
 
 	public SyntheticData() {
 
