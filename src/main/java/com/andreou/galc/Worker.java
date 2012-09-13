@@ -212,6 +212,8 @@ public class Worker implements Comparable<Worker> {
 	 */
 	public void setEst_sigma(Double est_sigma) {
 	
+		//double epsilon = 0.0001;
+		//if (est_sigma<epsilon) est_sigma = epsilon;
 		this.est_sigma = est_sigma;
 	}
 	

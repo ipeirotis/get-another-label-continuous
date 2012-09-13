@@ -42,17 +42,18 @@ public class Engine {
 		double epsilon = 0.00001;
 		//System.out.print("----\nRound: ");
 		while (true) {
-			//System.out.print(round+"... ");
+			System.out.print(round+"... ");
 			double d1 = estimateObjectZetas();
 			//System.out.println("DiffObjects:" + d1);
 			double d2 = estimateWorkerRho();
 			//System.out.println("DiffWorkers:" + d2);
 			round++;
-			//System.out.println("");
-			//generateObjectReport(data_mu, data_sigma);
-			//generateWorkerReport();
+			System.out.println("");
 			if (d1+d2<epsilon) break;
-			//if (Double.isNaN(d1+d2)) System.err.println("ERROR: Check for division by 0");
+			if (Double.isNaN(d1+d2)) {
+				System.err.println("ERROR: Check for division by 0");
+				break;
+			}
 		}
 		System.out.println("Done!\n----");
 		
@@ -70,7 +71,7 @@ public class Engine {
 
 	}
 
-	private double estimateObjectZetas() {
+	private Double estimateObjectZetas() {
 
 		// See equation 9
 
@@ -91,7 +92,15 @@ public class Engine {
 			}
 			
 			//d.setEst_zeta(zeta / betasum);
-			d.setEst_zeta(zeta/ betasum);
+			Double newZeta = zeta/ betasum;
+			if (Double.isNaN(newZeta)) {
+				System.err.println("Error in ObjectZetas");
+				System.err.println(d);
+				System.err.println("Z = " + zeta);
+				System.err.println("B = " + betasum);
+				return null;
+			}
+			d.setEst_zeta(newZeta);
 			this.objects_index.put(d.getName(), d);
 			
 			if (oldzeta == null) {
@@ -101,6 +110,7 @@ public class Engine {
 			
 			diff += Math.abs(d.getEst_zeta() - oldzeta);
 		}
+		
 		return diff;
 
 	}

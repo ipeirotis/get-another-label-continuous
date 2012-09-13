@@ -150,10 +150,10 @@ public class Main {
 	private static SyntheticData createSyntheticDataSet() {
 
 		int data_points = 1000;
-		Double data_mu = 0.0;
-		Double data_sigma = 1.0;
+		Double data_mu = 7.0;
+		Double data_sigma = 11.0;
 
-		int workers = 5;
+		int workers = 1;
 		Double worker_mu_down = -5.0;
 		Double worker_mu_up = 5.0;
 		Double worker_sigma_down = 0.5;
@@ -210,10 +210,6 @@ public class Main {
 		edata.loadTrueWorkerData(filename_workers);
 		edata.loadTrueObjectData(filename_objects);
 		
-		for (Worker w: edata.getWorkers()) {
-			w.computeZetaValues();
-			System.out.println("Worker:"+w.getName()+" labeled" +w.getLabels().size());
-		}
 		
 		Engine eng = new Engine(edata);
 		
