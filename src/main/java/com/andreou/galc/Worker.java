@@ -79,6 +79,9 @@ public class Worker implements Comparable<Worker> {
 
 
 	public Double getBeta() {
+		Double t = 1 - Math.pow(this.est_rho, 2);
+		Double t1 = Math.pow(this.est_rho, 2);
+		if(t == 0.0) System.err.print("woops "+ "rho^2:" + t1 + ", w.est_rho:" + this.est_rho +" ");
 
 		return 1 / (1 - Math.pow(this.est_rho, 2));
 	}
@@ -174,9 +177,8 @@ public class Worker implements Comparable<Worker> {
 	public void setEst_rho(Double est_rho) {
 	
 		if (est_rho>0.9999) this.est_rho = 0.9999;
-		if (est_rho<-0.9999) this.est_rho = -0.9999;
-		
-		this.est_rho = est_rho;
+		else if (est_rho<-0.9999) this.est_rho = -0.9999;
+		else this.est_rho = est_rho;
 	}
 
 	
