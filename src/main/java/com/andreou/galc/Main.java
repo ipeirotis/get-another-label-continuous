@@ -158,8 +158,8 @@ public class Main {
 		Double worker_mu_up = 5.0;
 		Double worker_sigma_down = 0.5;
 		Double worker_sigma_up = 1.5;
-		Double worker_rho_down = 0.999;
-		Double worker_rho_up = 0.9999;
+		Double worker_rho_down = 0.5;
+		Double worker_rho_up = 1.0;
 
 		System.out.println("Data points: " + data_points);
 		System.out.println("Workers: " + workers);
@@ -193,14 +193,27 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		String filename = "test-labels.txt";
+		String filename_labels = "test-labels.txt";
+		String filename_workers = "test-workers.txt";
+		String filename_objects = "test-objects.txt";
 		
 		SyntheticData sdata = createSyntheticDataSet();
-		sdata.writeLabelsToFile(filename);
+		sdata.writeLabelsToFile(filename_labels);
+		sdata.writeTrueWorkerDataToFile(filename_workers);
+		sdata.writeTrueObjectDataToFile(filename_objects);
+		
+		
 		
 		// PANOS: not verified that it works...
 		EmpiricalData edata = new EmpiricalData();
-		edata.loadFile(filename);
+		edata.loadLabelFile(filename_labels);
+		edata.loadTrueWorkerData(filename_workers);
+		edata.loadTrueObjectData(filename_objects);
+		
+		for (Worker w: edata.getWorkers()) {
+			w.computeZetaValues();
+			System.out.println("Worker:"+w.getName()+" labeled" +w.getLabels().size());
+		}
 		
 		Engine eng = new Engine(edata);
 		

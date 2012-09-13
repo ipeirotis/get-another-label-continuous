@@ -124,4 +124,55 @@ public class SyntheticData extends Data {
 			e.printStackTrace();
 		}
 	}
+	
+	public void writeTrueObjectDataToFile(String filename) {
+
+		try {
+			File outfile = new File(filename);
+			
+			
+			if (outfile.getParent() != null) {
+				File parentDir = new File(outfile.getParent());
+				if (!parentDir.exists()) {
+					parentDir.mkdirs();
+				}
+			}
+
+
+			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
+			for (DatumCont d: objects) {
+				String line = d.getName() +"\t" + d.getTrueValue() +"\t" + d.getTrueZeta() +  "\n";
+				bw.write(line);
+			}
+			bw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeTrueWorkerDataToFile(String filename) {
+
+		try {
+			File outfile = new File(filename);
+			
+			
+			if (outfile.getParent() != null) {
+				File parentDir = new File(outfile.getParent());
+				if (!parentDir.exists()) {
+					parentDir.mkdirs();
+				}
+			}
+
+
+			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
+			for (Worker w: workers) {
+				String line = w.getName() +"\t" + w.getTrueRho() +"\t" + w.getTrueMu() +"\t" + w.getTrueSigma() +"\t" + "\n";
+				bw.write(line);
+			}
+			bw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

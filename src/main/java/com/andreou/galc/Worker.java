@@ -214,5 +214,23 @@ public class Worker implements Comparable<Worker> {
 	
 		this.est_sigma = est_sigma;
 	}
+	
+	public Double estimatedAbsZetaError() {
+		return  Math.sqrt(1-Math.pow(this.est_rho,2))*Math.sqrt(2)/Math.sqrt(Math.PI);
+	}
+	
+	public static Double estimatedAbsZetaError(Double rho) {
+		return  Math.sqrt(1-Math.pow(rho,2))*Math.sqrt(2)/Math.sqrt(Math.PI);
+	}
+
+	
+	/**
+	 * @return the labels
+	 */
+	public Set<AssignedLabel> getLabels() {
+	
+		return labels;
+	}
+
 
 }

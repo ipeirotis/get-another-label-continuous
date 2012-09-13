@@ -40,19 +40,19 @@ public class Engine {
 		// Run until convergence.
 		int round = 1;
 		double epsilon = 0.00001;
-		System.out.print("----\nRound: ");
+		//System.out.print("----\nRound: ");
 		while (true) {
-			System.out.print(round+"... ");
+			//System.out.print(round+"... ");
 			double d1 = estimateObjectZetas();
 			//System.out.println("DiffObjects:" + d1);
 			double d2 = estimateWorkerRho();
 			//System.out.println("DiffWorkers:" + d2);
 			round++;
-			System.out.println("");
+			//System.out.println("");
 			//generateObjectReport(data_mu, data_sigma);
 			//generateWorkerReport();
 			if (d1+d2<epsilon) break;
-			if (Double.isNaN(d1+d2)) System.err.println("ERROR: Check for division by 0");
+			//if (Double.isNaN(d1+d2)) System.err.println("ERROR: Check for division by 0");
 		}
 		System.out.println("Done!\n----");
 		

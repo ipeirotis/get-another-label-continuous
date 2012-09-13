@@ -14,7 +14,7 @@ public class EmpiricalData extends Data {
 	}
 
 
-	public void loadFile(String filename) {
+	public void loadLabelFile(String filename) {
 
 		String[] lines = Utils.getFile(filename).split("\n");
 		
@@ -25,29 +25,97 @@ public class EmpiricalData extends Data {
 			}
 
 			String workername = entries[0];
+			String objectname = entries[1]; 
+			Double value = Double.parseDouble(entries[2]);
+
+			AssignedLabel al = new AssignedLabel(workername, objectname, value);
+			
 			Worker w = this.workers_index.get(workername);
 			if (w == null) {
 				w = new Worker(workername);
 				this.workers.add(w);
-			}
-			
-			String objectname = entries[1]; 
+				this.workers_index.put(workername,w);
+			} 
+			w.addAssignedLabel(al);
+
 			DatumCont d = this.objects_index.get(objectname);
 			if (d == null) {
 				d = new DatumCont(objectname);
 				this.objects.add(d);
+				this.objects_index.put(objectname,d);
 			}
+			d.addAssignedLabel(al);
 			
-			
-			Double value = Double.parseDouble(entries[2]);
-			AssignedLabel al = new AssignedLabel(workername, objectname, value);
 			
 			this.labels.add(al);
-			d.addAssignedLabel(al);
-			w.addAssignedLabel(al);
+			
+			
 		}
-		//System.out.println("Loaded "+lines.length + " lines");
+		
 	}
 
 
+	public void loadTrueWorkerData(String filename) {
+
+		String[] lines = Utils.getFile(filename).split("\n");
+		
+		for (String line : lines) {
+			String[] entries = line.split("\t");
+			if (entries.length != 4) {
+				throw new IllegalArgumentException("Error while loading from assigned labels file");
+			}
+
+			String workername = entries[0];
+			Double rho = Double.parseDouble(entries[1]);
+			Double mu = Double.parseDouble(entries[2]);
+			Double sigma = Double.parseDouble(entries[3]);
+
+		
+			Worker w = this.workers_index.get(workername);
+			if (w == null) {
+				w = new Worker(workername);
+				this.workers.add(w);
+				this.workers_index.put(workername,w);
+			} 
+			w.setTrueMu(mu);
+			w.setTrueSigma(sigma);
+			w.setTrueRho(rho);
+
+			
+			
+		}
+		
+	}
+	
+	public void loadTrueObjectData(String filename) {
+
+		String[] lines = Utils.getFile(filename).split("\n");
+		
+		for (String line : lines) {
+			String[] entries = line.split("\t");
+			if (entries.length != 3) {
+				throw new IllegalArgumentException("Error while loading from assigned labels file");
+			}
+
+			String objectname = entries[0];
+			Double value = Double.parseDouble(entries[1]);
+			Double zeta = Double.parseDouble(entries[2]);
+			
+			DatumCont d = this.objects_index.get(objectname);
+			if (d == null) {
+				d = new DatumCont(objectname);
+				this.objects.add(d);
+				this.objects_index.put(objectname,d);
+			} 
+			d.setTrueValue(value);
+			d.setTrueZeta(zeta);
+			
+			
+		}
+		
+	}
+
+
+	
+	
 }
