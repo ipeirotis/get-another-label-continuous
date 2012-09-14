@@ -4,15 +4,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class Engine {
+public class Ipeirotis {
 
 	private Set<DatumCont>					objects;
 	private Map<String, DatumCont>	objects_index;
 	private Set<Worker>							workers;
 	private Map<String, Worker>			workers_index;
 	private Set<AssignedLabel>			labels;
+	
 
-	public Engine(Data data) {
+
+	public Ipeirotis(Data data) {
 
 
 		
@@ -93,13 +95,6 @@ public class Engine {
 			
 			//d.setEst_zeta(zeta / betasum);
 			Double newZeta = zeta/ betasum;
-			if (Double.isNaN(newZeta)) {
-				System.err.println("Error in ObjectZetas");
-				System.err.println(d);
-				System.err.println("Z = " + zeta);
-				System.err.println("B = " + betasum);
-				return null;
-			}
 			d.setEst_zeta(newZeta);
 			this.objects_index.put(d.getName(), d);
 			
