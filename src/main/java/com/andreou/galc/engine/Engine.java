@@ -1,8 +1,12 @@
 package com.andreou.galc.engine;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.Set;
 
 import com.andreou.galc.AssignedLabel;
+import com.andreou.galc.Data;
 import com.andreou.galc.DatumCont;
 import com.andreou.galc.EmpiricalData;
 import com.andreou.galc.Ipeirotis;
@@ -11,9 +15,12 @@ import com.andreou.galc.Worker;
 
 class ReportGenerator {
 	
-	Ipeirotis ip;
-	public ReportGenerator(Ipeirotis ip) {
+	private Ipeirotis ip;
+	private boolean verbose; 
+	
+	public ReportGenerator(Ipeirotis ip, EngineContext ctx) {
 		this.ip = ip;
+		this.verbose = ctx.isVerbose();
 	}
 	
 	/**
@@ -54,10 +61,12 @@ class ReportGenerator {
 	/**
 	 * 
 	 */
-	  void generateWorkerReport() {
+	  String generateWorkerReport() {
 
-		System.out.println("Average absolute estimation error for correlation values: " + getCorrelationAbsoluteError());
-		System.out.println("Average relative estimation error for correlation values: " + getCorrelationRelativeError());
+		String out = "Average absolute estimation error for correlation values: " + getCorrelationAbsoluteError() + "\n" +
+		"Average relative estimation error for correlation values: " + getCorrelationRelativeError();
+		if(!this.verbose) System.out.println(out);
+		return out;
 	}
 
 	/**
@@ -101,10 +110,12 @@ class ReportGenerator {
 	 * @param data_mu
 	 * @param data_sigma
 	 */
-	  void generateDistributionReport() {
+	  String generateDistributionReport() {
 
-		System.out.println("Estimated mu = " + estimateDistributionMu());
-		System.out.println("Estimated sigma = " + estimateDistributionSigma());
+		String out = 	"Estimated mu = " + estimateDistributionMu() + "\n" + 
+						"Estimated sigma = " + estimateDistributionSigma();
+		if(!this.verbose)System.out.println(out);
+		return out;
 	}
 
 	/**
@@ -143,12 +154,43 @@ class ReportGenerator {
 		return avgRelError;
 	}
 	
-	void generateObjectReport() {
+	String generateObjectReport() {
 
-		System.out.println("Average absolute estimation error for z-values: " + getZetaAbsoluteErrorObject());
-		System.out.println("Average relative estimation error for z-values: " + getZetaRelativeErrorObject());
+		String out = 	"Average absolute estimation error for z-values: " + getZetaAbsoluteErrorObject() + "\n" + 
+						"Average relative estimation error for z-values: " + getZetaRelativeErrorObject();
+		if(!this.verbose) System.out.println(out);
+		return out;
 	}
 	
+	public void writeReportsToFile(String filename) {
+
+		try {
+			File outfile = new File(filename);
+			
+			if (outfile.getParent() != null) {
+				File parentDir = new File(outfile.getParent());
+				if (!parentDir.exists()) {
+					parentDir.mkdirs();
+				}
+			}
+
+			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
+
+			String lines = ""; 
+			// Report about distributional estimates
+			lines+=  this.generateDistributionReport() + "\n"; 
+			// Give report for objects
+			lines+=  this.generateObjectReport() + "\n";
+			// Give report for workers
+			lines+=  this.generateWorkerReport() + "\n";
+
+			bw.write(lines);
+			bw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(this.verbose) System.out.println("Evaluation Reports: " + filename);
+	}
 }
 
 
@@ -162,37 +204,25 @@ public class Engine {
 	}
 	
 	public void execute(){
-
-		String filename_labels = ctx.getLabelsFile();
-		String filename_workers = ctx.getWorkersFile();
-		String filename_objects = ctx.getObjectsFile();
+		Data data;
+		if(ctx.isSyntheticDataSet()) {
+			SyntheticData sdata = createSyntheticDataSet();
+			sdata.writeLabelsToFile(ctx.getLabelsFile());
+			sdata.writeTrueWorkerDataToFile(ctx.getWorkersFile());
+			sdata.writeTrueObjectDataToFile(ctx.getObjectsFile());
+			data = sdata;
+		} else {
+			// PANOS: not verified that it works...
+			EmpiricalData edata = new EmpiricalData();
+			edata.loadLabelFile(ctx.getLabelsFile());
+			edata.loadTrueWorkerData(ctx.getWorkersFile());
+			edata.loadTrueObjectData(ctx.getObjectsFile());
+		data = edata;
+		}		
+		Ipeirotis ip = new Ipeirotis(data, ctx);
 		
-		SyntheticData sdata = createSyntheticDataSet();
-		sdata.writeLabelsToFile(filename_labels);
-		sdata.writeTrueWorkerDataToFile(filename_workers);
-		sdata.writeTrueObjectDataToFile(filename_objects);
-		
-		
-		
-		// PANOS: not verified that it works...
-		EmpiricalData edata = new EmpiricalData();
-		edata.loadLabelFile(filename_labels);
-		edata.loadTrueWorkerData(filename_workers);
-		edata.loadTrueObjectData(filename_objects);
-		
-		
-		Ipeirotis ip = new Ipeirotis(edata);
-		
-		ReportGenerator rpt = new ReportGenerator(ip);
-
-		// Report about distributional estimates
-		rpt.generateDistributionReport();
-
-		// Give report for objects
-		rpt.generateObjectReport();
-
-		// Give report for workers
-		rpt.generateWorkerReport();
+		ReportGenerator rpt = new ReportGenerator(ip, ctx);
+		rpt.writeReportsToFile(ctx.getEvaluationFile());
 	
 	}
 

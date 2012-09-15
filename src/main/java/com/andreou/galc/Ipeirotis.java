@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.andreou.galc.engine.EngineContext;
+
 public class Ipeirotis {
 
 	private Set<DatumCont>					objects;
@@ -14,7 +16,7 @@ public class Ipeirotis {
 	
 
 
-	public Ipeirotis(Data data) {
+	public Ipeirotis(Data data, EngineContext ctx) {
 
 
 		
@@ -44,20 +46,24 @@ public class Ipeirotis {
 		double epsilon = 0.00001;
 		//System.out.print("----\nRound: ");
 		while (true) {
-			System.out.print(round+"... ");
+			if (!ctx.isVerbose()) System.out.print(round+"... ");
 			double d1 = estimateObjectZetas();
 			//System.out.println("DiffObjects:" + d1);
 			double d2 = estimateWorkerRho();
 			//System.out.println("DiffWorkers:" + d2);
 			round++;
-			System.out.println("");
+			if (!ctx.isVerbose()) System.out.println("");
 			if (d1+d2<epsilon) break;
 			if (Double.isNaN(d1+d2)) {
 				System.err.println("ERROR: Check for division by 0");
 				break;
 			}
+			if(round >= ctx.getNumIterations()) {
+				System.err.println("ERROR: Algorithm achieved maximum number of iterations. Increase number of iterations.");
+				break;
+			}
 		}
-		System.out.println("Done!\n----");
+		if (!ctx.isVerbose()) System.out.println("Done!\n----");
 		
 		
 	}
