@@ -1,38 +1,34 @@
 package com.andreou.galc.engine;
 
-import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
 
 public class EngineContext {
 
-	@Argument(index=0, metaVar="<labelsfile>", required=true, usage="A tab-separated text file. Each line has the form <workerid><tab><objectid><tab><assigned_label> and records the label that the given worker gave to that object")
-	private String labelsFile = "";
+	@Option(name="--input", metaVar="<labelsfile>", required=true, usage="A tab-separated text file. Each line has the form <workerid><tab><objectid><tab><assigned_label> and records the label that the given worker gave to that object")
+	private String labelsfile = "";
 
-	@Argument(index=1, metaVar="<objectsfile>", usage="")
+	@Option(name="--objects", metaVar="<objectsfile>", usage="")
 	private String objectsFile = "";
 
-	@Argument(index=2, metaVar="<workersfile>", usage="")
+	@Option(name="--workers", metaVar="<workersfile>", usage="")
 	private String workersFile = "";
 
-	@Argument(index=3, metaVar="<evaluationfile>", usage="An Evaluation Report File")
+	@Option(name="--eval", metaVar="<evaluationfile>", usage="An Evaluation Report File")
 	private String evaluationFile = "";
 
-	@Option(name="--iterations", metaVar="<num-iterations>", usage="is the maximum number of times to run the algorithm until convergence. Usually convergence achieved before the value of 20 (the default).")
-	private int numIterations = 20;
-
-	@Option(name="--v", metaVar="<verbose>", usage="Verbose Mode?")
+	@Option(name="--verbose", metaVar="<verbose>", usage="Verbose Mode?")
 	private boolean verbose;
 
 	@Option(name="--syntheticDataSet", usage="Create new synthetic DataSet or use empirical DataSet?")
 	private boolean syntheticDataSet;
 
 	public String getLabelsFile() {
-		return labelsFile;
+		return labelsfile;
 	}
 
 	public void setLabelsFile(String labelsFile) {
-		this.labelsFile = labelsFile;
+		this.labelsfile = labelsFile;
 	}
 
 	public String getObjectsFile() {
@@ -57,14 +53,6 @@ public class EngineContext {
 
 	public void setEvaluationFile(String evaluationFile) {
 		this.evaluationFile = evaluationFile;
-	}
-
-	public int getNumIterations() {
-		return numIterations;
-	}
-
-	public void setNumIterations(int numIterations) {
-		this.numIterations = numIterations;
 	}
 
 	public boolean isVerbose() {

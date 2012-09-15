@@ -58,10 +58,6 @@ public class Ipeirotis {
 				System.err.println("ERROR: Check for division by 0");
 				break;
 			}
-			if(round >= ctx.getNumIterations()) {
-				System.err.println("ERROR: Algorithm achieved maximum number of iterations. Increase number of iterations.");
-				break;
-			}
 		}
 		if (!ctx.isVerbose()) System.out.println("Done!\n----");
 		
