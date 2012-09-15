@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Set;
 
+import org.omg.CORBA.CTX_RESTRICT_SCOPE;
+
 import com.andreou.galc.AssignedLabel;
 import com.andreou.galc.Data;
 import com.andreou.galc.DatumCont;
@@ -206,7 +208,7 @@ public class Engine {
 	public void execute(){
 		Data data;
 		if(ctx.isSyntheticDataSet()) {
-			SyntheticData sdata = createSyntheticDataSet();
+			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose());
 			sdata.writeLabelsToFile(ctx.getLabelsFile());
 			sdata.writeTrueWorkerDataToFile(ctx.getWorkersFile());
 			sdata.writeTrueObjectDataToFile(ctx.getObjectsFile());
@@ -229,7 +231,7 @@ public class Engine {
 	/**
 	 * @return
 	 */
-	private static SyntheticData createSyntheticDataSet() {
+	private static SyntheticData createSyntheticDataSet(boolean verbose) {
 
 		int data_points = 1000;
 		Double data_mu = 7.0;
@@ -243,12 +245,13 @@ public class Engine {
 		Double worker_rho_down = 0.5;
 		Double worker_rho_up = 1.0;
 
-		System.out.println("Data points: " + data_points);
-		System.out.println("Workers: " + workers);
-
-		System.out.println("Low rho: " + worker_rho_down);
-		System.out.println("High rho: " + worker_rho_up);
-
+		if(!verbose) {
+			System.out.println("Data points: " + data_points);
+			System.out.println("Workers: " + workers);
+	
+			System.out.println("Low rho: " + worker_rho_down);
+			System.out.println("High rho: " + worker_rho_up);
+		}
 		SyntheticData data = createDataSet(data_points, data_mu, data_sigma, workers, worker_mu_down, worker_mu_up,
 				worker_sigma_down, worker_sigma_up, worker_rho_down, worker_rho_up);
 		return data;
