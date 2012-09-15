@@ -1,6 +1,0 @@
-Estimated mu = -1.4697935520420267
-Estimated sigma = 0.6536087414145008
-Average absolute estimation error for z-values: 0.397138639067974
-Average relative estimation error for z-values: 2.4115858069825826
-Average absolute estimation error for correlation values: 0.11530419189216567
-Average relative estimation error for correlation values: 0.1303467536645955
