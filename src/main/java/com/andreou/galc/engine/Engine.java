@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Set;
 
-import org.omg.CORBA.CTX_RESTRICT_SCOPE;
+import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
 
 import com.andreou.galc.AssignedLabel;
 import com.andreou.galc.Data;
@@ -63,7 +63,7 @@ class ReportGenerator {
 	/**
 	 * 
 	 */
-	  String generateWorkerReport() {
+	  public String generateWorkerReport() {
 
 		String out = "Average absolute estimation error for correlation values: " + getCorrelationAbsoluteError() + "\n" +
 		"Average relative estimation error for correlation values: " + getCorrelationRelativeError();
@@ -112,7 +112,7 @@ class ReportGenerator {
 	 * @param data_mu
 	 * @param data_sigma
 	 */
-	  String generateDistributionReport() {
+	  public String generateDistributionReport() {
 
 		String out = 	"Estimated mu = " + estimateDistributionMu() + "\n" + 
 						"Estimated sigma = " + estimateDistributionSigma();
@@ -156,7 +156,7 @@ class ReportGenerator {
 		return avgRelError;
 	}
 	
-	String generateObjectReport() {
+	public String generateObjectReport() {
 
 		String out = 	"Average absolute estimation error for z-values: " + getZetaAbsoluteErrorObject() + "\n" + 
 						"Average relative estimation error for z-values: " + getZetaRelativeErrorObject();
@@ -164,10 +164,10 @@ class ReportGenerator {
 		return out;
 	}
 	
-	public void writeReportsToFile(String filename) {
+	public void writeReportToFile(String foldername, String filename, String reportcontent) {
 
 		try {
-			File outfile = new File(filename);
+			File outfile = new File(foldername+"/"+filename);
 			
 			if (outfile.getParent() != null) {
 				File parentDir = new File(outfile.getParent());
@@ -175,23 +175,12 @@ class ReportGenerator {
 					parentDir.mkdirs();
 				}
 			}
-
 			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-
-			String lines = ""; 
-			// Report about distributional estimates
-			lines+=  this.generateDistributionReport() + "\n"; 
-			// Give report for objects
-			lines+=  this.generateObjectReport() + "\n";
-			// Give report for workers
-			lines+=  this.generateWorkerReport() + "\n";
-
-			bw.write(lines);
+			bw.write(reportcontent);
 			bw.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(this.verbose) System.out.println("Evaluation Reports: " + filename);
 	}
 }
 
@@ -209,22 +198,31 @@ public class Engine {
 		Data data;
 		if(ctx.isSyntheticDataSet()) {
 			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose());
-			sdata.writeLabelsToFile(ctx.getLabelsFile());
-			sdata.writeTrueWorkerDataToFile(ctx.getWorkersFile());
-			sdata.writeTrueObjectDataToFile(ctx.getObjectsFile());
+			sdata.writeLabelsToFile(ctx.getOutputFolder()+"/"+ctx.getInputFile());
+			sdata.writeTrueWorkerDataToFile(ctx.getOutputFolder()+"/"+ctx.getTrueWorkersFile());
+			sdata.writeTrueObjectDataToFile(ctx.getOutputFolder()+"/"+ctx.getTrueObjectsFile());
 			data = sdata;
 		} else {
 			// PANOS: not verified that it works...
 			EmpiricalData edata = new EmpiricalData();
-			edata.loadLabelFile(ctx.getLabelsFile());
-			edata.loadTrueWorkerData(ctx.getWorkersFile());
-			edata.loadTrueObjectData(ctx.getObjectsFile());
+			edata.loadLabelFile(ctx.getOutputFolder()+"/"+ctx.getInputFile());
+			edata.loadTrueWorkerData(ctx.getOutputFolder()+"/"+ctx.getTrueWorkersFile());
+			edata.loadTrueObjectData(ctx.getOutputFolder()+"/"+ctx.getTrueObjectsFile());
 		data = edata;
 		}		
 		Ipeirotis ip = new Ipeirotis(data, ctx);
 		
 		ReportGenerator rpt = new ReportGenerator(ip, ctx);
-		rpt.writeReportsToFile(ctx.getEvaluationFile());
+
+		
+		// Report about distributional estimates
+		rpt.writeReportToFile(ctx.getOutputFolder(), "results-distribution.txt", rpt.generateDistributionReport()); 
+		// Give report for objects
+		rpt.writeReportToFile(ctx.getOutputFolder(), "results-objects.txt", rpt.generateObjectReport());
+		// Give report for workers
+		rpt.writeReportToFile(ctx.getOutputFolder(), "results-workers.txt", rpt.generateWorkerReport());
+
+		if(ctx.isVerbose()) System.out.println("Results in folder: " + ctx.getOutputFolder());
 	
 	}
 

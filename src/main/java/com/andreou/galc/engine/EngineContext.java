@@ -5,17 +5,17 @@ import org.kohsuke.args4j.Option;
 
 public class EngineContext {
 
-	@Option(name="--input", metaVar="<labelsfile>", required=true, usage="A tab-separated text file. Each line has the form <workerid><tab><objectid><tab><assigned_label> and records the label that the given worker gave to that object")
-	private String labelsfile = "";
+	@Option(name="--input", metaVar="<inputfile>", required=true, usage="A tab-separated text file. Each line has the form <workerid><tab><objectid><tab><assigned_label> and records the label that the given worker gave to that object")
+	private String inputfile = "";
 
-	@Option(name="--objects", metaVar="<objectsfile>", usage="")
-	private String objectsFile = "";
+	@Option(name="--evalObjects", metaVar="<trueobjectsfile>", usage="")
+	private String trueobjectsfile = "";
 
-	@Option(name="--workers", metaVar="<workersfile>", usage="")
-	private String workersFile = "";
+	@Option(name="--evalWorkers", metaVar="<trueworkersfile>", usage="")
+	private String trueworkersfile = "";
 
-	@Option(name="--eval", metaVar="<evaluationfile>", usage="An Evaluation Report File")
-	private String evaluationFile = "";
+	@Option(name="--output", metaVar="<outputfolder>", usage="An Evaluation Report File")
+	private String outputfolder = "results";
 
 	@Option(name="--verbose", metaVar="<verbose>", usage="Verbose Mode?")
 	private boolean verbose;
@@ -23,36 +23,36 @@ public class EngineContext {
 	@Option(name="--syntheticDataSet", usage="Create new synthetic DataSet or use empirical DataSet?")
 	private boolean syntheticDataSet;
 
-	public String getLabelsFile() {
-		return labelsfile;
+	public String getInputFile() {
+		return inputfile;
 	}
 
-	public void setLabelsFile(String labelsFile) {
-		this.labelsfile = labelsFile;
+	public void setInputFile(String inputfile) {
+		this.inputfile = inputfile;
 	}
 
-	public String getObjectsFile() {
-		return objectsFile;
+	public String getTrueObjectsFile() {
+		return trueobjectsfile;
 	}
 
-	public void setObjectsFile(String objectsFile) {
-		this.objectsFile = objectsFile;
+	public void setTrueObjectsFile(String trueobjectsfile) {
+		this.trueobjectsfile = trueobjectsfile;
 	}
 
-	public String getWorkersFile() {
-		return workersFile;
+	public String getTrueWorkersFile() {
+		return trueworkersfile;
 	}
 
-	public void setWorkersFile(String workersFile) {
-		this.workersFile = workersFile;
+	public void setTrueWorkersFile(String trueworkersfile) {
+		this.trueworkersfile = trueworkersfile;
 	}
 
-	public String getEvaluationFile() {
-		return evaluationFile;
+	public String getOutputFolder() {
+		return outputfolder;
 	}
 
-	public void setEvaluationFile(String evaluationFile) {
-		this.evaluationFile = evaluationFile;
+	public void setOutputFolder(String outputfolder) {
+		this.outputfolder = outputfolder;
 	}
 
 	public boolean isVerbose() {
@@ -71,7 +71,6 @@ public class EngineContext {
 		this.syntheticDataSet = syntheticDataSet;
 	}
 
+
 	
-
-
 }
