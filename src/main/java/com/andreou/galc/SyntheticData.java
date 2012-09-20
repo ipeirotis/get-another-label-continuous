@@ -42,12 +42,27 @@ public class SyntheticData extends Data {
 		rhoGenerator.setUniformParameters(rho_down, rho_up);
 	}
 
-	public void build(int k_objects, int l_workers) {
+	public void build(int k_objects, int g_gold_objects, int l_workers) {
 
 		createObjects(k_objects);
+		createGold(g_gold_objects);
 		createWorkers(l_workers);
 		createLabels();
 
+	}
+
+	private void createGold(int g_gold_objects) {
+
+		//first g_gold_objects will be gold
+		int i = 0;
+
+		for (DatumCont d : this.objects) {
+				if(i++<g_gold_objects){
+					d.setGold(true);
+					d.setGoldValue(d.getTrueValue());
+					d.setGoldZeta(d.getTrueZeta());
+				}
+		}
 	}
 
 	private void createLabels() {
@@ -69,7 +84,6 @@ public class SyntheticData extends Data {
 				labels.add(al);
 				w.addAssignedLabel(al);
 				d.addAssignedLabel(al);
-
 			}
 		}
 	}
@@ -174,5 +188,32 @@ public class SyntheticData extends Data {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void writeGoldObjectDataToFile(String filename) {
+
+		try {
+			File outfile = new File(filename);
+			
+			
+			if (outfile.getParent() != null) {
+				File parentDir = new File(outfile.getParent());
+				if (!parentDir.exists()) {
+					parentDir.mkdirs();
+				}
+			}
+
+
+			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
+			for (DatumCont d: objects) {
+				if(d.isGold()) {
+					String line = d.getName() +"\t" + d.getTrueValue() +"\t" + d.getTrueZeta() +  "\n";
+					bw.write(line);					
+				}
+			}
+			bw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

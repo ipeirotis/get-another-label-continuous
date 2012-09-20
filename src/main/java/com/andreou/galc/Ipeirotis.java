@@ -12,7 +12,6 @@ public class Ipeirotis {
 	private Map<String, DatumCont>	objects_index;
 	private Set<Worker>							workers;
 	private Map<String, Worker>			workers_index;
-	private Set<AssignedLabel>			labels;
 	
 
 
@@ -32,7 +31,6 @@ public class Ipeirotis {
 			workers_index.put(w.getName(), w);
 		}
 
-		this.labels = data.getLabels();
 
 		initWorkers();
 		//System.out.println("=======");
@@ -78,34 +76,42 @@ public class Ipeirotis {
 	private Double estimateObjectZetas() {
 
 		// See equation 9
-
 		double diff = 0.0;
 		for (DatumCont d : this.objects) {
-			Double oldzeta = d.getEst_zeta();
-			
+			Double oldZeta = 0.0;
+			Double newZeta = 0.0;
 			Double zeta = 0.0;
 			Double betasum = 0.0;
-			for (AssignedLabel al : d.getAssignedLabels()) {
-				String wid = al.getWorker();
-				Worker w = this.workers_index.get(wid);
-				Double b = w.getBeta();
-				Double r = w.getEst_rho();
-				Double z = w.getZeta(al.getLabel());
-				zeta +=  b* r * z;
-				betasum += b;
+			if(!d.isGold()) {
+				oldZeta = d.getEst_zeta();
+				for (AssignedLabel al : d.getAssignedLabels()) {
+					String wid = al.getWorker();
+					Worker w = this.workers_index.get(wid);
+					Double b = w.getBeta();
+					Double r = w.getEst_rho();
+					Double z = w.getZeta(al.getLabel());
+					zeta +=  b* r * z;
+					betasum += b;
+				}
+				
+				//d.setEst_zeta(zeta / betasum);
+				newZeta = zeta/ betasum;
+			} else {
+				oldZeta = d.getGoldZeta();
+				newZeta = d.getGoldZeta();
 			}
-			
-			//d.setEst_zeta(zeta / betasum);
-			Double newZeta = zeta/ betasum;
+				
 			d.setEst_zeta(newZeta);
 			this.objects_index.put(d.getName(), d);
 			
-			if (oldzeta == null) {
+			if (d.isGold())
+				continue;
+			else if (oldZeta == null) {
 				diff += 1;
 				continue;
 			}
 			
-			diff += Math.abs(d.getEst_zeta() - oldzeta);
+			diff += Math.abs(d.getEst_zeta() - oldZeta);
 		}
 		
 		return diff;

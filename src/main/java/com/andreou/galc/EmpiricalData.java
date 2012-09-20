@@ -3,6 +3,7 @@ package com.andreou.galc;
 import java.util.Map;
 import java.util.TreeMap;
 
+
 public class EmpiricalData extends Data {
 
 	
@@ -50,6 +51,33 @@ public class EmpiricalData extends Data {
 			this.labels.add(al);
 			
 			
+		}
+		
+	}
+
+	public void loadGoldLabelsFile(String filename) {
+
+		String[] lines = Utils.getFile(filename).split("\n");
+		
+		for (String line : lines) {
+			String[] entries = line.split("\t");
+			if (entries.length != 3) {
+				throw new IllegalArgumentException("Error while loading from gold labels file");
+			}
+
+			String objectname = entries[0]; 
+			Double correctValue = Double.parseDouble(entries[1]);
+			Double correctZeta = Double.parseDouble(entries[2]);
+
+			DatumCont d = this.objects_index.get(objectname);
+			if (d == null) {
+				d = new DatumCont(objectname);
+				this.objects.add(d);
+				this.objects_index.put(objectname,d);
+			}
+			d.setGold(true);
+			d.setGoldValue(correctValue);
+			d.setGoldZeta(correctZeta);
 		}
 		
 	}
@@ -115,7 +143,5 @@ public class EmpiricalData extends Data {
 		
 	}
 
-
-	
 	
 }

@@ -8,6 +8,11 @@ public class DatumCont implements Comparable<DatumCont> {
 	private String							name;
 	private Set<AssignedLabel>	labels;
 
+	private Boolean							isGold;
+	private Double							goldValue;
+	private Double							goldZeta;
+
+	
 	private Double							est_value;
 	private Double							est_zeta;
 
@@ -15,7 +20,31 @@ public class DatumCont implements Comparable<DatumCont> {
 	private Double							trueValue;
 	private Double							trueZeta;
 
-	
+	public DatumCont(String name) {
+
+		this.name = name;
+		this.isGold = false;
+		this.labels = new TreeSet<AssignedLabel>();
+
+	}
+
+	public void addAssignedLabel(AssignedLabel al) {
+
+		if (al.getDatum().equals(name)) {
+			this.labels.add(al);
+		}
+	}
+
+	public String getName() {
+
+		return name;
+	}
+
+	public void setName(String name) {
+
+		this.name = name;
+	}
+
 	/**
 	 * @return the est_value
 	 */
@@ -69,30 +98,6 @@ public class DatumCont implements Comparable<DatumCont> {
 		this.trueZeta = trueZeta;
 	}
 
-	public DatumCont(String name) {
-
-		this.name = name;
-		this.labels = new TreeSet<AssignedLabel>();
-
-	}
-
-	public void addAssignedLabel(AssignedLabel al) {
-
-		if (al.getDatum().equals(name)) {
-			this.labels.add(al);
-		}
-	}
-
-	public String getName() {
-
-		return name;
-	}
-
-	public void setName(String name) {
-
-		this.name = name;
-	}
-
 	public Double getTrueValue() {
 
 		return trueValue;
@@ -101,6 +106,33 @@ public class DatumCont implements Comparable<DatumCont> {
 	public void setTrueValue(Double trueValue) {
 
 		this.trueValue = trueValue;
+	}
+	
+
+	public Boolean isGold() {
+		return isGold;
+	}
+
+
+	public void setGold(Boolean isGold) {
+		this.isGold = isGold;
+	}
+
+
+	public Double getGoldValue() {
+		return goldValue;
+	}
+
+	public void setGoldValue(Double goldValue) {
+		this.goldValue = goldValue;
+	}
+
+	public Double getGoldZeta() {
+		return goldZeta;
+	}
+
+	public void setGoldZeta(Double goldZeta) {
+		this.goldZeta = goldZeta;
 	}
 
 	/*

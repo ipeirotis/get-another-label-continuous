@@ -3,11 +3,7 @@ package com.andreou.galc.engine;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Set;
 
-import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
-
-import com.andreou.galc.AssignedLabel;
 import com.andreou.galc.Data;
 import com.andreou.galc.DatumCont;
 import com.andreou.galc.EmpiricalData;
@@ -201,6 +197,7 @@ public class Engine {
 			sdata.writeLabelsToFile(ctx.getOutputFolder()+"/"+ctx.getInputFile());
 			sdata.writeTrueWorkerDataToFile(ctx.getOutputFolder()+"/"+ctx.getTrueWorkersFile());
 			sdata.writeTrueObjectDataToFile(ctx.getOutputFolder()+"/"+ctx.getTrueObjectsFile());
+			sdata.writeGoldObjectDataToFile(ctx.getOutputFolder()+"/"+ctx.getCorrectFile());
 			data = sdata;
 		} else {
 			// PANOS: not verified that it works...
@@ -208,6 +205,7 @@ public class Engine {
 			edata.loadLabelFile(ctx.getOutputFolder()+"/"+ctx.getInputFile());
 			edata.loadTrueWorkerData(ctx.getOutputFolder()+"/"+ctx.getTrueWorkersFile());
 			edata.loadTrueObjectData(ctx.getOutputFolder()+"/"+ctx.getTrueObjectsFile());
+			edata.loadGoldLabelsFile(ctx.getOutputFolder()+"/"+ctx.getCorrectFile());
 		data = edata;
 		}		
 		Ipeirotis ip = new Ipeirotis(data, ctx);
@@ -231,9 +229,10 @@ public class Engine {
 	 */
 	private static SyntheticData createSyntheticDataSet(boolean verbose) {
 
-		int data_points = 1000;
+		int data_points = 10000;
 		Double data_mu = 7.0;
 		Double data_sigma = 11.0;
+		int data_gold = 100;
 
 		int workers = 1;
 		Double worker_mu_down = -5.0;
@@ -245,18 +244,19 @@ public class Engine {
 
 		if(!verbose) {
 			System.out.println("Data points: " + data_points);
+			System.out.println("Data gold: " + data_gold);
 			System.out.println("Workers: " + workers);
 	
 			System.out.println("Low rho: " + worker_rho_down);
 			System.out.println("High rho: " + worker_rho_up);
 		}
-		SyntheticData data = createDataSet(data_points, data_mu, data_sigma, workers, worker_mu_down, worker_mu_up,
+		SyntheticData data = createDataSet(data_points, data_mu, data_sigma, data_gold, workers, worker_mu_down, worker_mu_up,
 				worker_sigma_down, worker_sigma_up, worker_rho_down, worker_rho_up);
 		return data;
 	}
 
 
-	 static SyntheticData createDataSet(int data_points, Double data_mu, Double data_sigma, int workers,
+	 private static SyntheticData createDataSet(int data_points, Double data_mu, Double data_sigma, int data_gold, int workers,
 			Double worker_mu_down, Double worker_mu_up, Double worker_sigma_down, Double worker_sigma_up,
 			Double worker_rho_down, Double worker_rho_up) {
 
@@ -267,7 +267,7 @@ public class Engine {
 		data.setWorkerParameters(worker_mu_down, worker_mu_up, worker_sigma_down, worker_sigma_up, worker_rho_down,
 				worker_rho_up);
 
-		data.build(data_points, workers);
+		data.build(data_points, data_gold, workers);
 		return data;
 	}
 
