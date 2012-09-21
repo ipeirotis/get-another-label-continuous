@@ -19,14 +19,14 @@ public class EngineContext {
 	@Option(name = "--correct", metaVar = "<correctfile>", usage = "A tab-separated text file. Each line has the form <objectid><tab><assigned_label> and records the correct labels for whatever objects we have them.")
 	String correctFile;
 
+	@Option(name = "--synthetic", metaVar = "<syntheticoptionsfile>", usage = "A tab-separated text file. Each line has the form <attribute><tab><value> and records the options for the creation of new synthetic data.")
+	String syntheticOptionsFile = "";
+
 	@Option(name="--output", metaVar="<outputfolder>", usage="An Evaluation Report File")
 	private String outputfolder = "results";
 
 	@Option(name="--verbose", metaVar="<verbose>", usage="Verbose Mode?")
 	private boolean verbose;
-
-	@Option(name="--syntheticDataSet", usage="Create new synthetic DataSet or use empirical DataSet?")
-	private boolean syntheticDataSet;
 
 	public String getInputFile() {
 		return inputfile;
@@ -72,6 +72,18 @@ public class EngineContext {
 		this.correctFile = correctfile;
 	}
 
+	public boolean isSyntheticDataSet() {
+		return isNotBlank(syntheticOptionsFile);
+	}
+
+	public String getSyntheticOptionsfile() {
+		return syntheticOptionsFile;
+	}
+
+	public void setSyntheticOptionsFile(String syntheticOptionsFile) {
+		this.syntheticOptionsFile = syntheticOptionsFile;
+	}
+
 	public String getOutputFolder() {
 		return outputfolder;
 	}
@@ -88,13 +100,6 @@ public class EngineContext {
 		this.verbose = verbose;
 	}
 
-	public boolean isSyntheticDataSet() {
-		return syntheticDataSet;
-	}
-
-	public void setSyntheticDataSet(boolean syntheticDataSet) {
-		this.syntheticDataSet = syntheticDataSet;
-	}
 
 
 	

@@ -8,45 +8,62 @@ import java.io.FileWriter;
 public class SyntheticData extends Data {
 
 
-	private Double							data_mu;
-	private Double							data_sigma;
 
+
+	private int 						data_points;
+	private Double						data_mu;
+	private Double						data_sigma;
+	private int 						data_gold;
+	private int 						workers_points;
+	private Double 						worker_mu_down;
+	private Double 						worker_mu_up;
+	private Double 						worker_sigma_down;
+	private Double 						worker_sigma_up;
+	private Double 						worker_rho_down;
+	private Double 						worker_rho_up;
+	
+	
 	private Generator										muGenerator;
 	private Generator										sigmaGenerator;
 	private Generator										rhoGenerator;
 
 	private Generator										datumGenerator;
 
-	public SyntheticData() {
+	public SyntheticData(Boolean verbose, String file) {
 
+		loadSyntheticOptions(file);
+		if(!verbose) {
+			System.out.println("Data points: " + this.data_points);
+			System.out.println("Data gold: " + this.data_gold);
+			System.out.println("Workers: " + this.workers_points);
+			System.out.println("Low rho: " + this.worker_rho_down);
+			System.out.println("High rho: " + this.worker_rho_up);
+		}
+		
 	}
 
-	public void setDataParameters(Double mu, Double sigma) {
-
-		this.data_mu = mu;
-		this.data_sigma = sigma;
+	public void initDataParameters() {
 		datumGenerator = new Generator(Generator.Distribution.GAUSSIAN);
-		datumGenerator.setGaussianParameters(mu, sigma);
+		datumGenerator.setGaussianParameters(this.data_mu, this.data_sigma);
 	}
 
-	public void setWorkerParameters(Double mu_down, Double mu_up, Double sigma_down, Double sigma_up, Double rho_down,
-			Double rho_up) {
+	public void initWorkerParameters() {
 
 		muGenerator = new Generator(Generator.Distribution.UNIFORM);
-		muGenerator.setUniformParameters(mu_down, mu_up);
+		muGenerator.setUniformParameters(this.worker_mu_down, this.worker_mu_up);
 
 		sigmaGenerator = new Generator(Generator.Distribution.UNIFORM);
-		sigmaGenerator.setUniformParameters(sigma_down, sigma_up);
+		sigmaGenerator.setUniformParameters(this.worker_sigma_down, this.worker_sigma_up);
 
 		rhoGenerator = new Generator(Generator.Distribution.UNIFORM);
-		rhoGenerator.setUniformParameters(rho_down, rho_up);
+		rhoGenerator.setUniformParameters(this.worker_rho_down, this.worker_rho_up);
 	}
 
-	public void build(int k_objects, int g_gold_objects, int l_workers) {
+	public void build() {
 
-		createObjects(k_objects);
-		createGold(g_gold_objects);
-		createWorkers(l_workers);
+		createObjects(this.data_points);
+		createGold(this.data_gold);
+		createWorkers(this.workers_points);
 		createLabels();
 
 	}
@@ -214,6 +231,42 @@ public class SyntheticData extends Data {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void loadSyntheticOptions(String filename) {
+		String[] lines = Utils.getFile(filename).split("\n");
+		for(String line : lines){
+			String[] entries = line.split("=");
+			if (entries.length != 2) {
+				throw new IllegalArgumentException("Error while loading from synthetic sptions file");
+			} else if(entries[0].equals("data_points") ){
+				this.data_points = (int)Integer.parseInt(entries[1]);
+			} else if (entries[0].equals("data_mu") ) {
+				this.data_mu = Double.parseDouble(entries[1]);
+			} else if (entries[0].equals("data_sigma") ) {
+				this.data_sigma = Double.parseDouble(entries[1]);
+			} else if (entries[0].equals("data_gold") ) {
+				this.data_gold = (int)Integer.parseInt(entries[1]);
+			} else if (entries[0].equals("workers") ) {
+				this.workers_points = (int)Integer.parseInt(entries[1]);
+			} else if (entries[0].equals("worker_mu_down") ) {
+				this.worker_mu_down = Double.parseDouble(entries[1]);
+			} else if (entries[0].equals("worker_mu_up") ) {
+				this.worker_mu_up = Double.parseDouble(entries[1]);
+			} else if (entries[0].equals("worker_sigma_down") ) {
+				this.worker_sigma_down = Double.parseDouble(entries[1]);
+			} else if (entries[0].equals("worker_sigma_up") ) {
+				this.worker_sigma_up = Double.parseDouble(entries[1]);
+			} else if (entries[0].equals("worker_rho_down") ) {
+				this.worker_rho_down = Double.parseDouble(entries[1]);
+			} else if (entries[0].equals("worker_rho_up") ) {
+				this.worker_rho_up = Double.parseDouble(entries[1]);
+			} else {
+				System.err.println("Error in synthetic options file variables");
+			}
+
+		}
+
 	}
 
 }

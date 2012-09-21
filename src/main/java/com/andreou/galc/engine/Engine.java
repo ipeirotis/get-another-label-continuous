@@ -193,7 +193,7 @@ public class Engine {
 	public void execute(){
 		Data data;
 		if(ctx.isSyntheticDataSet()) {
-			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose());
+			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose(),ctx.getOutputFolder()+"/"+ctx.getSyntheticOptionsfile());
 			sdata.writeLabelsToFile(ctx.getOutputFolder()+"/"+ctx.getInputFile());
 			sdata.writeTrueWorkerDataToFile(ctx.getOutputFolder()+"/"+ctx.getTrueWorkersFile());
 			sdata.writeTrueObjectDataToFile(ctx.getOutputFolder()+"/"+ctx.getTrueObjectsFile());
@@ -227,47 +227,35 @@ public class Engine {
 	/**
 	 * @return
 	 */
-	private static SyntheticData createSyntheticDataSet(boolean verbose) {
+	private static SyntheticData createSyntheticDataSet(boolean verbose, String file) {
 
-		int data_points = 10000;
-		Double data_mu = 7.0;
-		Double data_sigma = 11.0;
-		int data_gold = 100;
+//		int data_points = 10000;
+//		Double data_mu = 7.0;
+//		Double data_sigma = 11.0;
+//		int data_gold = 100;
+//
+//		int workers = 1;
+//		Double worker_mu_down = -5.0;
+//		Double worker_mu_up = 5.0;
+//		Double worker_sigma_down = 0.5;
+//		Double worker_sigma_up = 1.5;
+//		Double worker_rho_down = 0.5;
+//		Double worker_rho_up = 1.0;
 
-		int workers = 1;
-		Double worker_mu_down = -5.0;
-		Double worker_mu_up = 5.0;
-		Double worker_sigma_down = 0.5;
-		Double worker_sigma_up = 1.5;
-		Double worker_rho_down = 0.5;
-		Double worker_rho_up = 1.0;
-
-		if(!verbose) {
-			System.out.println("Data points: " + data_points);
-			System.out.println("Data gold: " + data_gold);
-			System.out.println("Workers: " + workers);
-	
-			System.out.println("Low rho: " + worker_rho_down);
-			System.out.println("High rho: " + worker_rho_up);
-		}
-		SyntheticData data = createDataSet(data_points, data_mu, data_sigma, data_gold, workers, worker_mu_down, worker_mu_up,
-				worker_sigma_down, worker_sigma_up, worker_rho_down, worker_rho_up);
+		SyntheticData data = createDataSet(verbose,file);
 		return data;
 	}
 
 
-	 private static SyntheticData createDataSet(int data_points, Double data_mu, Double data_sigma, int data_gold, int workers,
-			Double worker_mu_down, Double worker_mu_up, Double worker_sigma_down, Double worker_sigma_up,
-			Double worker_rho_down, Double worker_rho_up) {
+	 private static SyntheticData createDataSet(Boolean verbose, String file) {
 
-		SyntheticData data = new SyntheticData();
+		SyntheticData data = new SyntheticData(verbose,file);
+		
+		data.initDataParameters();
 
-		data.setDataParameters(data_mu, data_sigma);
+		data.initWorkerParameters();
 
-		data.setWorkerParameters(worker_mu_down, worker_mu_up, worker_sigma_down, worker_sigma_up, worker_rho_down,
-				worker_rho_up);
-
-		data.build(data_points, data_gold, workers);
+		data.build();
 		return data;
 	}
 
