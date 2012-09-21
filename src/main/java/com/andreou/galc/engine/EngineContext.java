@@ -76,12 +76,8 @@ public class EngineContext {
 		return isNotBlank(syntheticOptionsFile);
 	}
 
-	public String getSyntheticOptionsfile() {
+	public String getSyntheticOptionsFile() {
 		return syntheticOptionsFile;
-	}
-
-	public void setSyntheticOptionsFile(String syntheticOptionsFile) {
-		this.syntheticOptionsFile = syntheticOptionsFile;
 	}
 
 	public String getOutputFolder() {
