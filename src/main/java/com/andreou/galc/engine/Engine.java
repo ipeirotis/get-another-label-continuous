@@ -193,7 +193,7 @@ public class Engine {
 	public void execute(){
 		Data data;
 		if(ctx.isSyntheticDataSet()) {
-			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose(),ctx.getOutputFolder()+"/"+ctx.getSyntheticOptionsFile());
+			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose(),ctx.getSyntheticOptionsFile());
 			sdata.writeLabelsToFile(ctx.getOutputFolder()+"/"+ctx.getInputFile());
 			sdata.writeTrueWorkerDataToFile(ctx.getOutputFolder()+"/"+ctx.getTrueWorkersFile());
 			sdata.writeTrueObjectDataToFile(ctx.getOutputFolder()+"/"+ctx.getTrueObjectsFile());
