@@ -201,8 +201,8 @@
 							</binFileExtensions>
 							<programs>
 								<program>
-									<mainClass>com.ipeirotis.gal.Main</mainClass>
-									<name>get-another-label</name>
+									<mainClass>com.andreou.galc.Main</mainClass>
+									<name>get-another-label-continuous</name>
 								</program>
 							</programs>
 						</configuration>
