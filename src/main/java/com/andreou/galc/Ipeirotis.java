@@ -1,5 +1,6 @@
 package com.andreou.galc;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -118,6 +119,37 @@ public class Ipeirotis {
 
 	}
 
+	private HashMap<String, Double> estimateObjectZetas(String workerToIgnore) {
+			
+		HashMap<String, Double> result = new HashMap<String, Double>();
+
+		// See equation 9 without the influence of worker w
+		for (DatumCont d : this.objects) {
+			Double newZeta = 0.0;
+			Double zeta = 0.0;
+			Double betasum = 0.0;
+
+			for (AssignedLabel al : d.getAssignedLabels()) {
+				String wid = al.getWorker();
+				if(wid.equals(workerToIgnore))
+					continue;
+				Worker w = this.workers_index.get(wid);
+				Double b = w.getBeta();
+				Double r = w.getEst_rho();
+				Double z = w.getZeta(al.getLabel());
+				zeta +=  b* r * z;
+				betasum += b;
+			}
+			
+			//d.setEst_zeta(zeta / betasum);
+			newZeta = zeta/ betasum;				
+			result.put(d.getName(), newZeta);
+		}
+		
+		return result;
+
+	}
+
 	private double estimateWorkerRho() {
 
 		// See equation 10
@@ -126,15 +158,19 @@ public class Ipeirotis {
 		double diff = 0.0;
 		for (Worker w : this.workers) {
 
+			String workerToIgnore = w.getName();
+			
 			Double sum_prod = 0.0;
 			Double sum_zi = 0.0;
 			Double sum_zij = 0.0;
 			
 			double oldrho = w.getEst_rho();
 			for (AssignedLabel zl : w.getZetaValues()) {
+				
+				HashMap<String, Double> zeta = estimateObjectZetas(workerToIgnore);
+				
 				String oid = zl.getDatum();
-				DatumCont d = objects_index.get(oid);
-				double z_i = d.getEst_zeta();
+				Double z_i = zeta.get(oid);
 				double z_ij = zl.getLabel();
 
 				sum_prod += z_i * z_ij;
