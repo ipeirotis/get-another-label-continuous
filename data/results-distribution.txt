@@ -1,0 +1,2 @@
+Estimated mu = 0.17197858523182763
+Estimated sigma = 0.5731262360742112
