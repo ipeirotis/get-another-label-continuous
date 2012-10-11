@@ -3,14 +3,10 @@ package com.andreou.galc;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
-import com.andreou.galc.engine.EngineContext;
 import com.andreou.galc.engine.Engine;
+import com.andreou.galc.engine.EngineContext;
 
 public class Main {
-
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		EngineContext ctx = new EngineContext();
 		
@@ -30,8 +26,6 @@ public class Main {
 		Engine engine = new Engine(ctx);
 		
 		engine.execute();
-
-
 	}
 
 	private static void showUsage(CmdLineParser parser) {
