@@ -41,29 +41,54 @@ public class Ipeirotis {
 		//System.out.println("=======");
 
 		// Run until convergence.
-		int round = 1;
 		double epsilon = 0.00001;
-		//System.out.print("----\nRound: ");
-		while (true) {
-			if (!ctx.isVerbose()) System.out.print(round+"... ");
-			double d1 = estimateObjectZetas();
-			//System.out.println("DiffObjects:" + d1);
-			double d2 = estimateWorkerRho();
-			//System.out.println("DiffWorkers:" + d2);
-			round++;
-			if (!ctx.isVerbose()) System.out.println("");
-			if (d1+d2<epsilon) break;
-			if (Double.isNaN(d1+d2)) {
-				System.err.println("ERROR: Check for division by 0");
-				break;
-			}
-		}
-		if (!ctx.isVerbose()) System.out.println("Done!\n----");
+		double logLikelihood = estimate(epsilon, ctx);
+		if (!ctx.isVerbose()) System.out.println("Done! (logLikelihood= " + logLikelihood + ")\n----");
 		
 		
 	}
 
 
+	private double estimate(double epsilon, EngineContext ctx) {
+		double pastLogLikelihood = Double.POSITIVE_INFINITY;
+		double logLikelihood = 0d;
+
+		int round = 1;
+		while (Math.abs(logLikelihood - pastLogLikelihood) > epsilon) {
+			pastLogLikelihood = logLikelihood;
+
+			if (!ctx.isVerbose()) System.out.print(round+"... ");
+			Double diffZetas = estimateObjectZetas();
+			Double diffWorkers = estimateWorkerRho();
+			round++;
+			if (!ctx.isVerbose()) System.out.println("");
+			if (Double.isNaN(diffZetas+diffWorkers)) {
+				System.err.println("ERROR: Check for division by 0");
+				break;
+			}
+			logLikelihood = getLogLikelihood();
+		}
+		
+
+		return logLikelihood;
+	}
+	private double getLogLikelihood() {
+		double result = 0d;
+		for (Worker w : this.workers) {
+			String workerToIgnore = w.getName();
+			for (AssignedLabel zl : w.getZetaValues()) {
+				HashMap<String, Double> zetas = estimateObjectZetas(workerToIgnore);
+				String oid = zl.getDatum();
+				Double zeta = zetas.get(oid);
+				double rho = w.getEst_rho();
+				result += 0.5*Math.pow(zeta, 2) / (1-Math.pow(rho, 2)) - Math.log(Math.sqrt(1-Math.pow(rho, 2)));
+			}			
+		}
+		return result;
+		
+	}
+	
+	
 	private void initWorkers() {
 
 		double initial_rho = 0.9;

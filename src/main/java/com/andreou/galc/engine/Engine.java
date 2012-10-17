@@ -26,7 +26,7 @@ class ReportGenerator {
 	 */
 	  double getCorrelationRelativeError() {
 
-		Double relRhoError = 0.0;
+		  Double relRhoError = 0.0;
 		int n = ip.getWorkers().size();
 		for (Worker w : ip.getWorkers()) {
 			double estRho = w.getEst_rho();

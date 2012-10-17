@@ -50,7 +50,7 @@ public class EngineTest {
 
 	@Test
 	public void testBasicExecution() throws Exception {
-		executeOn("--input data/assignedlabels.txt --evalObjects data/evaluationObjects.txt --evalWorkers data/evaluationWorkers.txt --correct data/goldObjects.txt --synthetic data/synthetic-options.txt --output results --verbose");
+		executeOn("--input data/assignedlabels.txt --evalObjects data/evaluationObjects.txt --evalWorkers data/evaluationWorkers.txt --correct data/goldObjects.txt --synthetic data/synthetic-options.txt --output results");
 	}
 
 	@Test
