@@ -1,2 +1,0 @@
-Average absolute estimation error for z-values: 0.5147022023894952
-Average relative estimation error for z-values: 1.5841065456458288

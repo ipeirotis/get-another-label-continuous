@@ -1,2 +1,0 @@
-Average absolute estimation error for correlation values: 0.16225687506374467
-Average relative estimation error for correlation values: 0.24227575507194582
