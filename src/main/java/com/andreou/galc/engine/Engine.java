@@ -194,18 +194,18 @@ public class Engine {
 		Data data;
 		if(ctx.isSyntheticDataSet()) {
 			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose(),ctx.getSyntheticOptionsFile());
-			sdata.writeLabelsToFile(ctx.getOutputFolder()+"/"+ctx.getInputFile());
-			sdata.writeTrueWorkerDataToFile(ctx.getOutputFolder()+"/"+ctx.getTrueWorkersFile());
-			sdata.writeTrueObjectDataToFile(ctx.getOutputFolder()+"/"+ctx.getTrueObjectsFile());
-			sdata.writeGoldObjectDataToFile(ctx.getOutputFolder()+"/"+ctx.getCorrectFile());
+			sdata.writeLabelsToFile(ctx.getInputFile());
+			sdata.writeTrueWorkerDataToFile(ctx.getTrueWorkersFile());
+			sdata.writeTrueObjectDataToFile(ctx.getTrueObjectsFile());
+			sdata.writeGoldObjectDataToFile(ctx.getCorrectFile());
 			data = sdata;
 		} else {
 			// PANOS: not verified that it works...
 			EmpiricalData edata = new EmpiricalData();
-			edata.loadLabelFile(ctx.getOutputFolder()+"/"+ctx.getInputFile());
-			edata.loadTrueWorkerData(ctx.getOutputFolder()+"/"+ctx.getTrueWorkersFile());
-			edata.loadTrueObjectData(ctx.getOutputFolder()+"/"+ctx.getTrueObjectsFile());
-			edata.loadGoldLabelsFile(ctx.getOutputFolder()+"/"+ctx.getCorrectFile());
+			edata.loadLabelFile(ctx.getInputFile());
+			edata.loadTrueWorkerData(ctx.getTrueWorkersFile());
+			edata.loadTrueObjectData(ctx.getTrueObjectsFile());
+			edata.loadGoldLabelsFile(ctx.getCorrectFile());
 		data = edata;
 		}		
 		Ipeirotis ip = new Ipeirotis(data, ctx);
