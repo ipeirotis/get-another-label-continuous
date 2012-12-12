@@ -13,6 +13,6 @@ The idea behind this work is an extension in continuous data of what is describe
 
 ## How to Run
 
-For details on how to run the algorithm see https://github.com/Allemaos/get-another-label-continuous/wiki/How-to-Run-Get-Another-Label-Continuous 
+For details on how to run the algorithm see https://github.com/ipeirotis/get-another-label-continuous/wiki/How-to-Run-Get-Another-Label-Continuous 
 
 
