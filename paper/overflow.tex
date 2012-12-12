@@ -1,0 +1,84 @@
+
+
+\section{Estimation Algorithm II: Maximum Likelihood}
+
+In the previous section, we described an algorithm that uses two ``maximum likelihood'' operations. In the first one, the noisy measurements $y_j(x_i)$ are mapped into a \emph{single} estimated point $z_i$. Then, in the second maximum likelihood operation, we use the $z_i$ values to compute, through maximum likelihood again, the mean $\mu$, variance $\sigma^2$, and the values of the latent variables $x_i$. 
+
+Here, we change slightly the estimation approach. In order to estimate the parameters $\mu$ and $\sigma$ of the latent distribution $F$, we estimate these values along all possible $z_i$ values (and not just using the ``most likely'' $z_i$ values).
+
+\begin{eqnarray}
+P(\mu, \sigma | Y_1 \ldots Y_k) 
+& = & \int_X P(\mu, \sigma | X) \cdot P ( X | Y_1 \ldots Y_k) \ dX \nonumber
+\end{eqnarray}
+
+From Equation~\ref{equ:pxgiveny}, we have the value for $P ( X | Y_1 \ldots Y_k)$:
+
+\begin{equation}
+\label{equ:pxgiveny-exp}
+P ( X | Y_1 \ldots Y_k) \propto  \prod_{j=1}^k \prod_{i=1}^n \mathcal{N}\left(x_i; \widehat{\mu_j},  \widehat{\sigma_j}\right)
+\end{equation}
+
+\begin{eqnarray}
+\mathcal{N}(x; \mu, \sigma) & = & \frac{1}{\sigma\sqrt{2\pi}} \cdot \exp{ -\frac{(x-\mu)^2}{2\sigma^2} } \nonumber \\
+\widehat{\mu_j} &= &\mu + \rho_j \frac{\sigma}{\sigma_j} (y_j(x_i) - \mu_j) \nonumber \\
+\widehat{\sigma_j} &=& \sqrt{1-\rho_j^2} \cdot \sigma \nonumber 
+\end{eqnarray}
+
+For the quantity $P(\mu, \sigma | X)$ we have $P(\mu, \sigma| X) \propto P(X | \mu, \sigma) \cdot P(\mu, \sigma)$. Since $P(X | \mu, \sigma) = \prod_i P(x_i | \mu,  \sigma)$ and $P(x_i | \mu,  \sigma) = \mathcal{N}(x_i; \mu, \sigma)$, we have:
+
+
+\begin{eqnarray}
+P(\mu, \sigma | Y_1 \ldots Y_k) 
+& \propto & P(\mu, \sigma) \cdot \int_X \left( \prod_{i=1}^n \mathcal{N}(x_i; \mu, \sigma) \right) \cdot  \left(  \prod_{j=1}^k \prod_{i=1}^n \mathcal{N}\left(x_i; \widehat{\mu_j},  \widehat{\sigma_j}\right) \right) \ dX \nonumber
+\end{eqnarray}
+
+\section{Overflow}
+
+
+
+
+Or we can go for a simpler maximum likelihood approach, where we maximize the likelihood of $P(\mu, \sigma | Y^1 \ldots Y^k)$ given the observed data $Y^1 \ldots Y^k$.
+
+
+
+\begin{eqnarray}
+P(\mu, \sigma | Y^1 \ldots Y^k) 
+& \propto & \int_X  P(X | \mu,  \sigma) \cdot P ( X | Y^1 \ldots Y^k) \ dX \nonumber \\
+\end{eqnarray}
+
+We now expand the term $P ( X | Y^1 \ldots Y^k)$ where $X=\{x_1,\ldots,x_n\}$.
+
+
+
+
+Combining the above, we have:
+
+\begin{eqnarray}
+P(\mu, \sigma | Y^1 \ldots Y^k) 
+& \propto & \int_{\{x_1,\ldots,x_n\}}  \prod_{i=1}^n P(x_i | \mu,  \sigma) \cdot \prod_{j=1}^k \prod_{i=1}^n P (  x_i | y_i^j, Y^j ) \\
+& = & \prod_{i=1}^n \prod_{j=1}^k \prod_{i=1}^n \int_{x_i}   P(x_i | \mu,  \sigma) \cdot  P (  x_i | y_i^j, Y^j )
+\end{eqnarray}
+
+
+
+This leads to the following:
+
+\begin{eqnarray}
+P(\mu, \sigma | Y^1 \ldots Y^k) 
+& \propto & \prod_{i=1}^n \prod_{j=1}^k \prod_{i=1}^n \int_{x_i}   \mathcal{N}(x_i; \mu, \sigma) \cdot  \mathcal{N}(\widehat{\mu^j} ,\widehat{\sigma^j}^2 ) \ dx_i
+\end{eqnarray}
+
+
+
+
+Now, we need to identify the parameters $\mu$, $\sigma$, and $\rho^j$ that best describe the data that we have in hand. (Notice that the values of $mu_j$ and $\sigma_j$ are stable.)
+
+
+
+
+
+We can do a Bayesian approach, which is more computationally intensive:
+\begin{equation}
+E[\mu | Y^1 \ldots Y^k]  =
+\int_\mu \mu \cdot P(\mu | Y^1 \ldots Y^k) \cdot d\mu=
+\int_\mu \int_X \mu \cdot  P(\mu | X) \cdot P ( X | Y^1 \ldots Y^k) d\mu dX \end{equation}

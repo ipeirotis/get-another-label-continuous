@@ -4,45 +4,41 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-
 public class SyntheticData extends Data {
 
+	private int				data_points;
+	private Double		data_mu;
+	private Double		data_sigma;
+	private int				data_gold;
+	private int				workers_points;
+	private Double		worker_mu_down;
+	private Double		worker_mu_up;
+	private Double		worker_sigma_down;
+	private Double		worker_sigma_up;
+	private Double		worker_rho_down;
+	private Double		worker_rho_up;
 
+	private Generator	muGenerator;
+	private Generator	sigmaGenerator;
+	private Generator	rhoGenerator;
 
-
-	private int 						data_points;
-	private Double						data_mu;
-	private Double						data_sigma;
-	private int 						data_gold;
-	private int 						workers_points;
-	private Double 						worker_mu_down;
-	private Double 						worker_mu_up;
-	private Double 						worker_sigma_down;
-	private Double 						worker_sigma_up;
-	private Double 						worker_rho_down;
-	private Double 						worker_rho_up;
-	
-	
-	private Generator										muGenerator;
-	private Generator										sigmaGenerator;
-	private Generator										rhoGenerator;
-
-	private Generator										datumGenerator;
+	private Generator	datumGenerator;
 
 	public SyntheticData(Boolean verbose, String file) {
 
 		loadSyntheticOptions(file);
-		if(!verbose) {
+		if (!verbose) {
 			System.out.println("Data points: " + this.data_points);
 			System.out.println("Data gold: " + this.data_gold);
 			System.out.println("Workers: " + this.workers_points);
 			System.out.println("Low rho: " + this.worker_rho_down);
 			System.out.println("High rho: " + this.worker_rho_up);
 		}
-		
+
 	}
 
 	public void initDataParameters() {
+
 		datumGenerator = new Generator(Generator.Distribution.GAUSSIAN);
 		datumGenerator.setGaussianParameters(this.data_mu, this.data_sigma);
 	}
@@ -70,15 +66,15 @@ public class SyntheticData extends Data {
 
 	private void createGold(int g_gold_objects) {
 
-		//first g_gold_objects will be gold
+		// first g_gold_objects will be gold
 		int i = 0;
 
 		for (DatumCont d : this.objects) {
-				if(i++<g_gold_objects){
-					d.setGold(true);
-					d.setGoldValue(d.getTrueValue());
-					d.setGoldZeta(d.getTrueZeta());
-				}
+			if (i++ < g_gold_objects) {
+				d.setGold(true);
+				d.setGoldValue(d.getTrueValue());
+				d.setGoldZeta(d.getTrueZeta());
+			}
 		}
 	}
 
@@ -111,7 +107,7 @@ public class SyntheticData extends Data {
 		for (int i = 0; i < k_objects; i++) {
 			DatumCont d = new DatumCont("Object" + (i + 1));
 			Double v = datumGenerator.nextData();
-			Double z = (v-this.data_mu)/this.data_sigma;
+			Double z = (v - this.data_mu) / this.data_sigma;
 			d.setTrueValue(v);
 			d.setTrueZeta(z);
 			this.objects.add(d);
@@ -130,13 +126,12 @@ public class SyntheticData extends Data {
 		}
 
 	}
-	
+
 	public void writeLabelsToFile(String filename) {
 
 		try {
 			File outfile = new File(filename);
-			
-			
+
 			if (outfile.getParent() != null) {
 				File parentDir = new File(outfile.getParent());
 				if (!parentDir.exists()) {
@@ -144,10 +139,9 @@ public class SyntheticData extends Data {
 				}
 			}
 
-
 			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (AssignedLabel al: labels) {
-				String line = al.getWorker() +"\t" + al.getDatum() +"\t" + al.getLabel() + "\n";
+			for (AssignedLabel al : labels) {
+				String line = al.getWorker() + "\t" + al.getDatum() + "\t" + al.getLabel() + "\n";
 				bw.write(line);
 			}
 			bw.close();
@@ -155,13 +149,12 @@ public class SyntheticData extends Data {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void writeTrueObjectDataToFile(String filename) {
 
 		try {
 			File outfile = new File(filename);
-			
-			
+
 			if (outfile.getParent() != null) {
 				File parentDir = new File(outfile.getParent());
 				if (!parentDir.exists()) {
@@ -169,10 +162,9 @@ public class SyntheticData extends Data {
 				}
 			}
 
-
 			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (DatumCont d: objects) {
-				String line = d.getName() +"\t" + d.getTrueValue() +"\t" + d.getTrueZeta() +  "\n";
+			for (DatumCont d : objects) {
+				String line = d.getName() + "\t" + d.getTrueValue() + "\t" + d.getTrueZeta() + "\n";
 				bw.write(line);
 			}
 			bw.close();
@@ -180,13 +172,12 @@ public class SyntheticData extends Data {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void writeTrueWorkerDataToFile(String filename) {
 
 		try {
 			File outfile = new File(filename);
-			
-			
+
 			if (outfile.getParent() != null) {
 				File parentDir = new File(outfile.getParent());
 				if (!parentDir.exists()) {
@@ -194,10 +185,10 @@ public class SyntheticData extends Data {
 				}
 			}
 
-
 			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (Worker w: workers) {
-				String line = w.getName() +"\t" + w.getTrueRho() +"\t" + w.getTrueMu() +"\t" + w.getTrueSigma() +"\t" + "\n";
+			for (Worker w : workers) {
+				String line = w.getName() + "\t" + w.getTrueRho() + "\t" + w.getTrueMu() + "\t" + w.getTrueSigma() + "\t"
+						+ "\n";
 				bw.write(line);
 			}
 			bw.close();
@@ -210,8 +201,7 @@ public class SyntheticData extends Data {
 
 		try {
 			File outfile = new File(filename);
-			
-			
+
 			if (outfile.getParent() != null) {
 				File parentDir = new File(outfile.getParent());
 				if (!parentDir.exists()) {
@@ -219,12 +209,11 @@ public class SyntheticData extends Data {
 				}
 			}
 
-
 			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (DatumCont d: objects) {
-				if(d.isGold()) {
-					String line = d.getName() +"\t" + d.getTrueValue() +"\t" + d.getTrueZeta() +  "\n";
-					bw.write(line);					
+			for (DatumCont d : objects) {
+				if (d.isGold()) {
+					String line = d.getName() + "\t" + d.getTrueValue() + "\t" + d.getTrueZeta() + "\n";
+					bw.write(line);
 				}
 			}
 			bw.close();
@@ -234,32 +223,33 @@ public class SyntheticData extends Data {
 	}
 
 	public void loadSyntheticOptions(String filename) {
+
 		String[] lines = Utils.getFile(filename).split("\n");
-		for(String line : lines){
+		for (String line : lines) {
 			String[] entries = line.split("=");
 			if (entries.length != 2) {
 				throw new IllegalArgumentException("Error while loading from synthetic sptions file");
-			} else if(entries[0].equals("data_points") ){
-				this.data_points = (int)Integer.parseInt(entries[1]);
-			} else if (entries[0].equals("data_mu") ) {
+			} else if (entries[0].equals("data_points")) {
+				this.data_points = (int) Integer.parseInt(entries[1]);
+			} else if (entries[0].equals("data_mu")) {
 				this.data_mu = Double.parseDouble(entries[1]);
-			} else if (entries[0].equals("data_sigma") ) {
+			} else if (entries[0].equals("data_sigma")) {
 				this.data_sigma = Double.parseDouble(entries[1]);
-			} else if (entries[0].equals("data_gold") ) {
-				this.data_gold = (int)Integer.parseInt(entries[1]);
-			} else if (entries[0].equals("workers") ) {
-				this.workers_points = (int)Integer.parseInt(entries[1]);
-			} else if (entries[0].equals("worker_mu_down") ) {
+			} else if (entries[0].equals("data_gold")) {
+				this.data_gold = (int) Integer.parseInt(entries[1]);
+			} else if (entries[0].equals("workers")) {
+				this.workers_points = (int) Integer.parseInt(entries[1]);
+			} else if (entries[0].equals("worker_mu_down")) {
 				this.worker_mu_down = Double.parseDouble(entries[1]);
-			} else if (entries[0].equals("worker_mu_up") ) {
+			} else if (entries[0].equals("worker_mu_up")) {
 				this.worker_mu_up = Double.parseDouble(entries[1]);
-			} else if (entries[0].equals("worker_sigma_down") ) {
+			} else if (entries[0].equals("worker_sigma_down")) {
 				this.worker_sigma_down = Double.parseDouble(entries[1]);
-			} else if (entries[0].equals("worker_sigma_up") ) {
+			} else if (entries[0].equals("worker_sigma_up")) {
 				this.worker_sigma_up = Double.parseDouble(entries[1]);
-			} else if (entries[0].equals("worker_rho_down") ) {
+			} else if (entries[0].equals("worker_rho_down")) {
 				this.worker_rho_down = Double.parseDouble(entries[1]);
-			} else if (entries[0].equals("worker_rho_up") ) {
+			} else if (entries[0].equals("worker_rho_up")) {
 				this.worker_rho_up = Double.parseDouble(entries[1]);
 			} else {
 				System.err.println("Error in synthetic options file variables");

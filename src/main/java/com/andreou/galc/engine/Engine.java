@@ -12,21 +12,22 @@ import com.andreou.galc.SyntheticData;
 import com.andreou.galc.Worker;
 
 class ReportGenerator {
-	
-	private Ipeirotis ip;
-	private boolean verbose; 
-	
+
+	private Ipeirotis	ip;
+	private boolean		verbose;
+
 	public ReportGenerator(Ipeirotis ip, EngineContext ctx) {
+
 		this.ip = ip;
 		this.verbose = ctx.isVerbose();
 	}
-	
+
 	/**
 	 * 
 	 */
-	  double getCorrelationRelativeError() {
+	double getCorrelationRelativeError() {
 
-		  Double relRhoError = 0.0;
+		Double relRhoError = 0.0;
 		int n = ip.getWorkers().size();
 		for (Worker w : ip.getWorkers()) {
 			double estRho = w.getEst_rho();
@@ -37,11 +38,11 @@ class ReportGenerator {
 		}
 		return relRhoError;
 	}
-	
+
 	/**
 	 * 
 	 */
-	  double getCorrelationAbsoluteError() {
+	double getCorrelationAbsoluteError() {
 
 		Double avgRhoError = 0.0;
 		int n = ip.getWorkers().size();
@@ -49,28 +50,28 @@ class ReportGenerator {
 			double estRho = w.getEst_rho();
 			double realRho = w.getTrueRho();
 			double absDiff = Math.abs(realRho - estRho);
-		
+
 			avgRhoError += absDiff / n;
 		}
 		return avgRhoError;
 	}
 
-	
 	/**
 	 * 
 	 */
-	  public String generateWorkerReport() {
+	public String generateWorkerReport() {
 
-		String out = "Average absolute estimation error for correlation values: " + getCorrelationAbsoluteError() + "\n" +
-		"Average relative estimation error for correlation values: " + getCorrelationRelativeError();
-		if(!this.verbose) System.out.println(out);
+		String out = "Average absolute estimation error for correlation values: " + getCorrelationAbsoluteError() + "\n"
+				+ "Average relative estimation error for correlation values: " + getCorrelationRelativeError();
+		if (!this.verbose)
+			System.out.println(out);
 		return out;
 	}
 
 	/**
 	 * @return
 	 */
-	  Double estimateDistributionSigma() {
+	Double estimateDistributionSigma() {
 
 		Double nominator_sigma = 0.0;
 		Double denominator_sigma = 0.0;
@@ -88,7 +89,7 @@ class ReportGenerator {
 	/**
 	 * @return
 	 */
-	  Double estimateDistributionMu() {
+	Double estimateDistributionMu() {
 
 		// Estimate mu and sigma of distribution
 		Double nominator_mu = 0.0;
@@ -108,11 +109,12 @@ class ReportGenerator {
 	 * @param data_mu
 	 * @param data_sigma
 	 */
-	  public String generateDistributionReport() {
+	public String generateDistributionReport() {
 
-		String out = 	"Estimated mu = " + estimateDistributionMu() + "\n" + 
-						"Estimated sigma = " + estimateDistributionSigma();
-		if(!this.verbose)System.out.println(out);
+		String out = "Estimated mu = " + estimateDistributionMu() + "\n" + "Estimated sigma = "
+				+ estimateDistributionSigma();
+		if (!this.verbose)
+			System.out.println(out);
 		return out;
 	}
 
@@ -120,7 +122,7 @@ class ReportGenerator {
 	 * @param data_mu
 	 * @param data_sigma
 	 */
-	  double getZetaAbsoluteErrorObject() {
+	double getZetaAbsoluteErrorObject() {
 
 		Double avgAbsError = 0.0;
 		int n = ip.getObjects().size();
@@ -132,12 +134,12 @@ class ReportGenerator {
 		}
 		return avgAbsError;
 	}
-	
+
 	/**
 	 * @param data_mu
 	 * @param data_sigma
 	 */
-	  double getZetaRelativeErrorObject() {
+	double getZetaRelativeErrorObject() {
 
 		Double avgRelError = 0.0;
 		int n = ip.getObjects().size();
@@ -151,20 +153,21 @@ class ReportGenerator {
 		}
 		return avgRelError;
 	}
-	
+
 	public String generateObjectReport() {
 
-		String out = 	"Average absolute estimation error for z-values: " + getZetaAbsoluteErrorObject() + "\n" + 
-						"Average relative estimation error for z-values: " + getZetaRelativeErrorObject();
-		if(!this.verbose) System.out.println(out);
+		String out = "Average absolute estimation error for z-values: " + getZetaAbsoluteErrorObject() + "\n"
+				+ "Average relative estimation error for z-values: " + getZetaRelativeErrorObject();
+		if (!this.verbose)
+			System.out.println(out);
 		return out;
 	}
-	
+
 	public void writeReportToFile(String foldername, String filename, String reportcontent) {
 
 		try {
-			File outfile = new File(foldername+"/"+filename);
-			
+			File outfile = new File(foldername + "/" + filename);
+
 			if (outfile.getParent() != null) {
 				File parentDir = new File(outfile.getParent());
 				if (!parentDir.exists()) {
@@ -180,20 +183,20 @@ class ReportGenerator {
 	}
 }
 
-
 public class Engine {
 
+	private EngineContext	ctx;
 
-	private EngineContext  ctx;
+	public Engine(EngineContext ctx) {
 
-	public Engine(EngineContext ctx){
 		this.ctx = ctx;
 	}
-	
-	public void execute(){
+
+	public void execute() {
+
 		Data data;
-		if(ctx.isSyntheticDataSet()) {
-			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose(),ctx.getSyntheticOptionsFile());
+		if (ctx.isSyntheticDataSet()) {
+			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose(), ctx.getSyntheticOptionsFile());
 			sdata.writeLabelsToFile(ctx.getInputFile());
 			sdata.writeTrueWorkerDataToFile(ctx.getTrueWorkersFile());
 			sdata.writeTrueObjectDataToFile(ctx.getTrueObjectsFile());
@@ -206,22 +209,22 @@ public class Engine {
 			edata.loadTrueWorkerData(ctx.getTrueWorkersFile());
 			edata.loadTrueObjectData(ctx.getTrueObjectsFile());
 			edata.loadGoldLabelsFile(ctx.getCorrectFile());
-		data = edata;
-		}		
+			data = edata;
+		}
 		Ipeirotis ip = new Ipeirotis(data, ctx);
-		
+
 		ReportGenerator rpt = new ReportGenerator(ip, ctx);
 
-		
 		// Report about distributional estimates
-		rpt.writeReportToFile(ctx.getOutputFolder(), "results-distribution.txt", rpt.generateDistributionReport()); 
+		rpt.writeReportToFile(ctx.getOutputFolder(), "results-distribution.txt", rpt.generateDistributionReport());
 		// Give report for objects
 		rpt.writeReportToFile(ctx.getOutputFolder(), "results-objects.txt", rpt.generateObjectReport());
 		// Give report for workers
 		rpt.writeReportToFile(ctx.getOutputFolder(), "results-workers.txt", rpt.generateWorkerReport());
 
-		if(ctx.isVerbose()) System.out.println("Results in folder: " + ctx.getOutputFolder());
-	
+		if (ctx.isVerbose())
+			System.out.println("Results in folder: " + ctx.getOutputFolder());
+
 	}
 
 	/**
@@ -229,28 +232,27 @@ public class Engine {
 	 */
 	private static SyntheticData createSyntheticDataSet(boolean verbose, String file) {
 
-//		int data_points = 10000;
-//		Double data_mu = 7.0;
-//		Double data_sigma = 11.0;
-//		int data_gold = 100;
-//
-//		int workers = 1;
-//		Double worker_mu_down = -5.0;
-//		Double worker_mu_up = 5.0;
-//		Double worker_sigma_down = 0.5;
-//		Double worker_sigma_up = 1.5;
-//		Double worker_rho_down = 0.5;
-//		Double worker_rho_up = 1.0;
+		// int data_points = 10000;
+		// Double data_mu = 7.0;
+		// Double data_sigma = 11.0;
+		// int data_gold = 100;
+		//
+		// int workers = 1;
+		// Double worker_mu_down = -5.0;
+		// Double worker_mu_up = 5.0;
+		// Double worker_sigma_down = 0.5;
+		// Double worker_sigma_up = 1.5;
+		// Double worker_rho_down = 0.5;
+		// Double worker_rho_up = 1.0;
 
-		SyntheticData data = createDataSet(verbose,file);
+		SyntheticData data = createDataSet(verbose, file);
 		return data;
 	}
 
+	private static SyntheticData createDataSet(Boolean verbose, String file) {
 
-	 private static SyntheticData createDataSet(Boolean verbose, String file) {
+		SyntheticData data = new SyntheticData(verbose, file);
 
-		SyntheticData data = new SyntheticData(verbose,file);
-		
 		data.initDataParameters();
 
 		data.initWorkerParameters();
@@ -260,11 +262,13 @@ public class Engine {
 	}
 
 	public void println(String mask, Object... args) {
+
 		print(mask + "\n", args);
 	}
 
 	public void print(String mask, Object... args) {
-		if (! ctx.isVerbose())
+
+		if (!ctx.isVerbose())
 			return;
 
 		String message;
