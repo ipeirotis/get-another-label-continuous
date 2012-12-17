@@ -53,6 +53,9 @@ public class EmpiricalData extends Data {
 
 	public void loadGoldLabelsFile(String filename) {
 
+		if(filename==null)
+			return;
+		
 		String[] lines = Utils.getFile(filename).split("\n");
 
 		for (String line : lines) {

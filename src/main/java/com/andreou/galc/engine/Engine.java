@@ -206,9 +206,15 @@ public class Engine {
 			// PANOS: not verified that it works...
 			EmpiricalData edata = new EmpiricalData();
 			edata.loadLabelFile(ctx.getInputFile());
-			edata.loadTrueWorkerData(ctx.getTrueWorkersFile());
-			edata.loadTrueObjectData(ctx.getTrueObjectsFile());
-			edata.loadGoldLabelsFile(ctx.getCorrectFile());
+			if(ctx.hasTrueWorkersFile()) {
+				edata.loadTrueWorkerData(ctx.getTrueWorkersFile());
+			}
+			if(ctx.hasTrueObjectsFile()) {
+				edata.loadTrueObjectData(ctx.getTrueObjectsFile());
+			}
+			if(ctx.hasCorrectFile()) {
+				edata.loadGoldLabelsFile(ctx.getCorrectFile());
+			}
 			data = edata;
 		}
 		Ipeirotis ip = new Ipeirotis(data, ctx);
@@ -217,10 +223,14 @@ public class Engine {
 
 		// Report about distributional estimates
 		rpt.writeReportToFile(ctx.getOutputFolder(), "results-distribution.txt", rpt.generateDistributionReport());
-		// Give report for objects
-		rpt.writeReportToFile(ctx.getOutputFolder(), "results-objects.txt", rpt.generateObjectReport());
-		// Give report for workers
-		rpt.writeReportToFile(ctx.getOutputFolder(), "results-workers.txt", rpt.generateWorkerReport());
+
+		if(ctx.hasTrueObjectsFile())
+			// Give report for objects
+			rpt.writeReportToFile(ctx.getOutputFolder(), "results-objects.txt", rpt.generateObjectReport());
+
+		if(ctx.hasTrueWorkersFile()) 
+			// Give report for workers
+			rpt.writeReportToFile(ctx.getOutputFolder(), "results-workers.txt", rpt.generateWorkerReport());
 
 		if (ctx.isVerbose())
 			System.out.println("Results in folder: " + ctx.getOutputFolder());

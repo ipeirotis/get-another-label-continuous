@@ -50,11 +50,48 @@ public class EngineTest {
 
 	@Test
 	public void testBasicExecution() throws Exception {
-		executeOn("--input data/assignedlabels.txt --evalObjects data/evaluationObjects.txt --evalWorkers data/evaluationWorkers.txt --correct data/goldObjects.txt --synthetic data/synthetic-options.txt --output results");
+		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt --synthetic data/synthetic/synthetic-options.txt --output results/synthetic");
 	}
 
 	@Test
-	public void testAnotherScenario() throws Exception {
-		executeOn("--input data/assignedlabels.txt --evalObjects data/evaluationObjects.txt --evalWorkers data/evaluationWorkers.txt --correct data/goldObjects.txt --synthetic data/synthetic-options.txt --output results --verbose");
+	public void testNewSyntheticData_verbose() throws Exception {
+		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt --synthetic data/synthetic/synthetic-options.txt --output results/synthetic --verbose");
+	}
+	@Test
+	public void testCurrentSyntheticData_verbose() throws Exception {
+		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt --output results/synthetic --verbose");
+	}
+	@Test
+	public void testCurrentSyntheticData_labels_objects_workers() throws Exception {
+		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --output results/synthetic");
+	}
+
+	@Test
+	public void testCurrentSyntheticData_labels_objects() throws Exception {
+//		executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --output results/synthetic");
+	}
+
+	@Test
+	public void testCurrentSyntheticData_labels() throws Exception {
+//		executeOn("--input data/synthetic/assignedlabels.txt --output results/synthetic");
+	}
+
+	@Test
+	public void testAdcountingData() throws Exception {
+//		executeOn("--input data/adcounting/assignedlabels.txt --evalObjects data/adcounting/evaluationObjects.txt --evalWorkers data/adcounting/evaluationWorkers.txt --correct data/adcounting/goldObjects.txt --output results/adcounting");
+	}
+	@Test
+	public void testAdcountingData_labels_objects_workers() throws Exception {
+//		executeOn("--input data/adcounting/assignedlabels.txt --evalObjects data/adcounting/evaluationObjects.txt --evalWorkers data/adcounting/evaluationWorkers.txt --output results/adcounting");
+	}
+
+	@Test
+	public void testAdcountingData_labels_objects() throws Exception {
+//		executeOn("--input data/adcounting/assignedlabels.txt --evalObjects data/adcounting/evaluationObjects.txt --output results/adcounting");
+	}
+
+	@Test
+	public void testAdcountingData_labels() throws Exception {
+		executeOn("--input data/adcounting/assignedlabels.txt --output results/adcounting");
 	}
 }
