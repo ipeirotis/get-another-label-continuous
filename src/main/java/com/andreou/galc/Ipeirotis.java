@@ -1,29 +1,28 @@
 package com.andreou.galc;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.andreou.galc.engine.EngineContext;
 
 public class Ipeirotis {
 
 	private Set<DatumCont>					objects;
-	private Map<String, DatumCont>	objects_index;
-	private Set<Worker>							workers;
-	private Map<String, Worker>			workers_index;
+	private Map<String, DatumCont>			objects_index;
+	private Set<Worker>						workers;
+	private Map<String, Worker>				workers_index;
 
 	public Ipeirotis(Data data, EngineContext ctx) {
 
 		this.objects = data.getObjects();
-		this.objects_index = new TreeMap<String, DatumCont>();
+		this.objects_index = new HashMap<String, DatumCont>();
 		for (DatumCont d : this.objects) {
 			objects_index.put(d.getName(), d);
 		}
 
 		this.workers = data.getWorkers();
-		this.workers_index = new TreeMap<String, Worker>();
+		this.workers_index = new HashMap<String, Worker>();
 		for (Worker w : this.workers) {
 			workers_index.put(w.getName(), w);
 		}

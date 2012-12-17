@@ -1,12 +1,12 @@
 package com.andreou.galc;
 
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.HashMap;
 
 public class EmpiricalData extends Data {
 
-	private Map<String, DatumCont>	objects_index	= new TreeMap<String, DatumCont>();
-	private Map<String, Worker>			workers_index	= new TreeMap<String, Worker>();
+	private Map<String, DatumCont>		objects_index	= new HashMap<String, DatumCont>();
+	private Map<String, Worker>			workers_index	= new HashMap<String, Worker>();
 
 	public EmpiricalData() {
 

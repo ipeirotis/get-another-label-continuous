@@ -1,8 +1,7 @@
 package com.andreou.galc;
 
-import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 public class Worker implements Comparable<Worker> {
 
@@ -25,7 +24,7 @@ public class Worker implements Comparable<Worker> {
 	public Worker(String name) {
 
 		this.name = name;
-		this.labels = new TreeSet<AssignedLabel>();
+		this.labels = new HashSet<AssignedLabel>();
 	}
 
 	public void addAssignedLabel(AssignedLabel al) {

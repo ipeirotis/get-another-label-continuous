@@ -1,7 +1,7 @@
 package com.andreou.galc;
 
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 public class DatumCont implements Comparable<DatumCont> {
 
@@ -23,7 +23,7 @@ public class DatumCont implements Comparable<DatumCont> {
 
 		this.name = name;
 		this.isGold = false;
-		this.labels = new TreeSet<AssignedLabel>();
+		this.labels = new HashSet<AssignedLabel>();
 
 	}
 
