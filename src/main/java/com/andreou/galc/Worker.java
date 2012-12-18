@@ -52,6 +52,10 @@ public class Worker implements Comparable<Worker> {
 		this.est_mu = mu_worker / n;
 		this.est_sigma = Math.sqrt((1.0 / n) * (mu_square - Math.pow(mu_worker, 2) / n));
 		// System.out.println(this.toString());
+		if(this.est_sigma==0.0) {
+			this.est_sigma = 0.00000000001;
+			System.out.println("[Single Label Worker: " +this.name+"]");
+		}
 
 		this.zeta = new HashSet<AssignedLabel>();
 		for (AssignedLabel al : labels) {

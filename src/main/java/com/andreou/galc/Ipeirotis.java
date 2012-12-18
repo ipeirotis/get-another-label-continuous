@@ -115,6 +115,7 @@ public class Ipeirotis {
 					
 					zeta += b * r * z;
 					betasum += b;
+					//Single Label Worker gives a z=NaN, due to its current est_sigma which is equal to 0
 					if (Double.isNaN(zeta)) System.out.print("["+ z + "," + al.getLabel() + "," + w.getEst_mu() + "," + w.getEst_sigma() + "," + w.getName()+"], ");
 
 				}
@@ -126,7 +127,6 @@ public class Ipeirotis {
 				newZeta = d.getGoldZeta();
 			}
 
-			if (Double.isNaN(newZeta)) System.out.println(zeta +","+ betasum + "," +d.getName());
 			d.setEst_zeta(newZeta);
 			this.objects_index.put(d.getName(), d);
 
@@ -168,6 +168,9 @@ public class Ipeirotis {
 			// d.setEst_zeta(zeta / betasum);
 			newZeta = zeta / betasum;
 			result.put(d.getName(), newZeta);
+
+			//if (Double.isNaN(newZeta)) System.out.println("estimateObjectZetas NaNbug@: " + zeta +","+ betasum + "," +d.getName());
+
 		}
 
 		return result;
@@ -199,8 +202,11 @@ public class Ipeirotis {
 				sum_prod += z_i * z_ij;
 				sum_zi += z_i * z_i;
 				sum_zij += z_ij * z_ij;
+				
 			}
 			double rho = sum_prod / Math.sqrt(sum_zi * sum_zij);
+
+			if (Double.isNaN(rho)) System.out.println("estimateWorkerRho NaNbug@: " + sum_zi +","+ sum_zij + "," +w.getName());
 
 			w.setEst_rho(rho);
 			this.workers_index.put(w.getName(), w);
