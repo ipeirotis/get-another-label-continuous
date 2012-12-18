@@ -91,7 +91,13 @@ public class EngineTest {
 	}
 
 	@Test
+	public void testAdcountingData_labels1() throws Exception {
+		executeOn("--input data/adcounting/assignedlabels1.txt --output results/adcounting");
+	}
+	@Test
 	public void testAdcountingData_labels() throws Exception {
 		executeOn("--input data/adcounting/assignedlabels.txt --output results/adcounting");
 	}
+
 }
+

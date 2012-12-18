@@ -112,8 +112,11 @@ public class Ipeirotis {
 					Double b = w.getBeta();
 					Double r = w.getEst_rho();
 					Double z = w.getZeta(al.getLabel());
+					
 					zeta += b * r * z;
 					betasum += b;
+					if (Double.isNaN(zeta)) System.out.print("["+ z + "," + al.getLabel() + "," + w.getEst_mu() + "," + w.getEst_sigma() + "," + w.getName()+"], ");
+
 				}
 
 				// d.setEst_zeta(zeta / betasum);
@@ -123,6 +126,7 @@ public class Ipeirotis {
 				newZeta = d.getGoldZeta();
 			}
 
+			if (Double.isNaN(newZeta)) System.out.println(zeta +","+ betasum + "," +d.getName());
 			d.setEst_zeta(newZeta);
 			this.objects_index.put(d.getName(), d);
 
@@ -135,7 +139,6 @@ public class Ipeirotis {
 
 			diff += Math.abs(d.getEst_zeta() - oldZeta);
 		}
-
 		return diff;
 
 	}
