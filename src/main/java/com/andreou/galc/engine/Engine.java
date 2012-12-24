@@ -28,15 +28,17 @@ class ReportGenerator {
 	double getCorrelationRelativeError() {
 
 		Double relRhoError = 0.0;
-		int n = ip.getWorkers().size();
+		int n = 0;
 		for (Worker w : ip.getWorkers()) {
+			if (w.getTrueRho()==null) continue;
+			n++;
 			double estRho = w.getEst_rho();
 			double realRho = w.getTrueRho();
 			double absDiff = Math.abs(realRho - estRho);
 			double relDiff = Math.abs(absDiff / realRho);
-			relRhoError += relDiff / n;
+			relRhoError += relDiff;
 		}
-		return relRhoError;
+		return relRhoError/n;
 	}
 
 	/**
@@ -45,15 +47,17 @@ class ReportGenerator {
 	double getCorrelationAbsoluteError() {
 
 		Double avgRhoError = 0.0;
-		int n = ip.getWorkers().size();
+		int n = 0;
 		for (Worker w : ip.getWorkers()) {
+			if (w.getTrueRho() ==null ) continue;
+			n++;
 			double estRho = w.getEst_rho();
 			double realRho = w.getTrueRho();
 			double absDiff = Math.abs(realRho - estRho);
 
-			avgRhoError += absDiff / n;
+			avgRhoError += absDiff;
 		}
-		return avgRhoError;
+		return avgRhoError/n;
 	}
 
 	/**
@@ -61,11 +65,23 @@ class ReportGenerator {
 	 */
 	public String generateWorkerReport() {
 
+		StringBuffer sb = new StringBuffer();
+		sb.append("Name\tLabels\tEstMean\tEstStDev\tEstCorrelation\tTrueMean\tTrueStDev\tTrueCorrelation\n");
+		for (Worker w : ip.getWorkers()) {
+			
+			sb.append(w.getName() + "\t" + w.getLabels().size() + "\t" + w.getEst_mu() + "\t" + w.getEst_sigma() + "\t" + w.getEst_rho() + "\t" + w.getTrueMu() + "\t" + w.getTrueSigma() + "\t" + w.getTrueRho());
+			sb.append("\n");
+		}
+		
 		String out = "Average absolute estimation error for correlation values: " + getCorrelationAbsoluteError() + "\n"
 				+ "Average relative estimation error for correlation values: " + getCorrelationRelativeError();
+		
+		
 		if (!this.verbose)
 			System.out.println(out);
-		return out;
+		
+		sb.append(out);
+		return sb.toString();
 	}
 
 	/**
@@ -125,14 +141,16 @@ class ReportGenerator {
 	double getZetaAbsoluteErrorObject() {
 
 		Double avgAbsError = 0.0;
-		int n = ip.getObjects().size();
+		int n = 0;
 		for (DatumCont d : ip.getObjects()) {
+			if (  d.getTrueZeta() == null ) continue;
+			n++;
 			double estZ = d.getEst_zeta();
 			double realZ = d.getTrueZeta();
 			double absDiff = Math.abs(realZ - estZ);
-			avgAbsError += absDiff / n;
+			avgAbsError += absDiff;
 		}
-		return avgAbsError;
+		return avgAbsError/n;
 	}
 
 	/**
@@ -142,25 +160,41 @@ class ReportGenerator {
 	double getZetaRelativeErrorObject() {
 
 		Double avgRelError = 0.0;
-		int n = ip.getObjects().size();
+		int n = 0;
 		for (DatumCont d : ip.getObjects()) {
+			if ( d.getTrueZeta() == null) continue;
+			n++;
 			double estZ = d.getEst_zeta();
 			double realZ = d.getTrueZeta();
 			double absDiff = Math.abs(realZ - estZ);
 			double relDiff = Math.abs(absDiff / realZ);
 
-			avgRelError += relDiff / n;
+			avgRelError += relDiff/n;
 		}
 		return avgRelError;
 	}
 
 	public String generateObjectReport() {
 
+		double mu = this.estimateDistributionMu();
+		double sigma = this.estimateDistributionSigma();
+		StringBuffer sb = new StringBuffer(); 
+		for (DatumCont d : ip.getObjects()) {
+			d.setDistributionMu(mu);
+			d.setDistributionSigma(sigma);
+			sb.append(d.getName() +"\t" + d.getAverageLabel() + "\t" + d.getEst_value() + "\t" + d.getEst_zeta() + "\t" + d.getTrueValue() + "\t" + d.getTrueZeta());
+		  sb.append("\n");
+			
+		}
+		
+		
 		String out = "Average absolute estimation error for z-values: " + getZetaAbsoluteErrorObject() + "\n"
 				+ "Average relative estimation error for z-values: " + getZetaRelativeErrorObject();
 		if (!this.verbose)
 			System.out.println(out);
-		return out;
+		
+		sb.append(out);
+		return sb.toString();
 	}
 
 	public void writeReportToFile(String foldername, String filename, String reportcontent) {
@@ -203,7 +237,6 @@ public class Engine {
 			sdata.writeGoldObjectDataToFile(ctx.getCorrectFile());
 			data = sdata;
 		} else {
-			// PANOS: not verified that it works...
 			EmpiricalData edata = new EmpiricalData();
 			edata.loadLabelFile(ctx.getInputFile());
 			if(ctx.hasTrueWorkersFile()) {
@@ -224,11 +257,9 @@ public class Engine {
 		// Report about distributional estimates
 		rpt.writeReportToFile(ctx.getOutputFolder(), "results-distribution.txt", rpt.generateDistributionReport());
 
-		if(ctx.hasTrueObjectsFile())
 			// Give report for objects
 			rpt.writeReportToFile(ctx.getOutputFolder(), "results-objects.txt", rpt.generateObjectReport());
 
-		if(ctx.hasTrueWorkersFile()) 
 			// Give report for workers
 			rpt.writeReportToFile(ctx.getOutputFolder(), "results-workers.txt", rpt.generateWorkerReport());
 

@@ -18,6 +18,9 @@ public class DatumCont implements Comparable<DatumCont> {
 	// Data generation characteristics
 	private Double							trueValue;
 	private Double							trueZeta;
+	
+	private Double 							distributionMu;
+	private Double 							distributionSigma;
 
 	public DatumCont(String name) {
 
@@ -47,8 +50,24 @@ public class DatumCont implements Comparable<DatumCont> {
 	/**
 	 * @return the est_value
 	 */
+	public Double getAverageLabel() {
+
+		double sum =0;
+		for (AssignedLabel al: labels) {
+			sum += al.getLabel();
+		}
+		
+		return sum/labels.size();
+	}
+	
+
+	/**
+	 * @return the est_value
+	 */
 	public Double getEst_value() {
 
+		this.est_value=  this.est_zeta * this.distributionSigma + this.distributionMu;
+		
 		return est_value;
 	}
 
@@ -205,6 +224,26 @@ public class DatumCont implements Comparable<DatumCont> {
 
 		return "DatumCont [name=" + name + ", est_value=" + est_value + ", est_zeta=" + est_zeta + ", trueValue="
 				+ trueValue + ", trueZeta=" + trueZeta + "]";
+	}
+
+	public Double getDistributionMu() {
+
+		return distributionMu;
+	}
+
+	public void setDistributionMu(Double distributionMu) {
+
+		this.distributionMu = distributionMu;
+	}
+
+	public Double getDistributionSigma() {
+
+		return distributionSigma;
+	}
+
+	public void setDistributionSigma(Double distributionSigma) {
+
+		this.distributionSigma = distributionSigma;
 	}
 
 }
