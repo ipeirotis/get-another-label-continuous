@@ -206,12 +206,13 @@ public class Ipeirotis {
 			}
 			double rho = sum_prod / Math.sqrt(sum_zi * sum_zij);
 
-			if (Double.isNaN(rho)) System.out.println("estimateWorkerRho NaNbug@: " + sum_zi +","+ sum_zij + "," +w.getName());
+			if (Double.isNaN(rho)) {
+				System.out.println("estimateWorkerRho NaNbug@: " + sum_zi +","+ sum_zij + "," +w.getName());
+				rho = 0.0;
+			}
 
 			w.setEst_rho(rho);
 			this.workers_index.put(w.getName(), w);
-
-			// System.out.println(w.toString());
 
 			diff += Math.abs(w.getEst_rho() - oldrho);
 		}

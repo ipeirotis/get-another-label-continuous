@@ -98,6 +98,10 @@ public class EngineTest {
 	public void testAdcountingData_labels() throws Exception {
 		executeOn("--input data/adcounting/assignedlabels.txt --output results/adcounting");
 	}
+	@Test
+	public void testAdcountingData_labelsOld() throws Exception {
+		executeOn("--input data/adcounting/assignedlabels.old.txt --output results/adcounting");
+	}
 
 }
 
