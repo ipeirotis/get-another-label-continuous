@@ -2,8 +2,9 @@ package com.andreou.galc;
 
 import java.util.Set;
 import java.util.HashSet;
+import com.google.common.base.Objects;
 
-public class Worker implements Comparable<Worker> {
+public class Worker {
 
 	private String							name;
 
@@ -51,7 +52,7 @@ public class Worker implements Comparable<Worker> {
 
 		this.est_mu = mu_worker / n;
 		this.est_sigma = Math.sqrt((1.0 / n) * (mu_square - Math.pow(mu_worker, 2) / n));
-		// System.out.println(this.toString());
+		//System.out.println(this.toString());
 		if(this.est_sigma==0.0) {
 			this.est_sigma = 0.00000000001;
 			System.out.println("[Single Label Worker: " +this.name+"]");
@@ -81,7 +82,6 @@ public class Worker implements Comparable<Worker> {
 	}
 
 	public Double getBeta() {
-
 		Double t = 1 - Math.pow(this.est_rho, 2);
 		Double t1 = Math.pow(this.est_rho, 2);
 		if (t == 0.0)
@@ -122,35 +122,15 @@ public class Worker implements Comparable<Worker> {
 
 	@Override
 	public int hashCode() {
-
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+		return com.google.common.base.Objects.hashCode( this.name);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
 		if (!(obj instanceof Worker))
 			return false;
 		Worker other = (Worker) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
-
-	@Override
-	public int compareTo(Worker o) {
-
-		return this.getName().compareTo(o.getName());
+		return Objects.equal(this.name, other.name);
 	}
 
 	/*
@@ -160,9 +140,15 @@ public class Worker implements Comparable<Worker> {
 	 */
 	@Override
 	public String toString() {
-
-		return "Worker [name=" + name + ", est_rho=" + est_rho + ", true_rho=" + true_rho + ", est_mu=" + est_mu
-				+ ", true_mu=" + true_mu + ", est_sigma=" + est_sigma + ", true_sigma=" + true_sigma + "]";
+		return Objects.toStringHelper(this)
+			       .add("name", name)
+			       .add("est_rho", est_rho)
+			       .add("true_rho", true_rho)
+			       .add("est_mu", est_mu)
+			       .add("true_mu", true_mu)
+			       .add("est_sigma", est_sigma)
+			       .add("true_sigma", true_sigma)
+			       .toString();
 	}
 
 	/**
@@ -174,8 +160,7 @@ public class Worker implements Comparable<Worker> {
 	}
 
 	/**
-	 * @param est_rho
-	 *          the est_rho to set
+	 * @param est_rho the est_rho to set
 	 */
 	public void setEst_rho(Double est_rho) {
 
@@ -196,8 +181,7 @@ public class Worker implements Comparable<Worker> {
 	}
 
 	/**
-	 * @param est_mu
-	 *          the est_mu to set
+	 * @param est_mu the est_mu to set
 	 */
 	public void setEst_mu(Double est_mu) {
 
@@ -213,24 +197,22 @@ public class Worker implements Comparable<Worker> {
 	}
 
 	/**
-	 * @param est_sigma
-	 *          the est_sigma to set
+	 * @param est_sigma the est_sigma to set
 	 */
 	public void setEst_sigma(Double est_sigma) {
 
-		// double epsilon = 0.0001;
-		// if (est_sigma<epsilon) est_sigma = epsilon;
+		//double epsilon = 0.0001;
+		//if (est_sigma<epsilon) est_sigma = epsilon;
 		this.est_sigma = est_sigma;
 	}
 
 	public Double estimatedAbsZetaError() {
-
-		return Math.sqrt(1 - Math.pow(this.est_rho, 2)) * Math.sqrt(2) / Math.sqrt(Math.PI);
+		return Math.sqrt(1 - Math.pow(this.est_rho,2)) * Math.sqrt(2) / Math.sqrt(Math.PI);
 	}
 
 	public static Double estimatedAbsZetaError(Double rho) {
 
-		return Math.sqrt(1 - Math.pow(rho, 2)) * Math.sqrt(2) / Math.sqrt(Math.PI);
+		return Math.sqrt(1 - Math.pow(rho,2)) * Math.sqrt(2) / Math.sqrt(Math.PI);
 	}
 
 	/**

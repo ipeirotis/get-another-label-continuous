@@ -5,11 +5,9 @@ import java.util.HashMap;
 
 public class EmpiricalData extends Data {
 
-	private Map<String, DatumCont>		objects_index	= new HashMap<String, DatumCont>();
-	private Map<String, Worker>			workers_index	= new HashMap<String, Worker>();
-
+	private Map<String, DatumCont>	objects_index = new HashMap<String, DatumCont>();
+	private Map<String, Worker>	workers_index = new HashMap<String, Worker>();
 	public EmpiricalData() {
-
 		super();
 	}
 
@@ -33,7 +31,7 @@ public class EmpiricalData extends Data {
 			if (w == null) {
 				w = new Worker(workername);
 				this.workers.add(w);
-				this.workers_index.put(workername, w);
+				this.workers_index.put(workername,w);
 			}
 			w.addAssignedLabel(al);
 
@@ -41,14 +39,11 @@ public class EmpiricalData extends Data {
 			if (d == null) {
 				d = new DatumCont(objectname);
 				this.objects.add(d);
-				this.objects_index.put(objectname, d);
+				this.objects_index.put(objectname,d);
 			}
 			d.addAssignedLabel(al);
-
 			this.labels.add(al);
-
 		}
-
 	}
 
 	public void loadGoldLabelsFile(String filename) {
@@ -72,7 +67,7 @@ public class EmpiricalData extends Data {
 			if (d == null) {
 				d = new DatumCont(objectname);
 				this.objects.add(d);
-				this.objects_index.put(objectname, d);
+				this.objects_index.put(objectname,d);
 			}
 			d.setGold(true);
 			d.setGoldValue(correctValue);
@@ -100,12 +95,11 @@ public class EmpiricalData extends Data {
 			if (w == null) {
 				w = new Worker(workername);
 				this.workers.add(w);
-				this.workers_index.put(workername, w);
+				this.workers_index.put(workername,w);
 			}
 			w.setTrueMu(mu);
 			w.setTrueSigma(sigma);
 			w.setTrueRho(rho);
-
 		}
 
 	}
@@ -128,13 +122,11 @@ public class EmpiricalData extends Data {
 			if (d == null) {
 				d = new DatumCont(objectname);
 				this.objects.add(d);
-				this.objects_index.put(objectname, d);
+				this.objects_index.put(objectname,d);
 			}
 			d.setTrueValue(value);
 			d.setTrueZeta(zeta);
-
 		}
-
 	}
 
 }

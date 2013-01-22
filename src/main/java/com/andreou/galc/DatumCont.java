@@ -3,7 +3,9 @@ package com.andreou.galc;
 import java.util.Set;
 import java.util.HashSet;
 
-public class DatumCont implements Comparable<DatumCont> {
+import com.google.common.base.Objects;
+
+public class DatumCont {
 
 	private String							name;
 	private Set<AssignedLabel>	labels;
@@ -72,8 +74,7 @@ public class DatumCont implements Comparable<DatumCont> {
 	}
 
 	/**
-	 * @param est_value
-	 *          the est_value to set
+	 * @param est_value the est_value to set
 	 */
 	public void setEst_value(Double est_value) {
 
@@ -89,8 +90,7 @@ public class DatumCont implements Comparable<DatumCont> {
 	}
 
 	/**
-	 * @param est_zeta
-	 *          the est_zeta to set
+	 * @param est_zeta the est_zeta to set
 	 */
 	public void setEst_zeta(Double est_zeta) {
 
@@ -106,8 +106,7 @@ public class DatumCont implements Comparable<DatumCont> {
 	}
 
 	/**
-	 * @param trueZeta
-	 *          the trueZeta to set
+	 * @param trueZeta the trueZeta to set
 	 */
 	public void setTrueZeta(Double trueZeta) {
 
@@ -161,11 +160,7 @@ public class DatumCont implements Comparable<DatumCont> {
 	 */
 	@Override
 	public int hashCode() {
-
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+		return Objects.hashCode( this.name);
 	}
 
 	/*
@@ -175,20 +170,10 @@ public class DatumCont implements Comparable<DatumCont> {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
 		if (!(obj instanceof DatumCont))
 			return false;
 		DatumCont other = (DatumCont) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		return Objects.equal(this.name, other.name);
 	}
 
 	/**
@@ -208,22 +193,29 @@ public class DatumCont implements Comparable<DatumCont> {
 		this.labels = labels;
 	}
 
-	@Override
-	public int compareTo(DatumCont o) {
-
-		return this.getName().compareTo(o.getName());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-
-		return "DatumCont [name=" + name + ", est_value=" + est_value + ", est_zeta=" + est_zeta + ", trueValue="
-				+ trueValue + ", trueZeta=" + trueZeta + "]";
+		String s1, s2;
+		s1 = Objects.toStringHelper(this)
+	       .add("name", name)
+	       .add("est_value", est_value)
+	       .add("est_zeta", est_zeta)
+	       .add("trueValue", trueValue)
+	       .add("trueZeta", trueZeta)
+	       .toString();
+		s2 =  "DatumCont [name=" + name + ", est_value=" + est_value + ", est_zeta=" + est_zeta + ", trueValue="
+		+ trueValue + ", trueZeta=" + trueZeta + "]";
+		
+		return Objects.toStringHelper(this)
+			       .add("name", name)
+			       .add("est_value", est_value)
+			       .add("est_zeta", est_zeta)
+			       .add("trueValue", trueValue)
+			       .add("trueZeta", trueZeta)
+			       .toString();
 	}
 
 	public Double getDistributionMu() {

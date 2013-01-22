@@ -17,7 +17,6 @@ class ReportGenerator {
 	private boolean		verbose;
 
 	public ReportGenerator(Ipeirotis ip, EngineContext ctx) {
-
 		this.ip = ip;
 		this.verbose = ctx.isVerbose();
 	}
@@ -222,15 +221,14 @@ public class Engine {
 	private EngineContext	ctx;
 
 	public Engine(EngineContext ctx) {
-
 		this.ctx = ctx;
 	}
 
 	public void execute() {
 
 		Data data;
-		if (ctx.isSyntheticDataSet()) {
-			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose(), ctx.getSyntheticOptionsFile());
+		if(ctx.isSyntheticDataSet()) {
+			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose(),ctx.getSyntheticOptionsFile());
 			sdata.writeLabelsToFile(ctx.getInputFile());
 			sdata.writeTrueWorkerDataToFile(ctx.getTrueWorkersFile());
 			sdata.writeTrueObjectDataToFile(ctx.getTrueObjectsFile());
@@ -286,13 +284,13 @@ public class Engine {
 		// Double worker_rho_down = 0.5;
 		// Double worker_rho_up = 1.0;
 
-		SyntheticData data = createDataSet(verbose, file);
+		SyntheticData data = createDataSet(verbose,file);
 		return data;
 	}
 
 	private static SyntheticData createDataSet(Boolean verbose, String file) {
 
-		SyntheticData data = new SyntheticData(verbose, file);
+		SyntheticData data = new SyntheticData(verbose,file);
 
 		data.initDataParameters();
 
@@ -303,12 +301,10 @@ public class Engine {
 	}
 
 	public void println(String mask, Object... args) {
-
 		print(mask + "\n", args);
 	}
 
 	public void print(String mask, Object... args) {
-
 		if (!ctx.isVerbose())
 			return;
 

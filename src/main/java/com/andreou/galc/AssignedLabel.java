@@ -1,6 +1,9 @@
 package com.andreou.galc;
 
-public class AssignedLabel implements Comparable<AssignedLabel> {
+import com.google.common.base.Objects;
+import com.google.common.collect.ComparisonChain;
+
+public class AssignedLabel {
 
 	private String	worker_id;
 	private String	object_id;
@@ -20,13 +23,7 @@ public class AssignedLabel implements Comparable<AssignedLabel> {
 	 */
 	@Override
 	public int hashCode() {
-
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((label == null) ? 0 : label.hashCode());
-		result = prime * result + ((object_id == null) ? 0 : object_id.hashCode());
-		result = prime * result + ((worker_id == null) ? 0 : worker_id.hashCode());
-		return result;
+		return com.google.common.base.Objects.hashCode( this.label, this.object_id, this.worker_id); 
 	}
 
 	/*
@@ -36,30 +33,12 @@ public class AssignedLabel implements Comparable<AssignedLabel> {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
 		if (!(obj instanceof AssignedLabel))
 			return false;
 		AssignedLabel other = (AssignedLabel) obj;
-		if (label == null) {
-			if (other.label != null)
-				return false;
-		} else if (!label.equals(other.label))
-			return false;
-		if (object_id == null) {
-			if (other.object_id != null)
-				return false;
-		} else if (!object_id.equals(other.object_id))
-			return false;
-		if (worker_id == null) {
-			if (other.worker_id != null)
-				return false;
-		} else if (!worker_id.equals(other.worker_id))
-			return false;
-		return true;
+		return Objects.equal(this.label, other.label) 
+			&& Objects.equal(this.object_id, other.object_id)
+			&& Objects.equal(this.worker_id, other.worker_id);
 	}
 
 	/**
@@ -113,14 +92,12 @@ public class AssignedLabel implements Comparable<AssignedLabel> {
 		this.label = label;
 	}
 
-	@Override
 	public int compareTo(AssignedLabel o) {
 
-		int c1 = this.getDatum().compareTo(o.getDatum());
-		int c2 = this.getWorker().compareTo(o.getWorker());
-
-		return (c1 == 0) ? c2 : c1;
-
+		return ComparisonChain.start()
+		         .compare(this.getDatum(), o.getDatum())
+		         .compare(this.getWorker(), o.getWorker())
+		         .result();
 	}
 
 }

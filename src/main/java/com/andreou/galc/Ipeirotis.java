@@ -1,22 +1,23 @@
 package com.andreou.galc;
 
-import java.util.Set;
-import java.util.Map;
+
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import com.andreou.galc.engine.EngineContext;
 
 public class Ipeirotis {
 
-	private Set<DatumCont>					objects;
-	private Map<String, DatumCont>			objects_index;
-	private Set<Worker>						workers;
-	private Map<String, Worker>				workers_index;
+	private Set<DatumCont>		objects;
+	private Map<String, DatumCont>	objects_index;
+	private Set<Worker>		workers;
+	private Map<String, Worker>	workers_index;
 
 	private EngineContext ctx;
 
 	public Ipeirotis(Data data, EngineContext ctx) {
-
+	
 		this.ctx = ctx;
 		
 		this.objects = data.getObjects();
@@ -24,26 +25,26 @@ public class Ipeirotis {
 		for (DatumCont d : this.objects) {
 			objects_index.put(d.getName(), d);
 		}
-
+	
 		this.workers = data.getWorkers();
 		this.workers_index = new HashMap<String, Worker>();
 		for (Worker w : this.workers) {
 			workers_index.put(w.getName(), w);
 		}
-
+	
 		initWorkers();
-		// System.out.println("=======");
+		//System.out.println("=======");
 		estimateObjectZetas();
-		// generateObjectReport(data_mu, data_sigma);
-		// generateWorkerReport();
-		// System.out.println("=======");
-
+		//generateObjectReport(data_mu, data_sigma);
+		//generateWorkerReport();
+		//System.out.println("=======");
+	
 		// Run until convergence.
 		double epsilon = 0.00001;
 		double logLikelihood = estimate(epsilon);
 		if (!this.ctx.isVerbose())
 			System.out.println("Done! (logLikelihood= " + logLikelihood + ")\n----");
-
+	
 	}
 
 	private double estimate(double epsilon) {
@@ -56,7 +57,7 @@ public class Ipeirotis {
 			pastLogLikelihood = logLikelihood;
 
 			if (!this.ctx.isVerbose())
-				System.out.print(round + "... ");
+					System.out.print(round + "... ");
 			Double diffZetas = estimateObjectZetas();
 			Double diffWorkers = estimateWorkerRho();
 			round++;
@@ -68,7 +69,7 @@ public class Ipeirotis {
 			}
 			logLikelihood = getLogLikelihood();
 		}
-
+	
 		return logLikelihood;
 	}
 
@@ -108,7 +109,7 @@ public class Ipeirotis {
 			Double newZeta = 0.0;
 			Double zeta = 0.0;
 			Double betasum = 0.0;
-			if (!d.isGold()) {
+			if(!d.isGold()) {
 				oldZeta = d.getEst_zeta();
 				for (AssignedLabel al : d.getAssignedLabels()) {
 					String wid = al.getWorker();
@@ -127,8 +128,8 @@ public class Ipeirotis {
 
 				}
 
-				// d.setEst_zeta(zeta / betasum);
-				newZeta = zeta / betasum;
+				//d.setEst_zeta(zeta / betasum);
+				newZeta = zeta/ betasum;
 			} else {
 				oldZeta = d.getGoldZeta();
 				newZeta = d.getGoldZeta();
@@ -162,7 +163,7 @@ public class Ipeirotis {
 
 			for (AssignedLabel al : d.getAssignedLabels()) {
 				String wid = al.getWorker();
-				if (wid.equals(workerToIgnore))
+				if(wid.equals(workerToIgnore))
 					continue;
 				Worker w = this.workers_index.get(wid);
 				Double b = w.getBeta();
@@ -172,7 +173,7 @@ public class Ipeirotis {
 				betasum += b;
 			}
 
-			// d.setEst_zeta(zeta / betasum);
+			//d.setEst_zeta(zeta / betasum);
 			newZeta = zeta / betasum;
 			result.put(d.getName(), newZeta);
 
@@ -209,7 +210,6 @@ public class Ipeirotis {
 				sum_prod += z_i * z_ij;
 				sum_zi += z_i * z_i;
 				sum_zij += z_ij * z_ij;
-				
 			}
 			double rho = sum_prod / Math.sqrt(sum_zi * sum_zij);
 
@@ -246,8 +246,7 @@ public class Ipeirotis {
 	}
 
 	/**
-	 * @param workers
-	 *          the workers to set
+	 * @param workers the workers to set
 	 */
 	public void setWorkers(Set<Worker> workers) {
 

@@ -7,9 +7,7 @@ import com.andreou.galc.engine.Engine;
 import com.andreou.galc.engine.EngineContext;
 
 public class Main {
-
 	public static void main(String[] args) {
-
 		EngineContext ctx = new EngineContext();
 
 		CmdLineParser parser = new CmdLineParser(ctx);
@@ -31,7 +29,6 @@ public class Main {
 	}
 
 	private static void showUsage(CmdLineParser parser) {
-
 		System.err.println("Usage: \n");
 		parser.printUsage(System.err);
 		System.err.println();
