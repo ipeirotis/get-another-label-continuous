@@ -21,8 +21,8 @@ public class EmpiricalData extends Data {
 				throw new IllegalArgumentException("Error while loading from assigned labels file");
 			}
 
-			String objectname = entries[0];
-			String workername = entries[1];
+			String workername = entries[0];
+			String objectname = entries[1];
 			Double value = Double.parseDouble(entries[2]);
 
 			AssignedLabel al = new AssignedLabel(workername, objectname, value);
