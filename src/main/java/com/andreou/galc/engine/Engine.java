@@ -8,7 +8,9 @@ import com.andreou.galc.Data;
 import com.andreou.galc.DatumCont;
 import com.andreou.galc.EmpiricalData;
 import com.andreou.galc.Ipeirotis;
+import com.andreou.galc.JoinlyNormalData;
 import com.andreou.galc.SyntheticData;
+import com.andreou.galc.Utils;
 import com.andreou.galc.Worker;
 
 class ReportGenerator {
@@ -228,12 +230,13 @@ public class Engine {
 
 		Data data;
 		if(ctx.isSyntheticDataSet()) {
-			SyntheticData sdata = createSyntheticDataSet(ctx.isVerbose(),ctx.getSyntheticOptionsFile());
-			sdata.writeLabelsToFile(ctx.getInputFile());
-			sdata.writeTrueWorkerDataToFile(ctx.getTrueWorkersFile());
-			sdata.writeTrueObjectDataToFile(ctx.getTrueObjectsFile());
-			sdata.writeGoldObjectDataToFile(ctx.getCorrectFile());
-			data = sdata;
+			String dist = loadDistributionOption(ctx.getSyntheticOptionsFile());
+			if(dist.equals("joinlynormal")) {
+				data = createJoinlyNormalSet(ctx);
+			} else {
+				data = createSyntheticDataSet(ctx);
+			}
+			
 		} else {
 			EmpiricalData edata = new EmpiricalData();
 			edata.loadLabelFile(ctx.getInputFile());
@@ -269,35 +272,36 @@ public class Engine {
 	/**
 	 * @return
 	 */
-	private static SyntheticData createSyntheticDataSet(boolean verbose, String file) {
+	private static Data createSyntheticDataSet(EngineContext ctx) {
 
-		// int data_points = 10000;
-		// Double data_mu = 7.0;
-		// Double data_sigma = 11.0;
-		// int data_gold = 100;
-		//
-		// int workers = 1;
-		// Double worker_mu_down = -5.0;
-		// Double worker_mu_up = 5.0;
-		// Double worker_sigma_down = 0.5;
-		// Double worker_sigma_up = 1.5;
-		// Double worker_rho_down = 0.5;
-		// Double worker_rho_up = 1.0;
+		SyntheticData sdata = new SyntheticData(ctx.isVerbose(),ctx.getSyntheticOptionsFile());
+		sdata.initDataParameters();
+		sdata.initWorkerParameters();
+		sdata.build();
 
-		SyntheticData data = createDataSet(verbose,file);
-		return data;
+		sdata.writeLabelsToFile(ctx.getInputFile());
+		sdata.writeTrueWorkerDataToFile(ctx.getTrueWorkersFile());
+		sdata.writeTrueObjectDataToFile(ctx.getTrueObjectsFile());
+		sdata.writeGoldObjectDataToFile(ctx.getCorrectFile());
+		
+		
+		return sdata;
 	}
 
-	private static SyntheticData createDataSet(Boolean verbose, String file) {
+	private static Data createJoinlyNormalSet(EngineContext ctx) {
 
-		SyntheticData data = new SyntheticData(verbose,file);
+		JoinlyNormalData sdata = new JoinlyNormalData(ctx.isVerbose(),ctx.getSyntheticOptionsFile());
+		sdata.initDataParameters();
+		sdata.initWorkerParameters();
+		sdata.build();
 
-		data.initDataParameters();
-
-		data.initWorkerParameters();
-
-		data.build();
-		return data;
+		sdata.writeLabelsToFile(ctx.getInputFile());
+		sdata.writeTrueWorkerDataToFile(ctx.getTrueWorkersFile());
+		sdata.writeTrueObjectDataToFile(ctx.getTrueObjectsFile());
+		sdata.writeGoldObjectDataToFile(ctx.getCorrectFile());
+		
+		
+		return sdata;
 	}
 
 	public void println(String mask, Object... args) {
@@ -319,4 +323,20 @@ public class Engine {
 
 		System.out.println(message);
 	}
+
+	public String loadDistributionOption(String filename) {
+		String[] lines = Utils.getFile(filename).split("\n");
+		for(String line : lines) {
+			String[] entries = line.split("=");
+			if (entries.length != 2) {
+				throw new IllegalArgumentException("Error while loading from options file");
+			} else if(entries[0].equals("dist")) {
+				return new String(entries[1]);
+			} else {
+				continue;
+			}
+		}
+		return "";
+	}
+	
 }
