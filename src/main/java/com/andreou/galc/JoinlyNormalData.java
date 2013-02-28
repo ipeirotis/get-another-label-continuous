@@ -75,8 +75,8 @@ public class JoinlyNormalData extends Data{
 				Double datum_z = (d.getTrueValue() - this.data_mu) / this.data_sigma;
 				Double label_mu = w.getTrueMu() + w.getTrueRho() * w.getTrueSigma() * datum_z;
 				Double label_sigma = Math.sqrt(1 - Math.pow(w.getTrueRho(), 2)) * w.getTrueSigma();
-
-				Generator labelGenerator = new Generator(Generator.Distribution.GAUSSIAN);
+				
+				Generator labelGenerator = new Generator(Generator.Distribution.BIVARIATE);
 				labelGenerator.setGaussianParameters(label_mu, label_sigma);
 				Double label = labelGenerator.nextData();
 
