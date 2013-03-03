@@ -14,7 +14,7 @@ import com.andreou.galc.engine.EngineContext;
  * 
  * <p>
  * <code>mvn exec:java -Dexec.mainClass=com.andreou.galc.Main -Dexec.args="--input assignedlabels.txt --evalObjects evaluationObjects.txt --evalWorkers evaluationWorkers.txt --correct goldObjects.txt
---synthetic synthetic-options.txt --output results --verbose"</code>
+--synthetic options.txt --output results --verbose"</code>
  * </p>
  * 
  */
@@ -50,12 +50,12 @@ public class EngineTest {
 
 	@Test
 	public void testBasicExecution() throws Exception {
-		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt --synthetic data/synthetic/synthetic-options.txt --output results/synthetic");
+		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt --synthetic data/synthetic/options.txt --output results/synthetic");
 	}
 
 	@Test
 	public void testNewSyntheticData_verbose() throws Exception {
-		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt --synthetic data/synthetic/synthetic-options.txt --output results/synthetic --verbose");
+		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt --synthetic data/synthetic/options.txt --output results/synthetic --verbose");
 	}
 	@Test
 	public void testCurrentSyntheticData_verbose() throws Exception {

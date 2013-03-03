@@ -43,7 +43,7 @@ public class GeneratorTest {
 	}
 	@Test
 	public void testCreateCurrentSyntheticData_verbose() throws Exception {
-		executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt  --synthetic data/synthetic/synthetic-options.txt --output results/synthetic");
+		executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt  --synthetic data/synthetic/options.txt --output results/synthetic");
 	}
 	@Test
 	public void testNewJoinlyNormalData() throws Exception {
