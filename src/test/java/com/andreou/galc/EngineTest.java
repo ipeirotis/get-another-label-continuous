@@ -50,30 +50,30 @@ public class EngineTest {
 
 	@Test
 	public void testBasicExecution() throws Exception {
-		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt --synthetic data/synthetic/options.txt --output results/synthetic");
+		//executeOn("--input data/synthetic/uniform/assignedlabels.txt --evalObjects data/synthetic/uniform/evaluationObjects.txt --evalWorkers data/synthetic/uniform/evaluationWorkers.txt --correct data/synthetic/uniform/goldObjects.txt --synthetic data/synthetic/uniform/options.txt --output results/synthetic/uniform");
 	}
 
 	@Test
 	public void testNewSyntheticData_verbose() throws Exception {
-		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt --synthetic data/synthetic/options.txt --output results/synthetic --verbose");
+		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/uniform/evaluationObjects.txt --evalWorkers data/synthetic/uniform/evaluationWorkers.txt --correct data/synthetic/uniform/goldObjects.txt --synthetic data/synthetic/uniform/options.txt --output results/synthetic/uniform --verbose");
 	}
 	@Test
 	public void testCurrentSyntheticData_verbose() throws Exception {
-		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt --output results/synthetic --verbose");
+		//executeOn("--input data/synthetic/uniform/assignedlabels.txt --evalObjects data/synthetic/uniform/evaluationObjects.txt --evalWorkers data/synthetic/uniform/evaluationWorkers.txt --correct data/synthetic/uniform/goldObjects.txt --output results/synthetic/uniform --verbose");
 	}
 	@Test
 	public void testCurrentSyntheticData_labels_objects_workers() throws Exception {
-		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --output results/synthetic");
+		//executeOn("--input data/synthetic/uniform/assignedlabels.txt --evalObjects data/synthetic/uniform/evaluationObjects.txt --evalWorkers data/synthetic/uniform/evaluationWorkers.txt --output results/synthetic/uniform");
 	}
 
 	@Test
 	public void testCurrentSyntheticData_labels_objects() throws Exception {
-//		executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --output results/synthetic");
+//		executeOn("--input data/synthetic/uniform/assignedlabels.txt --evalObjects data/synthetic/uniform/evaluationObjects.txt --output results/synthetic/uniform");
 	}
 
 	@Test
 	public void testCurrentSyntheticData_labels() throws Exception {
-//		executeOn("--input data/synthetic/assignedlabels.txt --output results/synthetic");
+//		executeOn("--input data/synthetic/uniform/assignedlabels.txt --output results/synthetic/uniform");
 	}
 
 	@Test

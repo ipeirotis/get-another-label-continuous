@@ -35,30 +35,30 @@ public class GeneratorTest {
 	
 	@Test
 	public void testCreateNewJoinlyNormalData() throws Exception {
-		executeOn("--input data/joinlynormal/assignedlabels.txt --evalObjects data/joinlynormal/evaluationObjects.txt --evalWorkers data/joinlynormal/evaluationWorkers.txt --correct data/joinlynormal/goldObjects.txt --synthetic data/joinlynormal/options.txt --output results/joinlynormal");
+		executeOn("--input data/synthetic/joinlynormal/assignedlabels.txt --evalObjects data/synthetic/joinlynormal/evaluationObjects.txt --evalWorkers data/synthetic/joinlynormal/evaluationWorkers.txt --correct data/synthetic/joinlynormal/goldObjects.txt --synthetic data/synthetic/joinlynormal/options.txt --output results/synthetic/joinlynormal");
 	}
 	@Test
 	public void testCreateNewSingleRhoData() throws Exception {
-		executeOn("--input data/singlerho/assignedlabels.txt --evalObjects data/singlerho/evaluationObjects.txt --evalWorkers data/singlerho/evaluationWorkers.txt --correct data/singlerho/goldObjects.txt --synthetic data/singlerho/options.txt --output results/singlerho");
+		executeOn("--input data/synthetic/singlerho/assignedlabels.txt --evalObjects data/synthetic/singlerho/evaluationObjects.txt --evalWorkers data/synthetic/singlerho/evaluationWorkers.txt --correct data/synthetic/singlerho/goldObjects.txt --synthetic data/synthetic/singlerho/options.txt --output results/synthetic/singlerho");
 	}
 	@Test
 	public void testCreateCurrentSyntheticData_verbose() throws Exception {
-		executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --correct data/synthetic/goldObjects.txt  --synthetic data/synthetic/options.txt --output results/synthetic");
+		executeOn("--input data/synthetic/uniform/assignedlabels.txt --evalObjects data/synthetic/uniform/evaluationObjects.txt --evalWorkers data/synthetic/uniform/evaluationWorkers.txt --correct data/synthetic/uniform/goldObjects.txt  --synthetic data/synthetic/uniform/options.txt --output results/synthetic/uniform");
 	}
 	@Test
 	public void testNewJoinlyNormalData() throws Exception {
-		//executeOn("--input data/joinlynormal/assignedlabels.txt --evalObjects data/joinlynormal/evaluationObjects.txt --evalWorkers data/joinlynormal/evaluationWorkers.txt --output results/joinlynormal");
+		//executeOn("--input data/synthetic/joinlynormal/assignedlabels.txt --evalObjects data/synthetic/joinlynormal/evaluationObjects.txt --evalWorkers data/synthetic/joinlynormal/evaluationWorkers.txt --output results/synthetic/joinlynormal");
 	}
 	@Test
 	public void testNewSingleRhoData() throws Exception {
-		//executeOn("--input data/singlerho/assignedlabels.txt --evalObjects data/singlerho/evaluationObjects.txt --evalWorkers data/singlerho/evaluationWorkers.txt --output results/singlerho");
+		//executeOn("--input data/synthetic/singlerho/assignedlabels.txt --evalObjects data/synthetic/singlerho/evaluationObjects.txt --evalWorkers data/synthetic/singlerho/evaluationWorkers.txt --output results/synthetic/singlerho");
 	}
 	@Test
 	public void testCurrentSyntheticData_verbose() throws Exception {
-		//executeOn("--input data/synthetic/assignedlabels.txt --evalObjects data/synthetic/evaluationObjects.txt --evalWorkers data/synthetic/evaluationWorkers.txt --output results/synthetic");
+		//executeOn("--input data/synthetic/uniform/assignedlabels.txt --evalObjects data/synthetic/uniform/evaluationObjects.txt --evalWorkers data/synthetic/uniform/evaluationWorkers.txt --output results/synthetic/uniform");
 	}
 	@Test
 	public void testCurrentSyntheticData_labels() throws Exception {
-//		executeOn("--input data/synthetic/assignedlabels.txt --output results/synthetic");
+//		executeOn("--input data/synthetic/uniform/assignedlabels.txt --output results/synthetic/uniform");
 	}
 }
