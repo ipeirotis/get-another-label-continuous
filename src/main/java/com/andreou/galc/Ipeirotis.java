@@ -61,15 +61,15 @@ public class Ipeirotis {
 			Double diffZetas = estimateObjectZetas();
 			Double diffWorkers = estimateWorkerRho();
 			round++;
-			if (!this.ctx.isVerbose())
-				System.out.println("");
+			//if (!this.ctx.isVerbose())
+			//	System.out.println("");
 			if (Double.isNaN(diffZetas + diffWorkers)) {
 				System.err.println("ERROR: Check for division by 0");
 				break;
 			}
 			logLikelihood = getLogLikelihood();
 		}
-	
+		System.out.println("");
 		return logLikelihood;
 	}
 
