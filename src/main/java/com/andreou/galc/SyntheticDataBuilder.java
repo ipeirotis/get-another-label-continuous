@@ -35,7 +35,7 @@ public class SyntheticDataBuilder {
 			srdata.build();
 			data = srdata;
 		} else {
-			SyntheticData sdata = new SyntheticData(verbose,file);
+			SyntheticUniformData sdata = new SyntheticUniformData(verbose,file);
 			sdata.initDataParameters();
 			sdata.initWorkerParameters();
 			sdata.build();

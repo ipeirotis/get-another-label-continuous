@@ -1,7 +1,7 @@
 package com.andreou.galc;
 
 
-public class SyntheticData extends Data {
+public class SyntheticUniformData extends Data {
 
 	private int				data_points;
 	private Double		data_mu;
@@ -23,7 +23,7 @@ public class SyntheticData extends Data {
 
 	private Generator	datumGenerator;
 
-	public SyntheticData(Boolean verbose, String file) {
+	public SyntheticUniformData(Boolean verbose, String file) {
 
 		loadSyntheticOptions(file);
 		if(!verbose) {
