@@ -9,4 +9,4 @@ worker_sigma_down=0.5
 worker_sigma_up=1.5
 worker_rho_down=0.5
 worker_rho_up=1.0
-
+dist=uniform
