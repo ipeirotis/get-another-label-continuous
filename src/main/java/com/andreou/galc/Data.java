@@ -3,6 +3,7 @@ package com.andreou.galc;
 import java.util.Set;
 import java.util.HashSet;
 
+
 public abstract class Data {
 
 	Set<DatumCont>			objects	= new HashSet<DatumCont>();
@@ -23,4 +24,5 @@ public abstract class Data {
 
 		return labels;
 	}
+	
 }

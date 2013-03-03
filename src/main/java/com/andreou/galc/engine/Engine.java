@@ -8,8 +8,7 @@ import com.andreou.galc.Data;
 import com.andreou.galc.DatumCont;
 import com.andreou.galc.EmpiricalData;
 import com.andreou.galc.Ipeirotis;
-import com.andreou.galc.JoinlyNormalData;
-import com.andreou.galc.SyntheticData;
+import com.andreou.galc.SyntheticDataBuilder;
 import com.andreou.galc.Utils;
 import com.andreou.galc.Worker;
 
@@ -230,13 +229,7 @@ public class Engine {
 
 		Data data;
 		if(ctx.isSyntheticDataSet()) {
-			String dist = loadDistributionOption(ctx.getSyntheticOptionsFile());
-			if(dist.equals("joinlynormal")) {
-				data = createJoinlyNormalSet(ctx);
-			} else {
-				data = createSyntheticDataSet(ctx);
-			}
-			
+			data = createSyntheticDataSet(ctx);
 		} else {
 			EmpiricalData edata = new EmpiricalData();
 			edata.loadLabelFile(ctx.getInputFile());
@@ -272,37 +265,18 @@ public class Engine {
 	/**
 	 * @return
 	 */
-	private static Data createSyntheticDataSet(EngineContext ctx) {
-
-		SyntheticData sdata = new SyntheticData(ctx.isVerbose(),ctx.getSyntheticOptionsFile());
-		sdata.initDataParameters();
-		sdata.initWorkerParameters();
-		sdata.build();
-
-		sdata.writeLabelsToFile(ctx.getInputFile());
-		sdata.writeTrueWorkerDataToFile(ctx.getTrueWorkersFile());
-		sdata.writeTrueObjectDataToFile(ctx.getTrueObjectsFile());
-		sdata.writeGoldObjectDataToFile(ctx.getCorrectFile());
-		
-		
-		return sdata;
+	private Data createSyntheticDataSet(EngineContext ctx) {
+		Data data;
+		SyntheticDataBuilder builder = new SyntheticDataBuilder(ctx.isVerbose(),ctx.getSyntheticOptionsFile());
+		builder.build();
+		builder.writeLabelsToFile(ctx.getInputFile());
+		builder.writeTrueWorkerDataToFile(ctx.getTrueWorkersFile());
+		builder.writeTrueObjectDataToFile(ctx.getTrueObjectsFile());
+		builder.writeGoldObjectDataToFile(ctx.getCorrectFile());
+		data = builder.getData();
+		return data;
 	}
 
-	private static Data createJoinlyNormalSet(EngineContext ctx) {
-
-		JoinlyNormalData sdata = new JoinlyNormalData(ctx.isVerbose(),ctx.getSyntheticOptionsFile());
-		sdata.initDataParameters();
-		sdata.initWorkerParameters();
-		sdata.build();
-
-		sdata.writeLabelsToFile(ctx.getInputFile());
-		sdata.writeTrueWorkerDataToFile(ctx.getTrueWorkersFile());
-		sdata.writeTrueObjectDataToFile(ctx.getTrueObjectsFile());
-		sdata.writeGoldObjectDataToFile(ctx.getCorrectFile());
-		
-		
-		return sdata;
-	}
 
 	public void println(String mask, Object... args) {
 		print(mask + "\n", args);

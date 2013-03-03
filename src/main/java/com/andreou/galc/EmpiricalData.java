@@ -3,6 +3,7 @@ package com.andreou.galc;
 import java.util.Map;
 import java.util.HashMap;
 
+
 public class EmpiricalData extends Data {
 
 	private Map<String, DatumCont>	objects_index = new HashMap<String, DatumCont>();

@@ -62,7 +62,8 @@ public class Ipeirotis {
 			Double diffWorkers = estimateWorkerRho();
 			round++;
 			if (!this.ctx.isVerbose())
-				System.out.println("");
+				System.err.println("diffZetas:"+diffZetas+" diffWorkers:"+diffWorkers);
+				//System.out.println("");
 			if (Double.isNaN(diffZetas + diffWorkers)) {
 				System.err.println("ERROR: Check for division by 0");
 				break;

@@ -1,8 +1,5 @@
 package com.andreou.galc;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 
 public class SyntheticData extends Data {
 
@@ -18,6 +15,8 @@ public class SyntheticData extends Data {
 	private Double		worker_rho_down;
 	private Double		worker_rho_up;
 
+	private String		dist;
+
 	private Generator	muGenerator;
 	private Generator	sigmaGenerator;
 	private Generator	rhoGenerator;
@@ -28,11 +27,13 @@ public class SyntheticData extends Data {
 
 		loadSyntheticOptions(file);
 		if(!verbose) {
+			System.out.println("-----------------------------------");
 			System.out.println("Data points: " + this.data_points);
 			System.out.println("Data gold: " + this.data_gold);
 			System.out.println("Workers: " + this.workers_points);
 			System.out.println("Low rho: " + this.worker_rho_down);
 			System.out.println("High rho: " + this.worker_rho_up);
+			System.out.println("Distribution: " + this.dist);
 		}
 
 	}
@@ -126,107 +127,14 @@ public class SyntheticData extends Data {
 
 	}
 
-	public void writeLabelsToFile(String filename) {
-
-		try {
-			File outfile = new File(filename);
-
-			if (outfile.getParent() != null) {
-				File parentDir = new File(outfile.getParent());
-				if (!parentDir.exists()) {
-					parentDir.mkdirs();
-				}
-			}
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (AssignedLabel al : labels) {
-				String line = al.getWorker() + "\t" + al.getDatum() + "\t" + al.getLabel() + "\n";
-				bw.write(line);
-			}
-			bw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void writeTrueObjectDataToFile(String filename) {
-
-		try {
-			File outfile = new File(filename);
-
-			if (outfile.getParent() != null) {
-				File parentDir = new File(outfile.getParent());
-				if (!parentDir.exists()) {
-					parentDir.mkdirs();
-				}
-			}
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (DatumCont d: objects) {
-				String line = d.getName() + "\t" + d.getTrueValue() + "\t" + d.getTrueZeta() + "\n";
-				bw.write(line);
-			}
-			bw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void writeTrueWorkerDataToFile(String filename) {
-
-		try {
-			File outfile = new File(filename);
-
-			if (outfile.getParent() != null) {
-				File parentDir = new File(outfile.getParent());
-				if (!parentDir.exists()) {
-					parentDir.mkdirs();
-				}
-			}
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (Worker w : workers) {
-				String line = w.getName() + "\t" + w.getTrueRho() + "\t" + w.getTrueMu() + "\t" + w.getTrueSigma() + "\t"
-						+ "\n";
-				bw.write(line);
-			}
-			bw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void writeGoldObjectDataToFile(String filename) {
-
-		try {
-			File outfile = new File(filename);
-
-			if (outfile.getParent() != null) {
-				File parentDir = new File(outfile.getParent());
-				if (!parentDir.exists()) {
-					parentDir.mkdirs();
-				}
-			}
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (DatumCont d: objects) {
-				if(d.isGold()) {
-					String line = d.getName() + "\t" + d.getTrueValue() + "\t" + d.getTrueZeta() + "\n";
-					bw.write(line);
-				}
-			}
-			bw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public void loadSyntheticOptions(String filename) {
 		String[] lines = Utils.getFile(filename).split("\n");
 		for(String line : lines) {
 			String[] entries = line.split("=");
 			if (entries.length != 2) {
 				throw new IllegalArgumentException("Error while loading from synthetic sptions file");
+			} else if(entries[0].equals("dist")) {
+				this.dist = entries[1];
 			} else if(entries[0].equals("data_points")) {
 				this.data_points = (int)Integer.parseInt(entries[1]);
 			} else if (entries[0].equals("data_mu")) {

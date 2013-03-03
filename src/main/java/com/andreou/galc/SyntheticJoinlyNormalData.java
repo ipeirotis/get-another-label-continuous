@@ -1,10 +1,7 @@
 package com.andreou.galc;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 
-public class JoinlyNormalData extends Data{
+public class SyntheticJoinlyNormalData extends Data{
 
 	private int				data_points;
 	private int				data_gold;
@@ -18,10 +15,11 @@ public class JoinlyNormalData extends Data{
 	
 	private Generator	gen;
 
-	public JoinlyNormalData(Boolean verbose, String file) {
+	public SyntheticJoinlyNormalData(Boolean verbose, String file) {
 
 		loadSyntheticOptions(file);
 		if(!verbose) {
+			System.out.println("-----------------------------------");
 			System.out.println("Data points: " + this.data_points);
 			System.out.println("Data gold: " + this.data_gold);
 			System.out.println("Workers: " + this.workers_points);
@@ -119,100 +117,6 @@ public class JoinlyNormalData extends Data{
 
 	}
 
-	public void writeLabelsToFile(String filename) {
-
-		try {
-			File outfile = new File(filename);
-
-			if (outfile.getParent() != null) {
-				File parentDir = new File(outfile.getParent());
-				if (!parentDir.exists()) {
-					parentDir.mkdirs();
-				}
-			}
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (AssignedLabel al : labels) {
-				String line = al.getWorker() + "\t" + al.getDatum() + "\t" + al.getLabel() + "\n";
-				bw.write(line);
-			}
-			bw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void writeTrueObjectDataToFile(String filename) {
-
-		try {
-			File outfile = new File(filename);
-
-			if (outfile.getParent() != null) {
-				File parentDir = new File(outfile.getParent());
-				if (!parentDir.exists()) {
-					parentDir.mkdirs();
-				}
-			}
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (DatumCont d: objects) {
-				String line = d.getName() + "\t" + d.getTrueValue() + "\t" + d.getTrueZeta() + "\n";
-				bw.write(line);
-			}
-			bw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void writeTrueWorkerDataToFile(String filename) {
-
-		try {
-			File outfile = new File(filename);
-
-			if (outfile.getParent() != null) {
-				File parentDir = new File(outfile.getParent());
-				if (!parentDir.exists()) {
-					parentDir.mkdirs();
-				}
-			}
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (Worker w : workers) {
-				String line = w.getName() + "\t" + w.getTrueRho() + "\t" + w.getTrueMu() + "\t" + w.getTrueSigma() + "\t"
-						+ "\n";
-				bw.write(line);
-			}
-			bw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void writeGoldObjectDataToFile(String filename) {
-
-		try {
-			File outfile = new File(filename);
-
-			if (outfile.getParent() != null) {
-				File parentDir = new File(outfile.getParent());
-				if (!parentDir.exists()) {
-					parentDir.mkdirs();
-				}
-			}
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
-			for (DatumCont d: objects) {
-				if(d.isGold()) {
-					String line = d.getName() + "\t" + d.getTrueValue() + "\t" + d.getTrueZeta() + "\n";
-					bw.write(line);
-				}
-			}
-			bw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public void loadSyntheticOptions(String filename) {
 		String[] lines = Utils.getFile(filename).split("\n");
@@ -239,7 +143,7 @@ public class JoinlyNormalData extends Data{
 			} else if (entries[0].equals("worker_rho")) {
 				this.worker_rho = Double.parseDouble(entries[1]);
 			} else {
-				System.err.println("Error in synthetic options file variables");
+				System.err.println("Error in JoinlyNormal synthetic options file variables");
 			}
 
 		}
