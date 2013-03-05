@@ -1,9 +1,9 @@
 data_points=1000
-data_mu=7.0
-data_sigma=11.0
+data_mu=0.000001
+data_sigma=3.0
 data_gold=100
-workers=10
-worker_mu=1.0
+workers=2
+worker_mu=0.0
 worker_sigma=1.5
 worker_rho=0.5
 dist=joinlynormal

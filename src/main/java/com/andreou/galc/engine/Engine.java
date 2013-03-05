@@ -134,6 +134,38 @@ class ReportGenerator {
 		return out;
 	}
 
+	double getValueAbsoluteErrorObject() {
+
+		Double avgAbsError = 0.0;
+		int n = 0;
+		for (DatumCont d : ip.getObjects()) {
+			if (  d.getTrueValue() == null ) continue;
+			n++;
+			double estV = d.getEst_value();
+			double realV = d.getTrueValue();
+			double absDiff = Math.abs(realV - estV);
+			avgAbsError += absDiff;
+		}
+		return avgAbsError/n;
+	}
+
+	double getValueRelativeErrorObject() {
+
+		Double avgRelError = 0.0;
+		int n = 0;
+		for (DatumCont d : ip.getObjects()) {
+			if ( d.getTrueValue() == null) continue;
+			n++;
+			double estV = d.getEst_value();
+			double realV = d.getTrueValue();
+			double absDiff = Math.abs(realV - estV);
+			double relDiff = Math.abs(absDiff / realV);
+
+			avgRelError += relDiff/n;
+		}
+		return avgRelError;
+	}
+
 	/**
 	 * @param data_mu
 	 * @param data_sigma
@@ -179,6 +211,7 @@ class ReportGenerator {
 		double mu = this.estimateDistributionMu();
 		double sigma = this.estimateDistributionSigma();
 		StringBuffer sb = new StringBuffer(); 
+		sb.append("Name\tAverageLabel\tEstValue\tEstZeta\tTrueValue\tTrueZeta\n");
 		for (DatumCont d : ip.getObjects()) {
 			d.setDistributionMu(mu);
 			d.setDistributionSigma(sigma);
@@ -189,7 +222,9 @@ class ReportGenerator {
 		
 		
 		String out = "Average absolute estimation error for z-values: " + getZetaAbsoluteErrorObject() + "\n"
-				+ "Average relative estimation error for z-values: " + getZetaRelativeErrorObject();
+				+ "Average relative estimation error for z-values: " + getZetaRelativeErrorObject() + "\n"
+				+ "Average absolute estimation error for obj-values: " + getValueAbsoluteErrorObject() + "\n"
+				+ "Average relative estimation error for obj-values: " + getValueRelativeErrorObject();
 		if (!this.verbose)
 			System.out.println(out);
 		

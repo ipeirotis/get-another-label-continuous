@@ -34,6 +34,12 @@ public class SyntheticDataBuilder {
 			srdata.initWorkerParameters();
 			srdata.build();
 			data = srdata;
+		} else if(dist.equals("singlerhosupervised")){
+			SyntheticSingleRhoSupervisedData srdata = new SyntheticSingleRhoSupervisedData(verbose,file);
+			srdata.initDataParameters();
+			srdata.initWorkerParameters();
+			srdata.build();
+			data = srdata;
 		} else {
 			SyntheticUniformData sdata = new SyntheticUniformData(verbose,file);
 			sdata.initDataParameters();
